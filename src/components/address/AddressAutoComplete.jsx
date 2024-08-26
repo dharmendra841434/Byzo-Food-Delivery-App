@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -23,9 +22,7 @@ import {
   fatchAddressByCords,
   fatchUserAddress,
   setAddressCordinates,
-  setfullAddress,
   setLocationPermission,
-  setSearchedAddress,
 } from '../../store/mapSlice';
 import {useNavigation} from '@react-navigation/native';
 
@@ -33,6 +30,7 @@ const AddressAutoComplete = ({
   setSettingModelOpen,
   setModalVisible,
   handleCloseSheet,
+  handleSelectAddress,
 }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -76,14 +74,17 @@ const AddressAutoComplete = ({
 
       if (json.status === 'OK') {
         const {lat, lng} = json.result.geometry.location;
-        // console.log('Latitude:', lat);
-        // console.log('Longitude:', lng);
+
         dispatch(
           setAddressCordinates({
             latitude: lat,
             longitude: lng,
           }),
         );
+        handleSelectAddress({
+          latitude: lat,
+          longitude: lng,
+        });
         dispatch(
           fatchAddressByCords({
             lat: lat,
@@ -111,20 +112,18 @@ const AddressAutoComplete = ({
     setSuggestions([]);
   };
 
-  const handleSuggestionPress = placeId => {
-    // console.log(description);
-    // dispatch(setfullAddress(description));
+  const handleSuggestionPress = async placeId => {
     handleSuggestionAPI(placeId);
     handleCloseSheet();
     setSuggestions([]);
     setQuery('');
-    //navigation.navigate('mapview');
   };
 
   const handleCurrentLocation = async () => {
     if (locationPermission === 'granted') {
-      dispatch(fatchUserAddress());
+      dispatch(fatchUserAddress('from current location press'));
       navigation.navigate('mapview');
+      handleCloseSheet();
     } else {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -133,6 +132,7 @@ const AddressAutoComplete = ({
         dispatch(setLocationPermission('granted'));
         dispatch(fatchUserAddress());
         navigation.navigate('mapview');
+        handleCloseSheet();
       } else {
         console.log('faied');
         setModalVisible(true);
@@ -140,12 +140,6 @@ const AddressAutoComplete = ({
       }
     }
   };
-
-  // handleCurrentLocation = () => {
-  //   // dispatch(fatchUserAddress());
-  //   // navigation.navigate('mapview');
-  //   setSettingModelOpen(true);
-  // };
 
   const renderSuggestion = ({item}) => {
     // console.log(item, 'ksjdks');
@@ -156,7 +150,6 @@ const AddressAutoComplete = ({
         activeOpacity={0.7}
         style={styles.suggestionItem}
         onPress={() => {
-          dispatch(setSearchedAddress(itemData));
           handleSuggestionPress(item?.place_id);
         }}>
         <View

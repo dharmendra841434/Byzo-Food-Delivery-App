@@ -16,6 +16,9 @@ import appColors from '../../utils/appColors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AddressAutoComplete from './AddressAutoComplete';
 import SettingOpenModel from './SettingOpenModel';
+import {useSelector} from 'react-redux';
+import {splitAddressAtFirstComma} from '../../utils/helperfun';
+import EnableWarning from './mapScreen/EnableWarning';
 const AddressBottomSheetModal = ({
   setModalVisible,
   keyboardVisible,
@@ -24,8 +27,13 @@ const AddressBottomSheetModal = ({
   handleEnableLocation,
   setSettingModelOpen,
   settingModelOpen,
-  loader,
+  handleSelectAddress,
 }) => {
+  const locationPermission = useSelector(
+    state => state?.map?.locationPermission,
+  );
+  const fullAddress = useSelector(state => state?.map?.fullAddress);
+
   // variables
   const snapPoints = useMemo(() => ['85%', '85%'], []);
   const handleSheetChanges = useCallback(index => {
@@ -39,6 +47,9 @@ const AddressBottomSheetModal = ({
         index={1}
         snapPoints={snapPoints}
         handleComponent={null}
+        enableHandlePanningGesture={false}
+        enableContentPanningGesture={false}
+        enablePanDownToClose={false}
         backdropComponent={props => (
           <CustomBackdrop
             {...props}
@@ -58,41 +69,28 @@ const AddressBottomSheetModal = ({
               borderRadius: 14,
             }}>
             <View>
-              <View className="flex flex-row items-center justify-between p-2 m-2 bg-white rounded-md ">
-                <View className="flex flex-row ">
-                  <View>
-                    <Icon
-                      name="location-outline"
-                      size={40}
-                      color={appColors.blackText}
-                    />
-                    <View className="absolute w-12 h-1 mt-5 -rotate-45 bg-red-600 border border-white " />
-                  </View>
-                  <View className="ml-2 ">
-                    <CustomText font="bold" className="text-sm text-blackText">
-                      Device location not enabled
-                    </CustomText>
-                    <CustomText className=" text-[12px] text-blackText">
-                      Enable for a bettter delivery
-                    </CustomText>
+              {locationPermission === 'denied' ? (
+                <EnableWarning />
+              ) : (
+                <View className="flex flex-row items-center justify-between p-2 m-2 bg-white rounded-md ">
+                  <View className="flex flex-row ">
+                    <View>
+                      <Icon
+                        name="location-outline"
+                        size={40}
+                        color={appColors.blackText}
+                      />
+                    </View>
+                    <View className="w-[85%] ml-2 ">
+                      <CustomText
+                        font="bold"
+                        className="text-sm text-blackText">
+                        {splitAddressAtFirstComma(fullAddress)}
+                      </CustomText>
+                    </View>
                   </View>
                 </View>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={handleEnableLocation}
-                  className="px-6 pb-1.5 pt-0.5 rounded-lg bg-secondry h-fit">
-                  <CustomText className="text-white ">
-                    {loader ? (
-                      <ActivityIndicator
-                        color={appColors.background}
-                        size={20}
-                      />
-                    ) : (
-                      'Enable'
-                    )}
-                  </CustomText>
-                </TouchableOpacity>
-              </View>
+              )}
               <View className="px-3 pb-2 ">
                 <CustomText font="bold" className="text-lg text-blackText">
                   Select delivery address
@@ -103,6 +101,7 @@ const AddressBottomSheetModal = ({
                   setSettingModelOpen={setSettingModelOpen}
                   setModalVisible={setModalVisible}
                   handleCloseSheet={() => {}}
+                  handleSelectAddress={handleSelectAddress}
                 />
               </View>
             </View>

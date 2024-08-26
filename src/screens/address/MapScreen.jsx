@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import appColors from '../../utils/appColors';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
@@ -28,21 +28,25 @@ import {fatchAddressByCords, setAddressCordinates} from '../../store/mapSlice';
 import Geolocation from 'react-native-geolocation-service';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
 import {
-  generateAddressObject,
+  getLocalStorageData,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
+import MarkerIcon from '../../components/address/MarkerIcon';
+import EnableWarning from '../../components/address/mapScreen/EnableWarning';
 
 const MapScreen = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
-  //console.log(fullAddress, 'this is full address');
-
+  // console.log(fullAddress, 'this is full address');
+  const locationPermission = useSelector(
+    state => state?.map?.locationPermission,
+  );
   const addressCordinates = useSelector(state => state?.map?.addressCordinates);
-  // console.log(addressCordinates, 'cordinates');
+  const currentCordinates = useSelector(state => state?.map?.currentCordinates);
   const addressLoader = useSelector(state => state?.map?.addressLoader);
   const isWithinKanyakumari = useSelector(
     state => state?.map?.isWithinKanyakumari,
   );
-  const searchedAddress = useSelector(state => state?.map?.searchedAddress);
+
   const [openSetting, setOpenSetting] = useState(false);
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -52,15 +56,27 @@ const MapScreen = () => {
   const [region, setRegion] = useState({
     latitude: addressCordinates?.latitude,
     longitude: addressCordinates?.longitude,
-    latitudeDelta: 15,
-    longitudeDelta: 15,
+    latitudeDelta: 0.005,
+    longitudeDelta: 0.005,
   });
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
 
-  console.log(fullAddress, 'this is full adddress');
+  //console.log(fullAddress, 'this is full adddress');
+
+  const handleConferLocation = async () => {
+    navigation.navigate('home');
+    // getLocalStorageData('skip-login').then(val => {
+    //   //console.log(val);
+    //   if (val !== null) {
+    //     navigation.navigate('home');
+    //   } else {
+    //     navigation.navigate('login');
+    //   }
+    // });
+  };
 
   const handleGoToCureent = () => {
     Geolocation.getCurrentPosition(
@@ -77,8 +93,8 @@ const MapScreen = () => {
           {
             latitude: position?.coords?.latitude,
             longitude: position?.coords?.longitude,
-            latitudeDelta: 15,
-            longitudeDelta: 15,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
           },
           2000,
         );
@@ -95,8 +111,8 @@ const MapScreen = () => {
     let cordinatesData = {
       latitude: newRegion?.latitude,
       longitude: newRegion?.longitude,
-      latitudeDelta: 15,
-      longitudeDelta: 15,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
     };
     //console.log(cordinatesData);
     setRegion(cordinatesData);
@@ -107,7 +123,18 @@ const MapScreen = () => {
       }),
     );
   };
-  // console.log(modalVisible, 'isvisible');
+
+  useEffect(() => {
+    setRegion({
+      latitude: addressCordinates?.latitude,
+      longitude: addressCordinates?.longitude,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
+    });
+  }, [addressCordinates]);
+
+  //console.log(cordinatesAddressLoader, 'loader');
+  // console.log(fullAddress, 'addd');
 
   return (
     <BottomSheetModalProvider>
@@ -119,19 +146,21 @@ const MapScreen = () => {
           barStyle="dark-content"
         />
         <MapView
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+          provider={PROVIDER_GOOGLE}
           style={{flex: 2}}
-          mapType="hybrid"
           zoomEnabled={true}
           ref={mapRef}
-          // showsUserLocation
-          // showsMyLocationButton={true}
+          minZoomLevel={5}
           onRegionChangeComplete={onRegionChangeComplete}
           initialRegion={region}>
           <Marker
             coordinate={{
-              latitude: addressCordinates?.latitude,
-              longitude: addressCordinates?.longitude,
+              latitude: currentCordinates?.latitude
+                ? currentCordinates?.latitude
+                : 0,
+              longitude: currentCordinates?.longitude
+                ? currentCordinates?.longitude
+                : 0,
             }}>
             <CurrentLocationMarker />
           </Marker>
@@ -144,23 +173,49 @@ const MapScreen = () => {
             Select location
           </CustomText>
         </View>
-        <View style={styles.searchBox}>
-          <TouchableOpacity
-            onPress={handlePresentModalPress}
-            activeOpacity={0.9}
-            style={styles.container}>
-            <Icon2 name="search" size={23} color={appColors.secondry} />
+        {locationPermission === 'denied' ? (
+          <View style={styles.notEnableTop}>
+            <View>
+              <TouchableOpacity
+                onPress={handlePresentModalPress}
+                activeOpacity={0.9}
+                style={[
+                  styles.container,
+                  {borderWidth: 1, borderColor: appColors.borderGray},
+                ]}>
+                <Icon2 name="search" size={23} color={appColors.secondry} />
 
-            <CustomText
-              font="medium"
-              style={{
-                color: appColors.blackText,
-                marginStart: 5,
-              }}>
-              Search for area, street name...
-            </CustomText>
-          </TouchableOpacity>
-        </View>
+                <CustomText
+                  font="medium"
+                  style={{
+                    color: appColors.blackText,
+                    marginStart: 5,
+                  }}>
+                  Search for area, street name...
+                </CustomText>
+              </TouchableOpacity>
+            </View>
+            <EnableWarning />
+          </View>
+        ) : (
+          <View style={styles.searchBox}>
+            <TouchableOpacity
+              onPress={handlePresentModalPress}
+              activeOpacity={0.9}
+              style={styles.container}>
+              <Icon2 name="search" size={23} color={appColors.secondry} />
+
+              <CustomText
+                font="medium"
+                style={{
+                  color: appColors.blackText,
+                  marginStart: 5,
+                }}>
+                Search for area, street name...
+              </CustomText>
+            </TouchableOpacity>
+          </View>
+        )}
         <View
           style={[
             styles.bottomSection,
@@ -190,7 +245,7 @@ const MapScreen = () => {
                             flexDirection: 'row',
                             width: '75%',
                           }}>
-                          <CustomMarker />
+                          <MarkerIcon />
                           <View
                             style={{
                               marginStart: '4%',
@@ -235,6 +290,7 @@ const MapScreen = () => {
                     <View style={{alignItems: 'center'}}>
                       <TouchableOpacity
                         activeOpacity={0.8}
+                        onPress={handleConferLocation}
                         style={[
                           styles.button,
                           {width: '95%', paddingVertical: 4},
@@ -321,6 +377,7 @@ const MapScreen = () => {
         bottomSheetModalRef={bottomSheetModalRef}
         setModalVisible={setModalVisible}
         setSettingModelOpen={setOpenSetting}
+        mapRef={mapRef}
       />
       <SettingOpenModel
         setSettingModelOpen={setOpenSetting}
@@ -403,6 +460,15 @@ const styles = StyleSheet.create({
     color: appColors.blackText,
     fontSize: 12.5,
     opacity: 0.7,
+  },
+  notEnableTop: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 30,
+    paddingHorizontal: '2%',
+    backgroundColor: appColors?.background,
+    paddingVertical: '2%',
   },
 });
 

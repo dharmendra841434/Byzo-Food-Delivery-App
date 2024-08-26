@@ -3,7 +3,7 @@ import {Text} from 'react-native';
 import appFonts from '../utils/appFonts';
 import appColors from '../utils/appColors';
 
-const CustomText = ({font, children, className, style, ...props}) => {
+const CustomText = ({font = '', children, className, style, ...props}) => {
   let fontFamily;
   switch (font) {
     case 'bold':

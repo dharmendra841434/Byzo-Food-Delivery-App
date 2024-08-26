@@ -5,26 +5,14 @@ import logo from '../assets/images/line.png';
 import CustomText from '../components/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {hideNavigationBar} from 'react-native-navigation-bar-color';
-import NetInfo from '@react-native-community/netinfo';
 
 const SplashScreen = () => {
   const navigation = useNavigation();
-
-  const checkInternetAndNavigate = () => {
-    NetInfo.fetch().then(state => {
-      if (state.isConnected) {
-        setTimeout(() => {
-          console.log('login ');
-          navigation.navigate('login');
-        }, 2000);
-      } else {
-        navigation.navigate('nointernet');
-      }
-    });
-  };
-
   useEffect(() => {
-    checkInternetAndNavigate();
+    setTimeout(() => {
+      console.log('login ');
+      navigation.replace('login');
+    }, 2000);
     hideNavigationBar();
   }, []);
 

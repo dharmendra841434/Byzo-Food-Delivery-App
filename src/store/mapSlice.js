@@ -15,7 +15,7 @@ export const fatchUserAddress = createAsyncThunk(
           const fullAddress = response.results[0].formatted_address;
           dispatch(setfullAddress(fullAddress));
           const extractedDigits = extractDigits(fullAddress);
-          console.log(!!extractedDigits, 'check digits');
+          //console.log(!!extractedDigits, 'check digits');
           dispatch(setIsWithinKanyakumari(!!extractedDigits));
           dispatch(setAddressLoader(false));
         } else {
@@ -26,8 +26,9 @@ export const fatchUserAddress = createAsyncThunk(
       };
       Geolocation.getCurrentPosition(
         position => {
-          console.log(position);
+          //console.log(position, values);
           dispatch(setAddressCordinates(position?.coords));
+          dispatch(setCurrentCordinates(position?.coords));
           fatchAddress({
             lat: position?.coords?.latitude,
             long: position?.coords?.longitude,
@@ -56,11 +57,10 @@ export const fatchAddressByCords = createAsyncThunk(
       // console.log(response, 'address response');
       if (response.results && response.results.length > 0) {
         // console.log(response.results, 'addres response');
-
         const fullAddress = response.results[0].formatted_address;
         dispatch(setfullAddress(fullAddress));
         const extractedDigits = extractDigits(fullAddress);
-        console.log(!!extractedDigits, 'check digits');
+        //console.log(!!extractedDigits, 'check digits');
         dispatch(setIsWithinKanyakumari(!!extractedDigits));
         dispatch(setAddressLoader(false));
       } else {
@@ -86,15 +86,19 @@ export const mapSlice = createSlice({
     fullAddress: '',
     locationPermission: 'denied',
     addressLoader: false,
+    cordinatesAddressLoader: false,
     addressCordinates: {},
-    searchedAddress: {},
+    currentCordinates: {},
   },
   reducers: {
     setMarkerPosition: (state, action) => {
       state.markerPosition = action.payload;
     },
-    setSearchedAddress: (state, action) => {
-      state.searchedAddress = action.payload;
+    setCordinatesAddressLoader: (state, action) => {
+      state.cordinatesAddressLoader = action.payload;
+    },
+    setCurrentCordinates: (state, action) => {
+      state.currentCordinates = action.payload;
     },
     setfullAddress: (state, action) => {
       state.fullAddress = action.payload;
@@ -125,7 +129,8 @@ export const {
   setLocationPermission,
   setAddressLoader,
   setAddressCordinates,
-  setSearchedAddress,
+  setCurrentCordinates,
+  setCordinatesAddressLoader,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

@@ -1,157 +1,207 @@
+import React, {useState} from 'react';
 import {
   View,
+  Button,
   StyleSheet,
-  Animated,
-  Image,
-  SafeAreaView,
+  ImageBackground,
+  TouchableWithoutFeedback,
   Keyboard,
-  Alert,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
-import React, {FC, useEffect, useRef, useState} from 'react';
-import {
-  GestureHandlerRootView,
-  PanGestureHandler,
-  State,
-} from 'react-native-gesture-handler';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
+import CustomButton from '../../components/CustomButton';
+import ProductSlider from '../../components/ProductSlider';
 import LinearGradient from 'react-native-linear-gradient';
 import {lightColors} from '../../utils/constent';
-import ProductSlider from '../../components/login/ProductSlider';
-import CustomSafeAreaView from '../../components/CustomSafeAreaView';
 import CustomText from '../../components/CustomText';
-import useKeyboardOffsetHeight from '../../components/useKeyboardOffsetHeight';
+import {TextInput} from 'react-native-gesture-handler';
+import appColors from '../../utils/appColors';
+import {screenWidth} from '../../utils/scaling';
+import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
 
-const bottomColors = [...lightColors].reverse();
+export default function UserLogin({onSkip}) {
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+  const bottomColors = [...lightColors].reverse();
+  const bottomValue = useSharedValue(0);
 
-const UserLogin = () => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [gestureSequence, setGestureSequence] = useState([]);
-  const keyboardOffsetHeight = useKeyboardOffsetHeight();
+  // Animated styles
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      bottom: bottomValue.value,
+    };
+  });
 
-  const animatedValue = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    if (keyboardOffsetHeight == 0) {
-      Animated.timing(animatedValue, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.timing(animatedValue, {
-        toValue: -keyboardOffsetHeight * 0.84,
-        duration: 1000,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [keyboardOffsetHeight]);
-
-  const handleGesture = ({nativeEvent}) => {
-    if (nativeEvent.state === State.END) {
-      const {translationX, translationY} = nativeEvent;
-      let direction = '';
-      if (Math.abs(translationX) > Math.abs(translationY)) {
-        direction = translationX > 0 ? 'right' : 'left';
-      } else {
-        direction = translationY > 0 ? 'down' : 'up';
-      }
-
-      const newSequence = [...gestureSequence, direction].slice(-5);
-      setGestureSequence(newSequence);
-
-      if (newSequence.join(' ') === 'up up down left right') {
-        setGestureSequence([]);
-        resetAndNavigate('DeliveryLogin');
-      }
-    }
+  const toggleVisibility = () => {
+    setIsVisible(prev => !prev);
+    bottomValue.value = withTiming(isVisible ? 0 : 100, {duration: 300}); // Change -150 to desired height
   };
-
+  const handleChangeText = text => {
+    // Replace non-numeric characters with an empty string
+    const numericValue = text.replace(/[^0-9]/g, '');
+    setMobileNumber(numericValue);
+  };
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <View style={styles.container}>
-        <CustomSafeAreaView>
-          <ProductSlider />
-          <PanGestureHandler onHandlerStateChange={handleGesture}>
-            <Animated.ScrollView
-              bounces={false}
-              keyboardDismissMode="on-drag"
-              keyboardShouldPersistTaps="handled"
-              contentContainerStyle={styles.subContainer}
-              style={{transform: [{translateY: animatedValue}]}}>
-              <LinearGradient colors={bottomColors} style={styles.gradient} />
-              <View style={styles.content}>
-                <CustomText>Logo here</CustomText>
-                {/* <Image source={require('@assets/images/logo.png')} style={styles.logo} /> */}
-                <CustomText font="bold">India's last minute app</CustomText>
-                <CustomText font="semibold" style={styles.text}>
-                  Log in or sign up
-                </CustomText>
-
-                <CustomText>Input ANd button here</CustomText>
-              </View>
-            </Animated.ScrollView>
-          </PanGestureHandler>
-        </CustomSafeAreaView>
-
-        <View style={styles.footer}>
-          <SafeAreaView>
-            <CustomText fontSize={RFValue(6)}>
-              By Continuing, you agree to our Terms of Service & Privacy Policy
+    <View style={{height: '100%'}}>
+      <ProductSlider />
+      <Animated.View style={[[styles.loginSection, animatedStyle]]}>
+        <LinearGradient colors={bottomColors} style={styles.gradient} />
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              height: '100%',
+              paddingTop: '5%',
+              alignItems: 'center',
+            }}>
+            <CustomText font="bold" style={styles.heading}>
+              India's last minute app
             </CustomText>
-          </SafeAreaView>
+            <CustomText font="medium" style={styles.subtext}>
+              Log in or sign up
+            </CustomText>
+            <View style={styles.inputContainer}>
+              <CustomText font="bold">+91</CustomText>
+              <TextInput
+                style={styles.input}
+                onFocus={toggleVisibility}
+                onBlur={toggleVisibility}
+                cursorColor={appColors.blackText}
+                onChangeText={handleChangeText}
+                value={mobileNumber}
+                maxLength={10}
+                placeholder="Enter mobile number"
+                placeholderTextColor={appColors.borderGray}
+                keyboardType="number-pad"
+              />
+            </View>
+            <CustomButton
+              disabled={true}
+              title="Continue"
+              style={{paddingBottom: 16}}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                backgroundColor: appColors.cardBg,
+                width: '100%',
+                marginTop: 10,
+                borderTopWidth: 0.5,
+                borderTopColor: appColors.borderGray,
+                paddingVertical: '3.6%',
+                justifyContent: 'center',
+              }}>
+              <CustomText style={{fontSize: 10, opacity: 0.7}}>
+                By continuing, you agree to our :{' '}
+              </CustomText>
+              <CustomText
+                style={{
+                  fontSize: 10,
+                  opacity: 0.7,
+                  textDecorationLine: 'underline', // Applies the underline
+                  textDecorationStyle: 'dotted',
+                }}>
+                Term & Services{' '}
+              </CustomText>
+              <CustomText style={{fontSize: 10, opacity: 0.7}}> & </CustomText>
+              <CustomText
+                style={{
+                  fontSize: 10,
+                  opacity: 0.7,
+                  textDecorationLine: 'underline', // Applies the underline
+                  textDecorationStyle: 'dotted',
+                }}>
+                {' '}
+                Privacy policy{' '}
+              </CustomText>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+        <View style={styles.logo}>
+          <Image
+            source={require('../../assets/images/logo.png')}
+            style={{height: 28, width: 65}}
+          />
         </View>
-      </View>
-    </GestureHandlerRootView>
+      </Animated.View>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        onPress={onSkip}
+        style={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+          backgroundColor: 'rgba(54, 67, 92, 0.4)',
+          borderRadius: 20,
+          paddingBottom: 5,
+          paddingHorizontal: 10,
+        }}>
+        <CustomText style={{color: appColors.background}}>
+          Skip login
+        </CustomText>
+      </TouchableOpacity>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  text: {
-    marginTop: 2,
-    marginBottom: 25,
-    opacity: 0.8,
-  },
-  subContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  phoneText: {
-    marginLeft: 10,
-  },
-  content: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-    backgroundColor: 'white',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    position: 'relative',
+    backgroundColor: 'red',
+  },
+  loginSection: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: '49.5%',
   },
   logo: {
-    height: 50,
-    width: 50,
-    borderRadius: 20,
-    marginVertical: 10,
-  },
-  footer: {
-    borderTopWidth: 0.8,
-    borderColor: Colors.border,
-    paddingBottom: 10,
-    zIndex: 22,
+    backgroundColor: appColors.primary,
     position: 'absolute',
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#f8f9fc',
-    width: '100%',
+    left: screenWidth / 2.5,
+    paddingHorizontal: 8,
+    paddingVertical: 16,
+    borderRadius: 15,
+    top: 25,
   },
   gradient: {
     paddingTop: 60,
     width: '100%',
   },
+  heading: {
+    fontSize: 30,
+    opacity: 0.9,
+  },
+  subtext: {
+    fontSize: 17,
+    opacity: 0.5,
+  },
+
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingStart: '3%',
+    borderWidth: 0.8,
+    borderColor: appColors.borderGray,
+    width: '90%',
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginTop: '6%',
+    marginBottom: '3%',
+    elevation: 1,
+    backgroundColor: appColors?.background,
+  },
+  input: {
+    paddingVertical: 10,
+    width: '100%',
+    //backgroundColor: 'red',
+    paddingStart: 10,
+  },
 });
-export default UserLogin;

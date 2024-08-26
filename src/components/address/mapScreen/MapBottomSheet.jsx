@@ -10,6 +10,7 @@ const MapBottomSheet = ({
   bottomSheetModalRef,
   setModalVisible,
   setSettingModelOpen,
+  mapRef,
 }) => {
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const snapPoints = useMemo(() => ['85%', '85%'], []);
@@ -20,7 +21,7 @@ const MapBottomSheet = ({
   }, []);
 
   const handleClose = () => {
-    // console.log('close');
+    console.log('close');
     bottomSheetModalRef.current?.close();
   };
   return (
@@ -28,7 +29,6 @@ const MapBottomSheet = ({
       ref={bottomSheetModalRef}
       index={1}
       snapPoints={snapPoints}
-      handleComponent={null}
       backdropComponent={props => (
         <CustomBackdrop
           {...props}
@@ -57,6 +57,17 @@ const MapBottomSheet = ({
                 setSettingModelOpen={setSettingModelOpen}
                 setModalVisible={setModalVisible}
                 handleCloseSheet={handleClose}
+                handleSelectAddress={cords => {
+                  mapRef?.current?.animateToRegion(
+                    {
+                      latitude: cords?.latitude,
+                      longitude: cords?.longitude,
+                      latitudeDelta: 15,
+                      longitudeDelta: 15,
+                    },
+                    2000,
+                  );
+                }}
               />
             </View>
           </View>

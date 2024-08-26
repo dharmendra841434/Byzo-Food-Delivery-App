@@ -8,6 +8,7 @@ const appColors = {
   cardBg: '#f2f9fc',
   warning: '#d4aa04',
   backDropBg: 'rgba(0,0,0,0.7)',
+  disable: '#9197A7',
 };
 
 export default appColors;

@@ -2,13 +2,13 @@ import React from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
 import appColors from '../../utils/appColors';
 
-const CustomMarker = () => {
+const MarkerIcon = () => {
   return (
     <View style={styles.marker}>
       <View
         style={{
-          height: 30,
-          width: 30,
+          height: 25,
+          width: 25,
           backgroundColor: appColors?.blackText,
           borderRadius: 100,
           padding: 8,
@@ -23,7 +23,7 @@ const CustomMarker = () => {
         />
       </View>
       <View
-        style={{height: 20, width: 4, backgroundColor: appColors.blackText}}
+        style={{height: 14, width: 4, backgroundColor: appColors.blackText}}
       />
     </View>
   );
@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
   marker: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -60,
   },
   image: {
     width: 40,
@@ -45,4 +44,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomMarker;
+export default MarkerIcon;

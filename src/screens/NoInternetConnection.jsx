@@ -10,16 +10,13 @@ import {
 import React from 'react';
 import appColors from '../utils/appColors';
 import CustomText from '../components/CustomText';
-import {useNavigation} from '@react-navigation/native';
 import NetInfo from '@react-native-community/netinfo';
 
 const NoInternetConnection = () => {
-  const navigation = useNavigation();
-
   const tryAgain = () => {
     NetInfo.fetch().then(state => {
       if (state.isConnected) {
-        navigation.navigate('splash');
+        console.log('connested');
       } else {
         ToastAndroid.showWithGravityAndOffset(
           'No Connection check your network',

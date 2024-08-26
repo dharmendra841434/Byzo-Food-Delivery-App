@@ -34,6 +34,8 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import AddressAutoComplete from '../../components/address/AddressAutoComplete';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
+import UserLogin from './UserLogin';
+import NotAllowLocation from '../../components/address/NotAllowLocation';
 
 const LoginScreen = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
@@ -66,10 +68,12 @@ const LoginScreen = () => {
       } else {
         console.log('Location permission denied');
         dispatch(setLocationPermission('denied'));
-        ToastAndroid.showWithGravity(
+        ToastAndroid.showWithGravityAndOffset(
           'Please provide location permission for hassle free delivery',
-          ToastAndroid.SHORT,
-          ToastAndroid.CENTER,
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM,
+          25,
+          50,
         );
       }
     } catch (err) {
@@ -81,7 +85,7 @@ const LoginScreen = () => {
     getLocalStorageData('skip-login').then(val => {
       console.log(val);
       if (val !== null) {
-        navigation.navigate('home');
+        navigation.replace('home');
       }
     });
     requestLocationPermission();
@@ -157,41 +161,40 @@ const LoginScreen = () => {
           ) : (
             <View>
               {isWithinKanyakumari ? (
-                <View className="flex items-center justify-center h-screen ">
-                  <CustomText>This is Login Screen you can Skip</CustomText>
-                  {/* {fullAddress && <Text>Your Address is : {fullAddress}</Text>} */}
-                  <TouchableOpacity
-                    onPress={() => {
+                <>
+                  <UserLogin
+                    onSkip={() => {
                       storeLocalStorageData('skip-login', 'skipped');
-                      navigation.navigate('home');
+                      navigation.replace('home');
                     }}
-                    className="absolute top-8 right-7">
-                    <CustomText>Skip Login</CustomText>
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <View className="flex items-center pt-[50%] ">
-                  <Image
-                    source={require('../../assets/images/location_not_found.png')}
-                    className="w-40 h-40 "
                   />
-                  <CustomText
-                    font="medium"
-                    className="text-xl text-blackText w-[70%] text-center mt-5 ">
-                    Sorry we don't deliver at your location
-                  </CustomText>
-                  <CustomText className="my-2 text-gray-500 ">
-                    we will be there soon - hang on tight
-                  </CustomText>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={handlePresentModalPress}
-                    className="px-3 pt-1 pb-2 mt-4 rounded-lg bg-secondry">
-                    <CustomText className="text-[13px] text-white ">
-                      Manually Select Your Location{' '}
-                    </CustomText>
-                  </TouchableOpacity>
-                </View>
+                </>
+              ) : (
+                <NotAllowLocation
+                  handlePresentModalPress={handlePresentModalPress}
+                />
+                // <View className="flex items-center pt-[50%] ">
+                //   <Image
+                //     source={require('../../assets/images/location_not_found.png')}
+                //     className="w-40 h-40 "
+                //   />
+                //   <CustomText
+                //     font="medium"
+                //     className="text-xl text-blackText w-[70%] text-center mt-5 ">
+                //     Sorry we don't deliver at your location
+                //   </CustomText>
+                //   <CustomText className="my-2 text-gray-500 ">
+                //     we will be there soon - hang on tight
+                //   </CustomText>
+                //   <TouchableOpacity
+                //     activeOpacity={0.8}
+                //     onPress={handlePresentModalPress}
+                //     className="px-3 pt-1 pb-2 mt-4 rounded-lg bg-secondry">
+                //     <CustomText className="text-[13px] text-white ">
+                //       Manually Select Your Location{' '}
+                //     </CustomText>
+                //   </TouchableOpacity>
+                // </View>
               )}
             </View>
           )}
@@ -229,6 +232,7 @@ const LoginScreen = () => {
                       setSettingModelOpen={setSettingModelOpen}
                       setModalVisible={setModalVisible}
                       handleCloseSheet={() => {}}
+                      handleSelectAddress={() => {}}
                     />
                   </View>
                 </View>

@@ -21,7 +21,7 @@ const StackNavigation = () => {
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="home" component={HomeScreen} />
         <Stack.Screen name="mapview" component={MapScreen} />
-        <Stack.Screen name="nointernet" component={NoInternetConnection} />
+        {/* <Stack.Screen name="nointernet" component={NoInternetConnection} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

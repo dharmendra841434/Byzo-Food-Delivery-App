@@ -6,6 +6,7 @@ import HomeScreen from '../screens/home/HomeScreen';
 import MapScreen from '../screens/address/MapScreen';
 import NoInternetConnection from '../screens/NoInternetConnection';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
+import CustomMap from '../screens/address/CustomMap';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +22,7 @@ const StackNavigation = () => {
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="home" component={HomeScreen} />
         <Stack.Screen name="mapview" component={MapScreen} />
-        {/* <Stack.Screen name="nointernet" component={NoInternetConnection} /> */}
+        <Stack.Screen name="test" component={CustomMap} />
       </Stack.Navigator>
     </NavigationContainer>
   );

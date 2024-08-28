@@ -121,23 +121,13 @@ const AddressAutoComplete = ({
 
   const handleCurrentLocation = async () => {
     if (locationPermission === 'granted') {
-      dispatch(fatchUserAddress('from current location press'));
+      dispatch(fatchUserAddress());
       navigation.navigate('mapview');
       handleCloseSheet();
     } else {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        dispatch(setLocationPermission('granted'));
-        dispatch(fatchUserAddress());
-        navigation.navigate('mapview');
-        handleCloseSheet();
-      } else {
-        console.log('faied');
-        setModalVisible(true);
-        setSettingModelOpen(true);
-      }
+      setModalVisible(true);
+      setSettingModelOpen(true);
+      handleCloseSheet();
     }
   };
 

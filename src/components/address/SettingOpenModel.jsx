@@ -9,7 +9,11 @@ import {
 import React from 'react';
 import CustomText from '../CustomText';
 
-const SettingOpenModel = ({setSettingModelOpen, settingModelOpen}) => {
+const SettingOpenModel = ({
+  setSettingModelOpen,
+  settingModelOpen,
+  setIsVisible,
+}) => {
   return (
     <Modal
       animationType="fade"
@@ -35,7 +39,10 @@ const SettingOpenModel = ({setSettingModelOpen, settingModelOpen}) => {
             <View className="w-1/2 border-r border-r-gray-300">
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => setSettingModelOpen(false)}
+                onPress={() => {
+                  setSettingModelOpen(false);
+                  setIsVisible(false);
+                }}
                 className="flex flex-col items-center w-full py-3 ">
                 <CustomText className=" text-blackText" font="medium">
                   Cancel

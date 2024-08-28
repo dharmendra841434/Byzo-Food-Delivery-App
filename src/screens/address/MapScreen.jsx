@@ -1,38 +1,21 @@
-import {
-  View,
-  Text,
-  StatusBar,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  ActivityIndicator,
-  PermissionsAndroid,
-} from 'react-native';
+import {StatusBar, StyleSheet} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import appColors from '../../utils/appColors';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import CustomMarker from '../../components/address/CustomMarker';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
-import CustomText from '../../components/CustomText';
-import Icon2 from 'react-native-vector-icons/Ionicons';
-import Icon3 from 'react-native-vector-icons/MaterialIcons';
-import appFonts from '../../utils/appFonts';
-import CurrentLocationMarker from '../../components/address/CurrentLocationMarker';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import MapBottomSheet from '../../components/address/mapScreen/MapBottomSheet';
-import AddressFatchingLoader from '../../components/skeltonLoaders/AddressFatchingLoader';
 import {useNavigation} from '@react-navigation/native';
-import {fatchAddressByCords, setAddressCordinates} from '../../store/mapSlice';
+import {
+  fatchAddressByCords,
+  fatchUserAddress,
+  setAddressCordinates,
+  setLocationPermission,
+} from '../../store/mapSlice';
 import Geolocation from 'react-native-geolocation-service';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
-import {
-  getLocalStorageData,
-  splitAddressAtFirstComma,
-} from '../../utils/helperfun';
-import MarkerIcon from '../../components/address/MarkerIcon';
-import EnableWarning from '../../components/address/mapScreen/EnableWarning';
+import {storeLocalStorageData} from '../../utils/helperfun';
+import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import CustomMap from './CustomMap';
 
 const MapScreen = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
@@ -41,12 +24,7 @@ const MapScreen = () => {
     state => state?.map?.locationPermission,
   );
   const addressCordinates = useSelector(state => state?.map?.addressCordinates);
-  const currentCordinates = useSelector(state => state?.map?.currentCordinates);
   const addressLoader = useSelector(state => state?.map?.addressLoader);
-  const isWithinKanyakumari = useSelector(
-    state => state?.map?.isWithinKanyakumari,
-  );
-
   const [openSetting, setOpenSetting] = useState(false);
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -60,22 +38,18 @@ const MapScreen = () => {
     longitudeDelta: 0.005,
   });
 
+  const [isCheckEnabled, setIsCheckEnabled] = useState(
+    locationPermission === 'denied' ? true : false,
+  );
+
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
 
-  //console.log(fullAddress, 'this is full adddress');
-
-  const handleConferLocation = async () => {
+  const handleConfirmLocation = async () => {
+    storeLocalStorageData('user-address', fullAddress);
     navigation.navigate('home');
-    // getLocalStorageData('skip-login').then(val => {
-    //   //console.log(val);
-    //   if (val !== null) {
-    //     navigation.navigate('home');
-    //   } else {
-    //     navigation.navigate('login');
-    //   }
-    // });
+    setIsCheckEnabled(false);
   };
 
   const handleGoToCureent = () => {
@@ -133,246 +107,70 @@ const MapScreen = () => {
     });
   }, [addressCordinates]);
 
-  //console.log(cordinatesAddressLoader, 'loader');
-  // console.log(fullAddress, 'addd');
+  const checkPermission = async () => {
+    check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION) // or PERMISSIONS.IOS.LOCATION_WHEN_IN_USE for iOS
+      .then(result => {
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            console.log('This feature is not available on this device.');
+            break;
+          case RESULTS.DENIED:
+            console.log('The permission is denied');
+            break;
+          case RESULTS.LIMITED:
+            console.log('The permission is limited');
+            break;
+          case RESULTS.GRANTED:
+            dispatch(fatchUserAddress());
+            setIsCheckEnabled(false);
+            dispatch(setLocationPermission('granted'));
+            bottomSheetModalRef.current.close();
+            console.log('The permission is granted.');
+            break;
+          case RESULTS.BLOCKED:
+            console.log(
+              'The permission is denied and not requestable anymore.',
+            );
+            break;
+        }
+      })
+      .catch(error => {
+        console.log('Error checking permission:', error);
+      });
+  };
+
+  useEffect(() => {
+    let timer;
+    if (isCheckEnabled) {
+      timer = setInterval(() => {
+        checkPermission();
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isCheckEnabled]);
 
   return (
     <BottomSheetModalProvider>
-      <View style={styles.screen}>
-        <StatusBar
-          backgroundColor={
-            modalVisible ? appColors.backDropBg : appColors?.background
-          }
-          barStyle="dark-content"
-        />
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={{flex: 2}}
-          zoomEnabled={true}
-          ref={mapRef}
-          minZoomLevel={5}
-          onRegionChangeComplete={onRegionChangeComplete}
-          initialRegion={region}>
-          <Marker
-            coordinate={{
-              latitude: currentCordinates?.latitude
-                ? currentCordinates?.latitude
-                : 0,
-              longitude: currentCordinates?.longitude
-                ? currentCordinates?.longitude
-                : 0,
-            }}>
-            <CurrentLocationMarker />
-          </Marker>
-        </MapView>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="arrow-left" size={18} color={appColors.blackText} />
-          </TouchableOpacity>
-          <CustomText font="semibold" style={styles.heading}>
-            Select location
-          </CustomText>
-        </View>
-        {locationPermission === 'denied' ? (
-          <View style={styles.notEnableTop}>
-            <View>
-              <TouchableOpacity
-                onPress={handlePresentModalPress}
-                activeOpacity={0.9}
-                style={[
-                  styles.container,
-                  {borderWidth: 1, borderColor: appColors.borderGray},
-                ]}>
-                <Icon2 name="search" size={23} color={appColors.secondry} />
-
-                <CustomText
-                  font="medium"
-                  style={{
-                    color: appColors.blackText,
-                    marginStart: 5,
-                  }}>
-                  Search for area, street name...
-                </CustomText>
-              </TouchableOpacity>
-            </View>
-            <EnableWarning />
-          </View>
-        ) : (
-          <View style={styles.searchBox}>
-            <TouchableOpacity
-              onPress={handlePresentModalPress}
-              activeOpacity={0.9}
-              style={styles.container}>
-              <Icon2 name="search" size={23} color={appColors.secondry} />
-
-              <CustomText
-                font="medium"
-                style={{
-                  color: appColors.blackText,
-                  marginStart: 5,
-                }}>
-                Search for area, street name...
-              </CustomText>
-            </TouchableOpacity>
-          </View>
-        )}
-        <View
-          style={[
-            styles.bottomSection,
-            {paddingBottom: isWithinKanyakumari ? 12 : 18},
-          ]}>
-          {addressLoader ? (
-            <View style={{height: '30%'}}>
-              <AddressFatchingLoader />
-            </View>
-          ) : (
-            <>
-              {isWithinKanyakumari ? (
-                <View>
-                  <View style={{paddingHorizontal: 6, paddingVertical: 3}}>
-                    <CustomText
-                      font="bold"
-                      style={{color: appColors.blackText, fontSize: 17}}>
-                      Delivering your order to{' '}
-                    </CustomText>
-                    <View style={styles.addresscard}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            width: '75%',
-                          }}>
-                          <MarkerIcon />
-                          <View
-                            style={{
-                              marginStart: '4%',
-                              width: '80%',
-                            }}>
-                            <CustomText
-                              font="semibold"
-                              style={styles.cardTitle}>
-                              {splitAddressAtFirstComma(fullAddress)}
-                            </CustomText>
-                            {/* <CustomText style={styles.cardDesc}>
-                              {searchedAddress?.addressDescription}
-                            </CustomText> */}
-                          </View>
-                        </View>
-                        <View style={{justifyContent: 'center'}}>
-                          <TouchableOpacity
-                            activeOpacity={0.8}
-                            onPress={handlePresentModalPress}
-                            style={{
-                              borderWidth: 1,
-                              borderColor: appColors.borderGray,
-                              paddingHorizontal: 15,
-                              borderRadius: 5,
-                              paddingBottom: 3,
-                            }}>
-                            <CustomText
-                              font="semibold"
-                              style={{color: appColors.secondry}}>
-                              Change
-                            </CustomText>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                      {/* <View style={{marginTop: 6}}>
-                        <CustomText
-                          style={{fontSize: 12, color: appColors.warning}}>
-                          Pin location 65.8km away from your current location{' '}
-                        </CustomText>
-                      </View> */}
-                    </View>
-                    <View style={{alignItems: 'center'}}>
-                      <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={handleConferLocation}
-                        style={[
-                          styles.button,
-                          {width: '95%', paddingVertical: 4},
-                        ]}>
-                        <View
-                          style={{flexDirection: 'row', alignItems: 'center'}}>
-                          <CustomText
-                            font="semibold"
-                            style={{color: appColors.background, fontSize: 16}}>
-                            Confirm location
-                          </CustomText>
-                          <Icon3
-                            name="arrow-right"
-                            color={appColors.background}
-                            size={35}
-                            style={{marginStart: -8, marginTop: 6}}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              ) : (
-                <>
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      paddingTop: '2%',
-                    }}>
-                    <Image
-                      style={{height: 110, width: 110}}
-                      source={require('../../assets/images/location_not_found.png')}
-                    />
-                  </View>
-                  <View style={{alignItems: 'center'}}>
-                    <CustomText
-                      font="bold"
-                      style={{fontSize: 19, color: appColors.blackText}}>
-                      Opps
-                    </CustomText>
-                    <CustomText font="medium" style={styles.errorText}>
-                      Blinkit is not available at this location at the moment.
-                      Please select a different location.
-                    </CustomText>
-                    <TouchableOpacity
-                      onPress={handleGoToCureent}
-                      activeOpacity={0.7}
-                      style={styles.button}>
-                      <CustomText
-                        font="semibold"
-                        style={{color: appColors.background}}>
-                        Go to current location
-                      </CustomText>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={handlePresentModalPress}
-                      activeOpacity={0.7}
-                      style={{marginTop: '2%'}}>
-                      <CustomText
-                        font="semibold"
-                        style={{color: appColors.secondry}}>
-                        Select location manually
-                      </CustomText>
-                    </TouchableOpacity>
-                  </View>
-                </>
-              )}
-            </>
-          )}
-        </View>
-        <View
-          style={{
-            height: 20,
-            width: 20,
-            position: 'absolute',
-            left: '47%',
-            top: '24%',
-          }}>
-          <CustomMarker />
-        </View>
-      </View>
+      <StatusBar
+        backgroundColor={
+          modalVisible ? appColors.backDropBg : appColors?.background
+        }
+        barStyle="dark-content"
+      />
+      <CustomMap
+        mapRef={mapRef}
+        isEnable={locationPermission === 'granted' ? true : false}
+        loader={addressLoader}
+        onRegionChangeComplete={onRegionChangeComplete}
+        handleChangeAddress={handlePresentModalPress}
+        handleConfirmLocation={handleConfirmLocation}
+        handleEnableLocation={() => {
+          setOpenSetting(true);
+          setModalVisible(true);
+        }}
+        handleGoToCureentLocation={handleGoToCureent}
+        handleSearchPress={handlePresentModalPress}
+      />
       <MapBottomSheet
         bottomSheetModalRef={bottomSheetModalRef}
         setModalVisible={setModalVisible}
@@ -382,12 +180,23 @@ const MapScreen = () => {
       <SettingOpenModel
         setSettingModelOpen={setOpenSetting}
         settingModelOpen={openSetting}
+        setIsVisible={setModalVisible}
       />
     </BottomSheetModalProvider>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    height: 400,
+    width: 400,
+    // justifyContent: 'flex-end',
+    // alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
   screen: {
     flex: 1,
     backgroundColor: appColors.background,
@@ -466,9 +275,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 30,
-    paddingHorizontal: '2%',
     backgroundColor: appColors?.background,
-    paddingVertical: '2%',
   },
 });
 

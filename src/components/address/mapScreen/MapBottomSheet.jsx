@@ -29,6 +29,7 @@ const MapBottomSheet = ({
       ref={bottomSheetModalRef}
       index={1}
       snapPoints={snapPoints}
+      handleStyle={{backgroundColor: appColors.bottomSheetBg, borderRadius: 14}}
       backdropComponent={props => (
         <CustomBackdrop
           {...props}
@@ -48,7 +49,7 @@ const MapBottomSheet = ({
           }}>
           <View>
             <View className="p-3 ">
-              <CustomText font="bold" className="text-lg text-blackText">
+              <CustomText font="bold" className="-mt-3 text-lg text-blackText">
                 Select delivery address
               </CustomText>
             </View>

@@ -4,12 +4,14 @@ import LottieView from 'lottie-react-native';
 
 const CurrentLocationMarker = () => {
   return (
-    <LottieView
-      source={require('../../assets/images/ripple.json')}
-      autoPlay
-      style={{height: 100, width: 100, marginTop: 150}}
-      speed={0.5}
-    />
+    <View className=" h-fit">
+      <LottieView
+        source={require('../../assets/images/ripple.json')}
+        autoPlay
+        style={{height: 50, width: 50, marginTop: 160}}
+        speed={0.5}
+      />
+    </View>
   );
 };
 

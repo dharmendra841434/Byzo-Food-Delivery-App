@@ -26,16 +26,16 @@ const AddressFatchingLoader = () => {
         }}>
         <ShimmerPlaceHolder
           shimmerColors={['#f0f0f0', '#e3e3e3', '#f0f0f0']}
-          className="w-20 h-20 bg-gray-200 rounded-lg mr "
+          className="w-16 h-16 bg-gray-200 rounded-lg "
         />
         <View style={{width: '80%', marginStart: '3%'}}>
           <ShimmerPlaceHolder
             shimmerColors={['#f0f0f0', '#e3e3e3', '#f0f0f0']}
-            className="w-[50%] h-6 bg-gray-200 rounded-lg "
+            className="w-[50%] h-4 bg-gray-200 rounded-lg "
           />
           <ShimmerPlaceHolder
             shimmerColors={['#f0f0f0', '#e3e3e3', '#f0f0f0']}
-            className="w-[80%] h-8 mt-2 bg-gray-200 rounded-lg "
+            className="w-[80%] h-6 mt-2 bg-gray-200 rounded-lg "
           />
         </View>
       </View>
@@ -46,7 +46,7 @@ const AddressFatchingLoader = () => {
           backgroundColor: appColors.borderGray,
           opacity: 0.6,
           marginHorizontal: '2%',
-          marginVertical: 10,
+          marginTop: 6,
         }}
       />
       <View style={{alignItems: 'center'}}>

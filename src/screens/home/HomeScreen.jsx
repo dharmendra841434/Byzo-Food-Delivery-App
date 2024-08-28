@@ -11,7 +11,10 @@ import {
   setLocationPermission,
 } from '../../store/mapSlice';
 import CustomText from '../../components/CustomText';
-import {splitAddressAtFirstComma} from '../../utils/helperfun';
+import {
+  getLocalStorageData,
+  splitAddressAtFirstComma,
+} from '../../utils/helperfun';
 import CustomButton from '../../components/CustomButton';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
@@ -25,7 +28,8 @@ const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [settingModelOpen, setSettingModelOpen] = useState(false);
-  const [isCheckEnabled, setIsCheckEnabled] = useState(true);
+  const [userFullAddress, setUserFullAddress] = useState('');
+
   const isWithinKanyakumari = useSelector(
     state => state?.map?.isWithinKanyakumari,
   );
@@ -41,6 +45,9 @@ const HomeScreen = () => {
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+  const [isCheckEnabled, setIsCheckEnabled] = useState(
+    locationPermission === 'denied' ? true : false,
+  );
 
   const enableLocation = async () => {
     if (locationPermission === 'denied') {
@@ -49,12 +56,12 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    if (!fullAddress) {
+    if (userFullAddress === '') {
       handlePresentModalPress();
     } else {
       bottomSheetModalRef.current?.close();
     }
-  }, [fullAddress]);
+  }, [userFullAddress]);
 
   const checkPermission = async () => {
     dispatch(setAddressLoader(true));
@@ -77,6 +84,8 @@ const HomeScreen = () => {
           case RESULTS.GRANTED:
             dispatch(fatchUserAddress());
             setIsCheckEnabled(false);
+            dispatch(setLocationPermission('granted'));
+            bottomSheetModalRef.current.close();
             console.log('The permission is granted.');
             break;
           case RESULTS.BLOCKED:
@@ -100,6 +109,16 @@ const HomeScreen = () => {
     }
     return () => clearInterval(timer);
   }, [isCheckEnabled]);
+
+  useEffect(() => {
+    getLocalStorageData('user-address').then(result => {
+      if (result === null) {
+        setUserFullAddress(fullAddress);
+      } else {
+        setUserFullAddress(result);
+      }
+    });
+  }, [fullAddress]);
 
   return (
     <BottomSheetModalProvider>
@@ -142,7 +161,6 @@ const HomeScreen = () => {
                   title="Change delivery address"
                   onPress={() => bottomSheetModalRef?.current?.present()}
                 />
-                {/* <Stopwatch /> */}
               </View>
             )}
           </>
@@ -157,6 +175,7 @@ const HomeScreen = () => {
         settingModelOpen={settingModelOpen}
         setSettingModelOpen={setSettingModelOpen}
         handleSelectAddress={() => {
+          bottomSheetModalRef.current.close();
           setIsCheckEnabled(false);
         }}
       />

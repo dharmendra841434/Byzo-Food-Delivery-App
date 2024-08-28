@@ -33,6 +33,9 @@ const AddressBottomSheetModal = ({
     state => state?.map?.locationPermission,
   );
   const fullAddress = useSelector(state => state?.map?.fullAddress);
+  const isWithinKanyakumari = useSelector(
+    state => state?.map?.isWithinKanyakumari,
+  );
 
   // variables
   const snapPoints = useMemo(() => ['85%', '85%'], []);
@@ -70,28 +73,38 @@ const AddressBottomSheetModal = ({
             }}>
             <View>
               {locationPermission === 'denied' ? (
-                <EnableWarning />
-              ) : (
-                <View className="flex flex-row items-center justify-between p-2 m-2 bg-white rounded-md ">
-                  <View className="flex flex-row ">
-                    <View>
-                      <Icon
-                        name="location-outline"
-                        size={40}
-                        color={appColors.blackText}
-                      />
-                    </View>
-                    <View className="w-[85%] ml-2 ">
-                      <CustomText
-                        font="bold"
-                        className="text-sm text-blackText">
-                        {splitAddressAtFirstComma(fullAddress)}
-                      </CustomText>
-                    </View>
-                  </View>
+                <View style={{marginHorizontal: '1%'}}>
+                  <EnableWarning
+                    className="rounded-md"
+                    handleEnableLocation={handleEnableLocation}
+                  />
                 </View>
+              ) : (
+                <>
+                  {isWithinKanyakumari && (
+                    <View className="flex flex-row items-center justify-between p-2 m-2 bg-white rounded-md ">
+                      <View className="flex flex-row ">
+                        <View>
+                          <Icon
+                            name="location-outline"
+                            size={40}
+                            color={appColors.blackText}
+                          />
+                        </View>
+                        <View className="w-[85%] ml-2 ">
+                          <CustomText
+                            font="bold"
+                            className="text-sm text-blackText">
+                            {splitAddressAtFirstComma(fullAddress)}
+                          </CustomText>
+                        </View>
+                      </View>
+                    </View>
+                  )}
+                </>
               )}
-              <View className="px-3 pb-2 ">
+              <View
+                className={` px-3 ${isWithinKanyakumari ? ' pb-2  ' : 'py-3'}`}>
                 <CustomText font="bold" className="text-lg text-blackText">
                   Select delivery address
                 </CustomText>
@@ -111,6 +124,7 @@ const AddressBottomSheetModal = ({
       <SettingOpenModel
         setSettingModelOpen={setSettingModelOpen}
         settingModelOpen={settingModelOpen}
+        setIsVisible={() => {}}
       />
     </>
   );

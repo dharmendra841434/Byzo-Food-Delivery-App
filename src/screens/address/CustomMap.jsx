@@ -57,9 +57,10 @@ import AddressFatchingLoader from '../../components/skeltonLoaders/AddressFatchi
 import CustomMarker from '../../components/address/CustomMarker';
 import CurrentLocationMarker from '../../components/address/CurrentLocationMarker';
 import {useSelector} from 'react-redux';
-import {splitAddressAtFirstComma} from '../../utils/helperfun';
+import {isEmptyObject, splitAddressAtFirstComma} from '../../utils/helperfun';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const CustomMap = ({
   isEnable = true,
@@ -72,10 +73,8 @@ const CustomMap = ({
   handleSearchPress,
   mapRef,
 }) => {
-  const DeviceHeight = Dimensions.get('window').height;
-  const DeviceWidth = Dimensions.get('window').width;
-  const height1 = useSharedValue(DeviceHeight * 0.8); // Initial height for View 1
-  const height2 = useSharedValue(DeviceHeight * 0.2); // Initial height for View 2
+  const height1 = useSharedValue(hp('80%')); // Initial height for View 1
+  const height2 = useSharedValue(hp('20%')); // Initial height for View 2
   const addressCordinates = useSelector(state => state?.map?.addressCordinates);
   const currentCordinates = useSelector(state => state?.map?.currentCordinates);
   const [region, setRegion] = useState({
@@ -111,22 +110,22 @@ const CustomMap = ({
   const handleRegionChangeComplete = newRegion => {
     onRegionChangeComplete(newRegion);
     if (isWithinKanyakumari) {
-      height1.value = DeviceHeight * 0.77;
-      height2.value = DeviceHeight * 0.23;
+      height1.value = hp('77%');
+      height2.value = hp('23%');
     } else {
-      height1.value = DeviceHeight * 0.64;
-      height2.value = DeviceHeight * 0.36;
+      height1.value = hp('64%');
+      height2.value = hp('36%');
     }
   };
 
   useEffect(() => {
     showNavigationBar();
     if (isWithinKanyakumari) {
-      height1.value = DeviceHeight * 0.77;
-      height2.value = DeviceHeight * 0.23;
+      height1.value = hp('75%');
+      height2.value = hp('25%');
     } else {
-      height1.value = DeviceHeight * 0.64;
-      height2.value = DeviceHeight * 0.36;
+      height1.value = hp('60%');
+      height2.value = hp('40%');
     }
   }, [isWithinKanyakumari]);
 
@@ -142,6 +141,8 @@ const CustomMap = ({
     );
   }, [addressCordinates, isWithinKanyakumari]);
 
+  console.log(currentCordinates, 'ashdjhsa');
+
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.map, animatedStyle1]}>
@@ -156,16 +157,22 @@ const CustomMap = ({
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
           }}>
-          {isEnable && (
-            <Marker
-              coordinate={{
-                latitude: currentCordinates ? currentCordinates?.latitude : 0,
-                longitude: currentCordinates ? currentCordinates?.longitude : 0,
-                latitudeDelta: 0.015,
-                longitudeDelta: 0.0121,
-              }}>
-              <CurrentLocationMarker />
-            </Marker>
+          {isEnable && !isEmptyObject(currentCordinates) && (
+            <>
+              <Marker
+                coordinate={{
+                  latitude: isEmptyObject(currentCordinates)
+                    ? 0
+                    : currentCordinates?.latitude,
+                  longitude: isEmptyObject(currentCordinates)
+                    ? 0
+                    : currentCordinates?.longitude,
+                  latitudeDelta: 0.015,
+                  longitudeDelta: 0.0121,
+                }}>
+                <CurrentLocationMarker />
+              </Marker>
+            </>
           )}
         </MapView>
         <View style={[styles.mapHeader]}>

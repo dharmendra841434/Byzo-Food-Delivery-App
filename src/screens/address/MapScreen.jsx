@@ -9,6 +9,7 @@ import {
   fatchAddressByCords,
   fatchUserAddress,
   setAddressCordinates,
+  setConfirmAddress,
   setLocationPermission,
 } from '../../store/mapSlice';
 import Geolocation from 'react-native-geolocation-service';
@@ -48,6 +49,7 @@ const MapScreen = () => {
 
   const handleConfirmLocation = async () => {
     storeLocalStorageData('user-address', fullAddress);
+    dispatch(setConfirmAddress(fullAddress));
     navigation.navigate('home');
     setIsCheckEnabled(false);
   };
@@ -112,25 +114,26 @@ const MapScreen = () => {
       .then(result => {
         switch (result) {
           case RESULTS.UNAVAILABLE:
-            console.log('This feature is not available on this device.');
+            // console.log('This feature is not available on this device.');
             break;
           case RESULTS.DENIED:
-            console.log('The permission is denied');
+            //console.log('The permission is denied on map');
             break;
           case RESULTS.LIMITED:
-            console.log('The permission is limited');
+            // console.log('The permission is limited');
             break;
           case RESULTS.GRANTED:
             dispatch(fatchUserAddress());
             setIsCheckEnabled(false);
             dispatch(setLocationPermission('granted'));
             bottomSheetModalRef.current.close();
-            console.log('The permission is granted.');
+            setModalVisible(false);
+            // console.log('The permission is granted.');
             break;
           case RESULTS.BLOCKED:
-            console.log(
-              'The permission is denied and not requestable anymore.',
-            );
+            // console.log(
+            //   'The permission is denied and not requestable anymore.',
+            // );
             break;
         }
       })
@@ -143,6 +146,7 @@ const MapScreen = () => {
     let timer;
     if (isCheckEnabled) {
       timer = setInterval(() => {
+        // console.log('map checked');
         checkPermission();
       }, 1000);
     }
@@ -176,6 +180,11 @@ const MapScreen = () => {
         setModalVisible={setModalVisible}
         setSettingModelOpen={setOpenSetting}
         mapRef={mapRef}
+        isEnable={locationPermission === 'granted' ? true : false}
+        handleEnableLocation={() => {
+          setOpenSetting(true);
+          setModalVisible(true);
+        }}
       />
       <SettingOpenModel
         setSettingModelOpen={setOpenSetting}
@@ -185,98 +194,5 @@ const MapScreen = () => {
     </BottomSheetModalProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    height: 400,
-    width: 400,
-    // justifyContent: 'flex-end',
-    // alignItems: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  screen: {
-    flex: 1,
-    backgroundColor: appColors.background,
-  },
-  container: {
-    elevation: 1,
-    backgroundColor: appColors.background,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '3%',
-    borderRadius: 8,
-    paddingBottom: 12,
-    paddingTop: 7,
-  },
-  header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: appColors.background,
-    paddingBottom: '3%',
-    paddingHorizontal: '3%',
-    elevation: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  heading: {
-    color: appColors.blackText,
-    marginStart: '28%',
-    fontSize: 16,
-    marginTop: -8,
-  },
-  searchBox: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 40,
-    paddingHorizontal: '2%',
-  },
-  bottomSection: {
-    backgroundColor: appColors.background,
-  },
-  errorText: {
-    textAlign: 'center',
-    width: '85%',
-    fontSize: 15,
-    color: appColors.blackText,
-  },
-  button: {
-    backgroundColor: appColors.secondry,
-    width: '90%',
-    marginTop: '3%',
-    paddingVertical: '3%',
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  addresscard: {
-    margin: 10,
-    backgroundColor: appColors.cardBg,
-    padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: appColors.bottomSheetBg,
-  },
-  cardTitle: {
-    color: appColors.blackText,
-    fontSize: 15,
-  },
-  cardDesc: {
-    color: appColors.blackText,
-    fontSize: 12.5,
-    opacity: 0.7,
-  },
-  notEnableTop: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 30,
-    backgroundColor: appColors?.background,
-  },
-});
 
 export default MapScreen;

@@ -31,6 +31,7 @@ const AddressAutoComplete = ({
   setModalVisible,
   handleCloseSheet,
   handleSelectAddress,
+  onPressCureentLocation,
 }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -198,7 +199,10 @@ const AddressAutoComplete = ({
       {suggestions?.length === 0 ? (
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={handleCurrentLocation}
+          onPress={() => {
+            onPressCureentLocation();
+            handleCurrentLocation();
+          }}
           className="flex flex-row items-center justify-between px-2 py-2 mt-3 bg-white rounded-lg ">
           <View className="flex flex-row ">
             <Icon2

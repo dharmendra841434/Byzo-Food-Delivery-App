@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import AddressBottomSheetModal from '../../components/address/AddressBottomSheetModal';
 import appColors from '../../utils/appColors';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   fatchUserAddress,
@@ -18,10 +18,8 @@ import {
 import CustomButton from '../../components/CustomButton';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
-import {fontScale} from 'nativewind';
 import AddressFatchingLoader from '../../components/skeltonLoaders/AddressFatchingLoader';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
-import Stopwatch from '../../components/StopWatch';
 
 const HomeScreen = () => {
   const bottomSheetModalRef = useRef(null);
@@ -36,13 +34,18 @@ const HomeScreen = () => {
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
-  const loader = useSelector(state => state?.map?.addressLoader);
+  const geolocationErrorMessage = useSelector(
+    state => state?.map?.geolocationErrorMessage,
+  );
+
+  const confirmAddress = useSelector(state => state?.map?.confirmAddress);
   const dispatch = useDispatch();
   const fullAddress = useSelector(state => state?.map?.fullAddress);
   const addressLoader = useSelector(state => state?.map?.addressLoader);
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const handlePresentModalPress = useCallback(() => {
+    dispatch(setAddressLoader(true));
     bottomSheetModalRef.current?.present();
   }, []);
   const [isCheckEnabled, setIsCheckEnabled] = useState(
@@ -175,7 +178,6 @@ const HomeScreen = () => {
         settingModelOpen={settingModelOpen}
         setSettingModelOpen={setSettingModelOpen}
         handleSelectAddress={() => {
-          bottomSheetModalRef.current.close();
           setIsCheckEnabled(false);
         }}
       />

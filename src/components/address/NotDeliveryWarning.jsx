@@ -13,7 +13,7 @@ const NotDeliveryWarning = ({handleGoToCureent, handleSelectManually}) => {
           paddingTop: '2%',
         }}>
         <Image
-          style={{height: 110, width: 110}}
+          style={{height: 80, width: 80}}
           source={require('../../assets/images/location_not_found.png')}
         />
       </View>

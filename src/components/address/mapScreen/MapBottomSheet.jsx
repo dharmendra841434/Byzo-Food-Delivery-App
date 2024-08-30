@@ -5,12 +5,19 @@ import CustomBackdrop from '../../CustomBackDrop';
 import CustomText from '../../CustomText';
 import AddressAutoComplete from '../AddressAutoComplete';
 import appColors from '../../../utils/appColors';
+import EnableWarning from './EnableWarning';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
+import {splitAddressAtFirstComma} from '../../../utils/helperfun';
 
 const MapBottomSheet = ({
   bottomSheetModalRef,
   setModalVisible,
   setSettingModelOpen,
   mapRef,
+  isEnable,
+  handleEnableLocation,
+  isValidAddress,
 }) => {
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const snapPoints = useMemo(() => ['85%', '85%'], []);
@@ -19,6 +26,11 @@ const MapBottomSheet = ({
     console.log('handleSheetChanges', index);
     setModalVisible(index === 1 ? true : false);
   }, []);
+
+  const isWithinKanyakumari = useSelector(
+    state => state?.map?.isWithinKanyakumari,
+  );
+  const fullAddress = useSelector(state => state?.map?.fullAddress);
 
   const handleClose = () => {
     console.log('close');
@@ -29,7 +41,11 @@ const MapBottomSheet = ({
       ref={bottomSheetModalRef}
       index={1}
       snapPoints={snapPoints}
-      handleStyle={{backgroundColor: appColors.bottomSheetBg, borderRadius: 14}}
+      handleStyle={{
+        backgroundColor: appColors.bottomSheetBg,
+        borderTopRightRadius: 14,
+        borderTopLeftRadius: 14,
+      }}
       backdropComponent={props => (
         <CustomBackdrop
           {...props}
@@ -45,9 +61,39 @@ const MapBottomSheet = ({
           style={{
             height: '100%',
             backgroundColor: appColors.bottomSheetBg,
-            borderRadius: 14,
           }}>
           <View>
+            {!isEnable ? (
+              <View style={{marginHorizontal: '1%'}}>
+                <EnableWarning
+                  className="rounded-md"
+                  handleEnableLocation={handleEnableLocation}
+                />
+              </View>
+            ) : (
+              <>
+                {isWithinKanyakumari && (
+                  <View className="flex flex-row items-center justify-between p-2 m-2 bg-white rounded-md ">
+                    <View className="flex flex-row ">
+                      <View>
+                        <Icon
+                          name="location-outline"
+                          size={40}
+                          color={appColors.blackText}
+                        />
+                      </View>
+                      <View className="w-[85%] ml-2 ">
+                        <CustomText
+                          font="bold"
+                          className="text-sm text-blackText">
+                          {splitAddressAtFirstComma(fullAddress)}
+                        </CustomText>
+                      </View>
+                    </View>
+                  </View>
+                )}
+              </>
+            )}
             <View className="p-3 ">
               <CustomText font="bold" className="-mt-3 text-lg text-blackText">
                 Select delivery address

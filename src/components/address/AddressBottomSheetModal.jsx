@@ -36,6 +36,7 @@ const AddressBottomSheetModal = ({
   const isWithinKanyakumari = useSelector(
     state => state?.map?.isWithinKanyakumari,
   );
+  const confirmAddress = useSelector(state => state?.map?.confirmAddress);
 
   // variables
   const snapPoints = useMemo(() => ['85%', '85%'], []);
@@ -95,7 +96,7 @@ const AddressBottomSheetModal = ({
                           <CustomText
                             font="bold"
                             className="text-sm text-blackText">
-                            {splitAddressAtFirstComma(fullAddress)}
+                            {splitAddressAtFirstComma(confirmAddress)}
                           </CustomText>
                         </View>
                       </View>
@@ -115,6 +116,9 @@ const AddressBottomSheetModal = ({
                   setModalVisible={setModalVisible}
                   handleCloseSheet={() => {}}
                   handleSelectAddress={handleSelectAddress}
+                  onPressCureentLocation={() =>
+                    bottomSheetModalRef?.current?.close()
+                  }
                 />
               </View>
             </View>

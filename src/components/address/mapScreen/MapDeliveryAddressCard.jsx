@@ -69,7 +69,7 @@ const MapDeliveryAddressCard = ({
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={handleConfirmLocation}
-          style={[styles.button, {width: '95%', paddingVertical: 4}]}>
+          style={[styles.button, {width: '95%', paddingVertical: 2}]}>
           <View
             style={{
               flexDirection: 'row',
@@ -117,8 +117,8 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: appColors.secondry,
     width: '90%',
-    marginTop: '3%',
-    paddingVertical: '3%',
+    marginTop: '1%',
+    paddingVertical: '2%',
     borderRadius: 10,
     alignItems: 'center',
   },

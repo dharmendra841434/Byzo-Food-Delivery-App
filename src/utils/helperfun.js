@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import checkLocationPermission from '../services/checkDeviceLocationPermission';
 const storeLocalStorageData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
@@ -18,6 +19,16 @@ const getLocalStorageData = async key => {
 
 function extractDigits(fullAddress) {
   const regex = /\b629\d{3}\b/g;
+  const matches = fullAddress.match(regex);
+  if (matches) {
+    return matches[0];
+  } else {
+    return null;
+  }
+}
+
+function testExtractDigits(fullAddress) {
+  const regex = /\b841\d{3}\b/g;
   const matches = fullAddress.match(regex);
   if (matches) {
     return matches[0];
@@ -56,10 +67,28 @@ function splitAddressAtFirstComma(addressString) {
   return remainingPart;
 }
 
+const isEmptyObject = obj => {
+  // Check if the object is not null and is of type 'object'
+  if (obj && typeof obj === 'object') {
+    // Return true if the object has no own enumerable properties
+    return Object.keys(obj).length === 0;
+  }
+  // If not an object, return false
+  return false;
+};
+
+const getLocationPermissionStatus = async () => {
+  const status = await checkLocationPermission();
+  return status;
+};
+
 export {
   storeLocalStorageData,
   getLocalStorageData,
   extractDigits,
   extractAddress,
   splitAddressAtFirstComma,
+  isEmptyObject,
+  testExtractDigits,
+  getLocationPermissionStatus,
 };

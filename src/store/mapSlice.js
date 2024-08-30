@@ -89,6 +89,8 @@ export const mapSlice = createSlice({
     cordinatesAddressLoader: false,
     addressCordinates: {},
     currentCordinates: {},
+    confirmAddress: '',
+    geolocationErrorMessage: '',
   },
   reducers: {
     setMarkerPosition: (state, action) => {
@@ -116,7 +118,16 @@ export const mapSlice = createSlice({
       state.locationPermission = action.payload; // Add reducer to update fetching location state
     },
     setAddressLoader: (state, action) => {
+      //console.log('addresss loaded called');
       state.addressLoader = action.payload; // Add reducer to update fetching location state
+    },
+    setConfirmAddress: (state, action) => {
+      //console.log('addresss loaded called');
+      state.confirmAddress = action.payload; // Add reducer to update fetching location state
+    },
+    setGeolocationErrorMessage: (state, action) => {
+      //console.log('addresss loaded called');
+      state.geolocationErrorMessage = action.payload; // Add reducer to update fetching location state
     },
   },
 });
@@ -131,6 +142,8 @@ export const {
   setAddressCordinates,
   setCurrentCordinates,
   setCordinatesAddressLoader,
+  setConfirmAddress,
+  setGeolocationErrorMessage,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

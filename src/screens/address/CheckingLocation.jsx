@@ -17,7 +17,11 @@ import {
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import {fatchUserAddress, setAddressLoader} from '../../store/mapSlice';
+import {
+  fatchUserAddress,
+  setAddressLoader,
+  setConfirmAddress,
+} from '../../store/mapSlice';
 import CustomBackdrop from '../../components/CustomBackDrop';
 import {useNavigation} from '@react-navigation/native';
 import AddressAutoComplete from '../../components/address/AddressAutoComplete';
@@ -88,16 +92,18 @@ const CheckingLocation = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   showNavigationBar();
-  //   if (locationPermission === 'denied') {
-  //     dispatch(setAddressLoader(true));
-  //     handlePresentModalPress();
-  //     //console.log('need to go to home screen');
-  //   } else {
-  //     dispatch(fatchUserAddress());
-  //   }
-  // }, []);
+  useEffect(() => {
+    showNavigationBar();
+    dispatch(fatchUserAddress());
+  }, []);
+
+  useEffect(() => {
+    if (isWithinKanyakumari) {
+      dispatch(setConfirmAddress(fullAddress));
+      console.log('going to home screen');
+      navigation.replace('home');
+    }
+  }, []);
 
   return (
     <>

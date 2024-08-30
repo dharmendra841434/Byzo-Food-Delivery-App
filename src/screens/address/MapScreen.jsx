@@ -24,6 +24,9 @@ const MapScreen = () => {
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
+  const isWithinKanyakumari = useSelector(
+    state => state?.map?.isWithinKanyakumari,
+  );
   const addressCordinates = useSelector(state => state?.map?.addressCordinates);
   const addressLoader = useSelector(state => state?.map?.addressLoader);
   const [openSetting, setOpenSetting] = useState(false);
@@ -49,7 +52,9 @@ const MapScreen = () => {
 
   const handleConfirmLocation = async () => {
     storeLocalStorageData('user-address', fullAddress);
-    dispatch(setConfirmAddress(fullAddress));
+    if (isWithinKanyakumari) {
+      dispatch(setConfirmAddress(fullAddress));
+    }
     navigation.navigate('home');
     setIsCheckEnabled(false);
   };

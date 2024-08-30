@@ -116,9 +116,7 @@ const AddressBottomSheetModal = ({
                   setModalVisible={setModalVisible}
                   handleCloseSheet={() => {}}
                   handleSelectAddress={handleSelectAddress}
-                  onPressCureentLocation={() =>
-                    bottomSheetModalRef?.current?.close()
-                  }
+                  onPressCureentLocation={() => {}}
                 />
               </View>
             </View>

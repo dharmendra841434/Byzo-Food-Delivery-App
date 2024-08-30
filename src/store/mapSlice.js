@@ -1,6 +1,10 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {locationAPI} from './api';
-import {extractDigits, parseAddress} from '../utils/helperfun';
+import {
+  extractDigits,
+  parseAddress,
+  testExtractDigits,
+} from '../utils/helperfun';
 import Geolocation from 'react-native-geolocation-service';
 
 export const fatchUserAddress = createAsyncThunk(
@@ -14,8 +18,9 @@ export const fatchUserAddress = createAsyncThunk(
         if (response.results && response.results.length > 0) {
           const fullAddress = response.results[0].formatted_address;
           dispatch(setfullAddress(fullAddress));
-          const extractedDigits = extractDigits(fullAddress);
+          // const extractedDigits = extractDigits(fullAddress);
           //console.log(!!extractedDigits, 'check digits');
+          const extractedDigits = testExtractDigits(fullAddress);
           dispatch(setIsWithinKanyakumari(!!extractedDigits));
           dispatch(setAddressLoader(false));
         } else {
@@ -59,8 +64,9 @@ export const fatchAddressByCords = createAsyncThunk(
         // console.log(response.results, 'addres response');
         const fullAddress = response.results[0].formatted_address;
         dispatch(setfullAddress(fullAddress));
-        const extractedDigits = extractDigits(fullAddress);
+        // const extractedDigits = extractDigits(fullAddress);
         //console.log(!!extractedDigits, 'check digits');
+        const extractedDigits = testExtractDigits(fullAddress);
         dispatch(setIsWithinKanyakumari(!!extractedDigits));
         dispatch(setAddressLoader(false));
       } else {
@@ -91,6 +97,7 @@ export const mapSlice = createSlice({
     currentCordinates: {},
     confirmAddress: '',
     geolocationErrorMessage: '',
+    isChecking: true,
   },
   reducers: {
     setMarkerPosition: (state, action) => {
@@ -129,6 +136,10 @@ export const mapSlice = createSlice({
       //console.log('addresss loaded called');
       state.geolocationErrorMessage = action.payload; // Add reducer to update fetching location state
     },
+    setIsChecking: (state, action) => {
+      //console.log('addresss loaded called');
+      state.isChecking = action.payload; // Add reducer to update fetching location state
+    },
   },
 });
 
@@ -144,6 +155,7 @@ export const {
   setCordinatesAddressLoader,
   setConfirmAddress,
   setGeolocationErrorMessage,
+  setIsChecking,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

@@ -8,6 +8,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   fatchUserAddress,
   setAddressLoader,
+  setConfirmAddress,
+  setIsChecking,
   setLocationPermission,
 } from '../../store/mapSlice';
 import CustomText from '../../components/CustomText';
@@ -20,6 +22,7 @@ import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
 import AddressFatchingLoader from '../../components/skeltonLoaders/AddressFatchingLoader';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
+import {showNavigationBar} from 'react-native-navigation-bar-color';
 
 const HomeScreen = () => {
   const bottomSheetModalRef = useRef(null);
@@ -34,40 +37,26 @@ const HomeScreen = () => {
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
-  const geolocationErrorMessage = useSelector(
-    state => state?.map?.geolocationErrorMessage,
-  );
+
+  const isChecking = useSelector(state => state?.map?.isChecking);
 
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
   const dispatch = useDispatch();
   const fullAddress = useSelector(state => state?.map?.fullAddress);
-  const addressLoader = useSelector(state => state?.map?.addressLoader);
+  const loader = useSelector(state => state?.map?.addressLoader);
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const handlePresentModalPress = useCallback(() => {
     dispatch(setAddressLoader(true));
     bottomSheetModalRef.current?.present();
   }, []);
-  const [isCheckEnabled, setIsCheckEnabled] = useState(
-    locationPermission === 'denied' ? true : false,
-  );
-
-  const enableLocation = async () => {
-    if (locationPermission === 'denied') {
-      setSettingModelOpen(true);
-    }
-  };
-
-  useEffect(() => {
-    if (userFullAddress === '') {
-      handlePresentModalPress();
-    } else {
-      bottomSheetModalRef.current?.close();
-    }
-  }, [userFullAddress]);
-
+  // const [isCheckEnabled, setIsCheckEnabled] = useState(
+  //   locationPermission === 'denied' ? true : false,
+  // );
   const checkPermission = async () => {
-    dispatch(setAddressLoader(true));
+    if (!confirmAddress) {
+      dispatch(setAddressLoader(true));
+    }
     check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION) // or PERMISSIONS.IOS.LOCATION_WHEN_IN_USE for iOS
       .then(result => {
         switch (result) {
@@ -86,10 +75,11 @@ const HomeScreen = () => {
             break;
           case RESULTS.GRANTED:
             dispatch(fatchUserAddress());
-            setIsCheckEnabled(false);
+            dispatch(setIsChecking(false));
             dispatch(setLocationPermission('granted'));
             bottomSheetModalRef.current.close();
             console.log('The permission is granted.');
+            dispatch(setConfirmAddress(fullAddress));
             break;
           case RESULTS.BLOCKED:
             console.log(
@@ -103,25 +93,61 @@ const HomeScreen = () => {
       });
   };
 
+  const enableLocation = async () => {
+    if (locationPermission === 'denied') {
+      setSettingModelOpen(true);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      checkPermission();
+      getLocalStorageData('user-address').then(result => {
+        console.log(result, 'local address');
+        if (result === null) {
+          dispatch(setConfirmAddress(''));
+        } else {
+          dispatch(setAddressLoader(false));
+          dispatch(setConfirmAddress(result));
+          bottomSheetModalRef.current?.close();
+        }
+      });
+      if (confirmAddress === '') {
+        handlePresentModalPress();
+      } else {
+        console.log('nees to close');
+        bottomSheetModalRef.current?.close();
+      }
+      return () => {
+        // This code will run when the screen is unfocused
+        console.log('Screen is unfocused');
+      };
+    }, [isChecking]),
+  );
+
   useEffect(() => {
     let timer;
-    if (isCheckEnabled) {
+    if (isChecking) {
       timer = setInterval(() => {
         checkPermission();
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [isCheckEnabled]);
+  }, [isChecking]);
 
-  useEffect(() => {
-    getLocalStorageData('user-address').then(result => {
-      if (result === null) {
-        setUserFullAddress(fullAddress);
-      } else {
-        setUserFullAddress(result);
+  useFocusEffect(
+    useCallback(() => {
+      if (isWithinKanyakumari) {
+        dispatch(setConfirmAddress(fullAddress));
       }
-    });
-  }, [fullAddress]);
+      return () => {
+        // This code will run when the screen is unfocused
+        console.log('Screen is unfocused');
+      };
+    }, [fullAddress]),
+  );
+
+  // console.log(confirmAddress, 'this is confirm address');
 
   return (
     <BottomSheetModalProvider>
@@ -157,7 +183,7 @@ const HomeScreen = () => {
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <CustomText font="bold">Delivery Address is : </CustomText>
                   <CustomText style={{width: '60%'}}>
-                    {splitAddressAtFirstComma(fullAddress)}
+                    {splitAddressAtFirstComma(confirmAddress)}
                   </CustomText>
                 </View>
                 <CustomButton
@@ -178,7 +204,7 @@ const HomeScreen = () => {
         settingModelOpen={settingModelOpen}
         setSettingModelOpen={setSettingModelOpen}
         handleSelectAddress={() => {
-          setIsCheckEnabled(false);
+          dispatch(setIsChecking(false));
         }}
       />
     </BottomSheetModalProvider>

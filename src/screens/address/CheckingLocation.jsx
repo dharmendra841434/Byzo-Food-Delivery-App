@@ -100,6 +100,8 @@ const CheckingLocation = () => {
   useEffect(() => {
     if (isWithinKanyakumari) {
       dispatch(setConfirmAddress(fullAddress));
+      bottomSheetModalRef?.current?.close();
+      console.log(fullAddress, 'full address');
       console.log('going to home screen');
       navigation.replace('home');
     }

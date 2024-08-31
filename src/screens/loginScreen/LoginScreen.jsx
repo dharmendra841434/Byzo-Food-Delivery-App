@@ -93,6 +93,7 @@ const LoginScreen = () => {
           if (locationPermission === 'denied') {
             navigation.replace('home');
           } else {
+            dispatch(fatchUserAddress());
             navigation.replace('checking');
           }
         }}

@@ -5,13 +5,30 @@ import logo from '../assets/images/line.png';
 import CustomText from '../components/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {hideNavigationBar} from 'react-native-navigation-bar-color';
+import {getLocalStorageData} from '../utils/helperfun';
+import {useDispatch} from 'react-redux';
+import {setConfirmAddress} from '../store/mapSlice';
 
 const SplashScreen = () => {
   const navigation = useNavigation();
+
+  const dispatch = useDispatch();
   useEffect(() => {
     setTimeout(() => {
       console.log('login ');
-      navigation.replace('login');
+      getLocalStorageData('user-address').then(result => {
+        if (result !== null) {
+          console.log(result, 'saved address');
+          dispatch(setConfirmAddress(result));
+        }
+      });
+      getLocalStorageData('skip-login').then(res => {
+        if (res === null) {
+          navigation.replace('login');
+        } else {
+          navigation.replace('home');
+        }
+      });
     }, 2000);
     hideNavigationBar();
   }, []);

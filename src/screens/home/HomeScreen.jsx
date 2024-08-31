@@ -45,14 +45,10 @@ const HomeScreen = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
   const loader = useSelector(state => state?.map?.addressLoader);
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
   const handlePresentModalPress = useCallback(() => {
     dispatch(setAddressLoader(true));
     bottomSheetModalRef.current?.present();
   }, []);
-  // const [isCheckEnabled, setIsCheckEnabled] = useState(
-  //   locationPermission === 'denied' ? true : false,
-  // );
   const checkPermission = async () => {
     if (!confirmAddress) {
       dispatch(setAddressLoader(true));
@@ -74,12 +70,16 @@ const HomeScreen = () => {
             );
             break;
           case RESULTS.GRANTED:
-            dispatch(fatchUserAddress());
-            dispatch(setIsChecking(false));
             dispatch(setLocationPermission('granted'));
             bottomSheetModalRef.current.close();
+            dispatch(setIsChecking(false));
+            console.log(confirmAddress, 'confirmAddress');
+            if (!confirmAddress) {
+              dispatch(fatchUserAddress());
+              dispatch(setConfirmAddress(fullAddress));
+            }
             console.log('The permission is granted.');
-            dispatch(setConfirmAddress(fullAddress));
+
             break;
           case RESULTS.BLOCKED:
             console.log(
@@ -99,33 +99,10 @@ const HomeScreen = () => {
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      checkPermission();
-      getLocalStorageData('user-address').then(result => {
-        console.log(result, 'local address');
-        if (result === null) {
-          dispatch(setConfirmAddress(''));
-        } else {
-          dispatch(setAddressLoader(false));
-          dispatch(setConfirmAddress(result));
-          bottomSheetModalRef.current?.close();
-        }
-      });
-      if (confirmAddress === '') {
-        handlePresentModalPress();
-      } else {
-        console.log('nees to close');
-        bottomSheetModalRef.current?.close();
-      }
-      return () => {
-        // This code will run when the screen is unfocused
-        console.log('Screen is unfocused');
-      };
-    }, [isChecking]),
-  );
-
   useEffect(() => {
+    if (isChecking && !confirmAddress) {
+      bottomSheetModalRef.current?.present();
+    }
     let timer;
     if (isChecking) {
       timer = setInterval(() => {
@@ -137,17 +114,16 @@ const HomeScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      if (isWithinKanyakumari) {
-        dispatch(setConfirmAddress(fullAddress));
+      showNavigationBar();
+      if (confirmAddress) {
+        bottomSheetModalRef.current.close();
       }
-      return () => {
-        // This code will run when the screen is unfocused
-        console.log('Screen is unfocused');
-      };
-    }, [fullAddress]),
+    }, [confirmAddress]), // Include checkPermission in the dependencies array if it's defined outside of this effect
   );
 
-  // console.log(confirmAddress, 'this is confirm address');
+  console.log(isWithinKanyakumari, 'isWithinKanyakumari');
+
+  console.log(fullAddress, 'fullAddress');
 
   return (
     <BottomSheetModalProvider>

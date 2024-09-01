@@ -17,11 +17,7 @@ import {
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import {
-  fatchUserAddress,
-  setAddressLoader,
-  setConfirmAddress,
-} from '../../store/mapSlice';
+import {fatchUserAddress, setConfirmAddress} from '../../store/mapSlice';
 import CustomBackdrop from '../../components/CustomBackDrop';
 import {useNavigation} from '@react-navigation/native';
 import AddressAutoComplete from '../../components/address/AddressAutoComplete';
@@ -29,9 +25,8 @@ import SettingOpenModel from '../../components/address/SettingOpenModel';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
 import timeOutAnimation from '../../assets/images/animations/wrong.json';
 import addresAnimation from '../../assets/images/animations/ddd.json';
-import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
-import checkLocationPermission from '../../services/checkDeviceLocationPermission';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
+import {checkIsWithinKanyakumari} from '../../utils/helperfun';
 
 const CheckingLocation = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
@@ -98,10 +93,11 @@ const CheckingLocation = () => {
   }, []);
 
   useEffect(() => {
+    console.log(isWithinKanyakumari, 'isWithinKanyakumari');
     if (isWithinKanyakumari) {
       dispatch(setConfirmAddress(fullAddress));
       bottomSheetModalRef?.current?.close();
-      console.log(fullAddress, 'full address');
+      //console.log(fullAddress, 'full address');
       console.log('going to home screen');
       navigation.replace('home');
     }
@@ -175,7 +171,7 @@ const CheckingLocation = () => {
                 </View>
               ) : (
                 <>
-                  {!isWithinKanyakumari && (
+                  {!checkIsWithinKanyakumari(fullAddress) && (
                     <NotAllowLocation
                       handlePresentModalPress={handlePresentModalPress}
                     />

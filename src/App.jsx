@@ -31,7 +31,11 @@ const App = () => {
           </Provider>
         </GestureHandlerRootView>
       ) : (
-        <NoInternetConnection />
+        <NoInternetConnection
+          handleCheck={vl => {
+            setIsConnected(true);
+          }}
+        />
       )}
     </>
   );

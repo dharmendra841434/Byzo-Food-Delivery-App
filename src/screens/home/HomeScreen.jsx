@@ -14,7 +14,7 @@ import {
 } from '../../store/mapSlice';
 import CustomText from '../../components/CustomText';
 import {
-  getLocalStorageData,
+  checkIsWithinKanyakumari,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
 import CustomButton from '../../components/CustomButton';
@@ -94,20 +94,22 @@ const HomeScreen = () => {
   };
 
   const enableLocation = async () => {
+    console.log('enable click');
+
     if (locationPermission === 'denied') {
       setSettingModelOpen(true);
     }
   };
 
   useEffect(() => {
-    if (isChecking && !confirmAddress) {
-      bottomSheetModalRef.current?.present();
-    }
     let timer;
     if (isChecking) {
       timer = setInterval(() => {
         checkPermission();
       }, 1000);
+    }
+    if (isChecking && !confirmAddress) {
+      bottomSheetModalRef.current?.present();
     }
     return () => clearInterval(timer);
   }, [isChecking]);
@@ -117,13 +119,15 @@ const HomeScreen = () => {
       showNavigationBar();
       if (confirmAddress) {
         bottomSheetModalRef.current.close();
+      } else {
+        dispatch(setAddressLoader(true));
       }
     }, [confirmAddress]), // Include checkPermission in the dependencies array if it's defined outside of this effect
   );
 
-  console.log(isWithinKanyakumari, 'isWithinKanyakumari');
+  //console.log(isWithinKanyakumari, 'isWithinKanyakumari');
 
-  console.log(fullAddress, 'fullAddress');
+  console.log(confirmAddress, 'confirmAddress');
 
   return (
     <BottomSheetModalProvider>
@@ -148,7 +152,7 @@ const HomeScreen = () => {
           </View>
         ) : (
           <>
-            {!isWithinKanyakumari ? (
+            {!checkIsWithinKanyakumari(confirmAddress) ? (
               <View style={{height: '100%'}}>
                 <NotAllowLocation
                   handlePresentModalPress={handlePresentModalPress}

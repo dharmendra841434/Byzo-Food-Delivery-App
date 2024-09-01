@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import checkLocationPermission from '../services/checkDeviceLocationPermission';
 const storeLocalStorageData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
@@ -82,6 +81,11 @@ const getLocationPermissionStatus = async () => {
   return status;
 };
 
+const checkIsWithinKanyakumari = fullAddress => {
+  //const extractedDigits = extractDigits(fullAddress);
+  const extractedDigits = testExtractDigits(fullAddress);
+  return !!extractedDigits;
+};
 export {
   storeLocalStorageData,
   getLocalStorageData,
@@ -91,4 +95,5 @@ export {
   isEmptyObject,
   testExtractDigits,
   getLocationPermissionStatus,
+  checkIsWithinKanyakumari,
 };

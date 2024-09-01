@@ -57,7 +57,11 @@ import AddressFatchingLoader from '../../components/skeltonLoaders/AddressFatchi
 import CustomMarker from '../../components/address/CustomMarker';
 import CurrentLocationMarker from '../../components/address/CurrentLocationMarker';
 import {useSelector} from 'react-redux';
-import {isEmptyObject, splitAddressAtFirstComma} from '../../utils/helperfun';
+import {
+  checkIsWithinKanyakumari,
+  isEmptyObject,
+  splitAddressAtFirstComma,
+} from '../../utils/helperfun';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -269,7 +273,7 @@ const CustomMap = ({
             </>
           ) : (
             <>
-              {isWithinKanyakumari ? (
+              {checkIsWithinKanyakumari(fullAddress) ? (
                 <View>
                   <MapDeliveryAddressCard
                     handleChangeAddress={handleChangeAddress}

@@ -82,7 +82,7 @@ const AddressBottomSheetModal = ({
                 </View>
               ) : (
                 <>
-                  {isWithinKanyakumari && (
+                  {isWithinKanyakumari && confirmAddress && (
                     <View className="flex flex-row items-center justify-between p-2 m-2 bg-white rounded-md ">
                       <View className="flex flex-row ">
                         <View>

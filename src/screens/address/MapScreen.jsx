@@ -14,7 +14,10 @@ import {
 } from '../../store/mapSlice';
 import Geolocation from 'react-native-geolocation-service';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
-import {storeLocalStorageData} from '../../utils/helperfun';
+import {
+  checkIsWithinKanyakumari,
+  storeLocalStorageData,
+} from '../../utils/helperfun';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import CustomMap from './CustomMap';
 
@@ -52,7 +55,7 @@ const MapScreen = () => {
 
   const handleConfirmLocation = async () => {
     storeLocalStorageData('user-address', fullAddress);
-    if (isWithinKanyakumari) {
+    if (checkIsWithinKanyakumari(fullAddress)) {
       dispatch(setConfirmAddress(fullAddress));
     }
     navigation.navigate('home');

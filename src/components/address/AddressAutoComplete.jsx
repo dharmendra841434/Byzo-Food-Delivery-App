@@ -165,13 +165,13 @@ const AddressAutoComplete = ({
   return (
     <View>
       <View style={styles.container}>
-        <Icon name="search" size={23} color={appColors.secondry} />
+        <Icon name="search" size={20} color={appColors.secondry} />
         <TextInput
           placeholder="Search for area, street name..."
           placeholderTextColor={appColors.blackText}
           style={{fontFamily: appFonts.medium}}
           cursorColor={appColors.blackText}
-          className="w-full "
+          className="w-full placeholder:text-[13px] "
           value={query}
           onChangeText={handleInputChange}
         />
@@ -207,10 +207,12 @@ const AddressAutoComplete = ({
           <View className="flex flex-row ">
             <Icon2
               name="location-crosshairs"
-              size={25}
+              size={22}
               color={appColors.secondry}
             />
-            <CustomText className="ml-3 text-secondry" font="semibold">
+            <CustomText
+              className="ml-3 text-secondry text-[13px]"
+              font="semibold">
               Use your current location
             </CustomText>
           </View>

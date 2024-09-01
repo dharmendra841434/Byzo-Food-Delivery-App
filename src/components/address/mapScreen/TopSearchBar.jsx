@@ -17,12 +17,13 @@ const TopSearchBar = ({handleSearchPress, isElivation}) => {
           elevation: isElivation ? 5 : 0,
         },
       ]}>
-      <Icon2 name="search" size={23} color={appColors.secondry} />
+      <Icon2 name="search" size={20} color={appColors.secondry} />
       <CustomText
         font="medium"
         style={{
           color: appColors.blackText,
           marginStart: 5,
+          fontSize: 13,
         }}>
         Search for area, street name...
       </CustomText>
@@ -35,10 +36,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '3%',
-    borderRadius: 8,
+    borderRadius: 12,
     paddingBottom: 12,
     paddingTop: 7,
-    borderWidth: 1,
+    borderWidth: 0.6,
     borderColor: appColors.borderGray,
   },
 });

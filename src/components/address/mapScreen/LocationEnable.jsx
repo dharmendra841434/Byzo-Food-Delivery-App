@@ -30,7 +30,7 @@ const LocationEnable = ({
             <Icon name="my-location" color={appColors.secondry} size={20} />
             <View className="-rotate-45 " style={styles.cross} />
           </View>
-          <CustomText font="semibold" style={styles.text}>
+          <CustomText font="medium" style={styles.text}>
             Enable precise location
           </CustomText>
         </TouchableOpacity>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth: 1,
+    borderWidth: 0.7,
     borderColor: appColors.secondry,
     marginBottom: 10,
     backgroundColor: appColors.background,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: appColors.secondry,
-    fontSize: 13,
+    fontSize: 11,
     marginStart: '2%',
     marginBottom: 2,
   },

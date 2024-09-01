@@ -19,7 +19,7 @@ const MapDeliveryAddressCard = ({
       }}>
       <CustomText
         font="bold"
-        style={{color: appColors.blackText, fontSize: 17}}>
+        style={{color: appColors.blackText, marginStart: '2%'}}>
         Delivering your order to{' '}
       </CustomText>
       <View style={styles.addresscard}>
@@ -58,7 +58,9 @@ const MapDeliveryAddressCard = ({
                 borderRadius: 5,
                 paddingBottom: 3,
               }}>
-              <CustomText font="semibold" style={{color: appColors.secondry}}>
+              <CustomText
+                font="semibold"
+                style={{fontSize: 12, color: appColors.secondry}}>
                 Change
               </CustomText>
             </TouchableOpacity>
@@ -79,7 +81,7 @@ const MapDeliveryAddressCard = ({
               font="semibold"
               style={{
                 color: appColors.background,
-                fontSize: 16,
+                fontSize: 14,
               }}>
               Confirm location
             </CustomText>
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     color: appColors.blackText,
-    fontSize: 15,
+    fontSize: 14,
   },
   cardDesc: {
     color: appColors.blackText,

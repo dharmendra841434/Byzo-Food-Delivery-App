@@ -113,7 +113,7 @@ const CustomMap = ({
 
   const handleRegionChangeComplete = newRegion => {
     onRegionChangeComplete(newRegion);
-    if (isWithinKanyakumari) {
+    if (checkIsWithinKanyakumari(fullAddress)) {
       height1.value = hp('77%');
       height2.value = hp('23%');
     } else {
@@ -124,14 +124,14 @@ const CustomMap = ({
 
   useEffect(() => {
     showNavigationBar();
-    if (isWithinKanyakumari) {
-      height1.value = hp('75%');
-      height2.value = hp('25%');
+    if (checkIsWithinKanyakumari(fullAddress)) {
+      height1.value = hp('77%');
+      height2.value = hp('23%');
     } else {
-      height1.value = hp('60%');
-      height2.value = hp('40%');
+      height1.value = hp('65%');
+      height2.value = hp('35%');
     }
-  }, [isWithinKanyakumari]);
+  }, [fullAddress]);
 
   useEffect(() => {
     mapRef?.current?.animateToRegion(
@@ -195,13 +195,13 @@ const CustomMap = ({
                   onPress={() => navigation.goBack()}>
                   <Icon2
                     name="chevron-back-outline"
-                    size={27}
+                    size={20}
                     color={appColors.blackText}
                   />
                 </TouchableOpacity>
                 <CustomText
                   font="semibold"
-                  style={{fontSize: 17, marginStart: '25%'}}>
+                  style={{fontSize: 14, marginStart: '25%'}}>
                   {isWithinKanyakumari
                     ? 'Confirm map pin location'
                     : 'Select location'}
@@ -224,6 +224,7 @@ const CustomMap = ({
                   alignContent: 'center',
                   paddingBottom: '3%',
                   paddingStart: '3%',
+                  justifyContent: 'center',
                 }}>
                 <TouchableOpacity
                   style={{position: 'absolute', left: '3%'}}
@@ -238,7 +239,7 @@ const CustomMap = ({
                 <CustomText
                   font="semibold"
                   style={{fontSize: 17, marginStart: '25%'}}>
-                  {isWithinKanyakumari
+                  {checkIsWithinKanyakumari(fullAddress)
                     ? 'Confirm map pin location'
                     : 'Select location'}
                 </CustomText>
@@ -246,7 +247,7 @@ const CustomMap = ({
               <View
                 style={{
                   paddingHorizontal: '3%',
-                  paddingVertical: '2%',
+                  paddingVertical: '1%',
                 }}>
                 <TopSearchBar handleSearchPress={handleSearchPress} />
               </View>

@@ -73,19 +73,19 @@ const MapBottomSheet = ({
             ) : (
               <>
                 {isWithinKanyakumari && (
-                  <View className="flex flex-row items-center justify-between p-2 m-2 bg-white rounded-md ">
+                  <View className="flex flex-row items-center justify-between p-2 mx-2 bg-white rounded-md ">
                     <View className="flex flex-row ">
                       <View>
                         <Icon
                           name="location-outline"
-                          size={40}
+                          size={25}
                           color={appColors.blackText}
                         />
                       </View>
-                      <View className="w-[85%] ml-2 ">
+                      <View className="w-[85%] ml-2  ">
                         <CustomText
                           font="bold"
-                          className="text-sm text-blackText">
+                          className=" text-blackText text-[12px]">
                           {splitAddressAtFirstComma(fullAddress)}
                         </CustomText>
                       </View>
@@ -95,7 +95,9 @@ const MapBottomSheet = ({
               </>
             )}
             <View className="p-3 ">
-              <CustomText font="bold" className="-mt-3 text-lg text-blackText">
+              <CustomText
+                font="bold"
+                className="-mt-2 text-[15px] text-blackText">
                 Select delivery address
               </CustomText>
             </View>

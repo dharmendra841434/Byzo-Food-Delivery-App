@@ -17,7 +17,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import AddressAutoComplete from './AddressAutoComplete';
 import SettingOpenModel from './SettingOpenModel';
 import {useSelector} from 'react-redux';
-import {splitAddressAtFirstComma} from '../../utils/helperfun';
+import {
+  checkIsWithinKanyakumari,
+  splitAddressAtFirstComma,
+} from '../../utils/helperfun';
 import EnableWarning from './mapScreen/EnableWarning';
 const AddressBottomSheetModal = ({
   setModalVisible,
@@ -88,14 +91,14 @@ const AddressBottomSheetModal = ({
                         <View>
                           <Icon
                             name="location-outline"
-                            size={40}
+                            size={25}
                             color={appColors.blackText}
                           />
                         </View>
                         <View className="w-[85%] ml-2 ">
                           <CustomText
-                            font="bold"
-                            className="text-sm text-blackText">
+                            font="semibold"
+                            className=" text-[13px] text-blackText">
                             {splitAddressAtFirstComma(confirmAddress)}
                           </CustomText>
                         </View>
@@ -105,8 +108,12 @@ const AddressBottomSheetModal = ({
                 </>
               )}
               <View
-                className={` px-3 ${isWithinKanyakumari ? ' pb-2  ' : 'py-3'}`}>
-                <CustomText font="bold" className="text-lg text-blackText">
+                className={` px-3 ${
+                  checkIsWithinKanyakumari(confirmAddress) ? ' pb-2  ' : 'py-3'
+                }`}>
+                <CustomText
+                  font="bold"
+                  className="-mt-1 text-[15px] text-blackText">
                   Select delivery address
                 </CustomText>
               </View>

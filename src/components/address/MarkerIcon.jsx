@@ -7,11 +7,11 @@ const MarkerIcon = () => {
     <View style={styles.marker}>
       <View
         style={{
-          height: 25,
-          width: 25,
+          height: 20,
+          width: 20,
           backgroundColor: appColors?.blackText,
           borderRadius: 100,
-          padding: 8,
+          padding: 6,
         }}>
         <View
           style={{
@@ -23,7 +23,7 @@ const MarkerIcon = () => {
         />
       </View>
       <View
-        style={{height: 14, width: 4, backgroundColor: appColors.blackText}}
+        style={{height: 12, width: 4, backgroundColor: appColors.blackText}}
       />
     </View>
   );

@@ -45,10 +45,12 @@ const SplashScreen = () => {
               if (result !== null) {
                 console.log(result, 'saved address');
                 dispatch(setConfirmAddress(result));
+              } else {
+                dispatch(fatchUserAddress());
+                navigation.replace('checking');
+                console.log('permission granted');
               }
             });
-            navigation.replace('checking');
-            console.log('permission granted');
 
             break;
           case RESULTS.BLOCKED:
@@ -69,7 +71,7 @@ const SplashScreen = () => {
         if (res === null) {
           navigation.replace('login');
         } else {
-          console.log('going to home');
+          //console.log('going to home');
           checkPermission();
         }
       });

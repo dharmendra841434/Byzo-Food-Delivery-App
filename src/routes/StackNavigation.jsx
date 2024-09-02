@@ -8,6 +8,7 @@ import NoInternetConnection from '../screens/NoInternetConnection';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
 import CustomMap from '../screens/address/CustomMap';
 import CheckingLocation from '../screens/address/CheckingLocation';
+import OtpScreen from '../screens/loginScreen/OtpScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ const StackNavigation = () => {
         <Stack.Screen name="home" component={HomeScreen} />
         <Stack.Screen name="mapview" component={MapScreen} />
         <Stack.Screen name="checking" component={CheckingLocation} />
+        <Stack.Screen name="otp" component={OtpScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

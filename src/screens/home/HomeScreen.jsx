@@ -110,6 +110,8 @@ const HomeScreen = () => {
     }
     if (isChecking && !confirmAddress) {
       bottomSheetModalRef.current?.present();
+    } else {
+      bottomSheetModalRef.current?.close();
     }
     return () => clearInterval(timer);
   }, [isChecking]);

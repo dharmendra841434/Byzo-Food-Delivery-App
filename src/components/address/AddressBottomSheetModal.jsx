@@ -36,9 +36,6 @@ const AddressBottomSheetModal = ({
     state => state?.map?.locationPermission,
   );
   const fullAddress = useSelector(state => state?.map?.fullAddress);
-  const isWithinKanyakumari = useSelector(
-    state => state?.map?.isWithinKanyakumari,
-  );
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
 
   // variables
@@ -77,7 +74,7 @@ const AddressBottomSheetModal = ({
             }}>
             <View>
               {locationPermission === 'denied' ? (
-                <View style={{marginHorizontal: '1%'}}>
+                <View style={{marginHorizontal: '1%', paddingTop: '3%'}}>
                   <EnableWarning
                     className="rounded-md"
                     handleEnableLocation={handleEnableLocation}

@@ -23,12 +23,15 @@ import {TextInput} from 'react-native-gesture-handler';
 import appColors from '../../utils/appColors';
 import {screenWidth} from '../../utils/scaling';
 import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
+import {useNavigation} from '@react-navigation/native';
 
 export default function UserLogin({onSkip}) {
   const [mobileNumber, setMobileNumber] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const bottomColors = [...lightColors].reverse();
   const bottomValue = useSharedValue(0);
+
+  const navigation = useNavigation();
 
   // Animated styles
   const animatedStyle = useAnimatedStyle(() => {
@@ -81,9 +84,12 @@ export default function UserLogin({onSkip}) {
               />
             </View>
             <CustomButton
-              disabled={true}
+              //disabled={true}
               title="Continue"
               style={{paddingBottom: 16}}
+              onPress={() => {
+                navigation.navigate('otp');
+              }}
             />
             <View
               style={{

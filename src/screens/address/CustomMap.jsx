@@ -56,7 +56,7 @@ import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLo
 import AddressFatchingLoader from '../../components/skeltonLoaders/AddressFatchingLoader';
 import CustomMarker from '../../components/address/CustomMarker';
 import CurrentLocationMarker from '../../components/address/CurrentLocationMarker';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   checkIsWithinKanyakumari,
   fixedZoomLevel,
@@ -66,6 +66,7 @@ import {
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {fatchAddressByCords} from '../../store/mapSlice';
 
 const CustomMap = ({
   isEnable = true,
@@ -91,6 +92,8 @@ const CustomMap = ({
   const isWithinKanyakumari = useSelector(
     state => state?.map?.isWithinKanyakumari,
   );
+
+  const dispatch = useDispatch();
 
   const navigation = useNavigation();
   const animatedStyle1 = useAnimatedStyle(() => {

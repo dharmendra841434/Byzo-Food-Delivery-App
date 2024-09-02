@@ -12,7 +12,7 @@ import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLo
 import CustomText from '../../components/CustomText';
 import LottieView from 'lottie-react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {
+import BottomSheet, {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
@@ -89,19 +89,20 @@ const CheckingLocation = () => {
 
   useEffect(() => {
     showNavigationBar();
-    dispatch(fatchUserAddress());
+    // dispatch(fatchUserAddress())
   }, []);
 
   useEffect(() => {
-    console.log(fullAddress, 'full address');
-    console.log(isWithinKanyakumari, 'isWithinKanyakumari');
-    if (isWithinKanyakumari) {
-      dispatch(setConfirmAddress(fullAddress));
-      bottomSheetModalRef?.current?.close();
-      console.log('going to home screen');
-      navigation.replace('home');
+    if (fullAddress) {
+      console.log(fullAddress, 'full address');
+      console.log(checkIsWithinKanyakumari(fullAddress), 'isWithinKanyakumari');
+      if (checkIsWithinKanyakumari(fullAddress)) {
+        dispatch(setConfirmAddress(fullAddress));
+        console.log('going to home screen');
+        navigation.replace('home');
+      }
     }
-  }, []);
+  }, [loader]);
 
   return (
     <>
@@ -131,7 +132,7 @@ const CheckingLocation = () => {
             </>
           ) : (
             <View>
-              {geolocationErrorMessage ? (
+              {/* {geolocationErrorMessage ? (
                 <View
                   style={{
                     alignItems: 'center',
@@ -171,12 +172,13 @@ const CheckingLocation = () => {
                 </View>
               ) : (
                 <>
-                  {!checkIsWithinKanyakumari(fullAddress) && (
-                    <NotAllowLocation
-                      handlePresentModalPress={handlePresentModalPress}
-                    />
-                  )}
+                  
                 </>
+              )} */}
+              {!checkIsWithinKanyakumari(fullAddress) && (
+                <NotAllowLocation
+                  handlePresentModalPress={handlePresentModalPress}
+                />
               )}
             </View>
           )}
@@ -194,33 +196,29 @@ const CheckingLocation = () => {
               />
             )}
             onChange={handleSheetChanges}>
-            <TouchableWithoutFeedback
-              onPress={() => Keyboard.dismiss()}
-              style={{height: '100%'}}>
-              <BottomSheetView
-                style={{
-                  height: '100%',
-                  backgroundColor: appColors.bottomSheetBg,
-                  borderRadius: 14,
-                }}>
-                <View>
-                  <View className="p-3 ">
-                    <CustomText font="bold" className="text-lg text-blackText">
-                      Select delivery address
-                    </CustomText>
-                  </View>
-                  <View className="px-3 ">
-                    <AddressAutoComplete
-                      setSettingModelOpen={setSettingModelOpen}
-                      setModalVisible={setModalVisible}
-                      handleCloseSheet={() => {}}
-                      handleSelectAddress={() => {}}
-                      onPressCureentLocation={() => {}}
-                    />
-                  </View>
+            <BottomSheetView
+              style={{
+                height: '100%',
+                backgroundColor: appColors.bottomSheetBg,
+                borderRadius: 14,
+              }}>
+              <View>
+                <View className="p-3 ">
+                  <CustomText font="bold" className="text-lg text-blackText">
+                    Select delivery address
+                  </CustomText>
                 </View>
-              </BottomSheetView>
-            </TouchableWithoutFeedback>
+                <View className="px-3 ">
+                  <AddressAutoComplete
+                    setSettingModelOpen={setSettingModelOpen}
+                    setModalVisible={setModalVisible}
+                    handleCloseSheet={() => {}}
+                    handleSelectAddress={() => {}}
+                    onPressCureentLocation={() => {}}
+                  />
+                </View>
+              </View>
+            </BottomSheetView>
           </BottomSheetModal>
         </View>
       </BottomSheetModalProvider>

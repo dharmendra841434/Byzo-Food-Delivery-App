@@ -10,6 +10,7 @@ import {useDispatch} from 'react-redux';
 import {
   fatchUserAddress,
   setConfirmAddress,
+  setfullAddress,
   setLocationPermission,
 } from '../store/mapSlice';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
@@ -39,16 +40,18 @@ const SplashScreen = () => {
             );
             break;
           case RESULTS.GRANTED:
-            dispatch(fatchUserAddress());
+            console.log('permission granted');
             dispatch(setLocationPermission('granted'));
             getLocalStorageData('user-address').then(result => {
               if (result !== null) {
                 console.log(result, 'saved address');
                 dispatch(setConfirmAddress(result));
+                dispatch(setfullAddress(result));
+                navigation.replace('checking');
               } else {
                 dispatch(fatchUserAddress());
+                console.log('local data not found');
                 navigation.replace('checking');
-                console.log('permission granted');
               }
             });
 
@@ -78,6 +81,13 @@ const SplashScreen = () => {
     }, 2000);
     hideNavigationBar();
   }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     navigation.replace('test');
+  //   }, 2000);
+  //   hideNavigationBar();
+  // }, []);
 
   return (
     <View

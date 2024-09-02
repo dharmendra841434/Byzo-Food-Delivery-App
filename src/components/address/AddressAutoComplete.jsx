@@ -229,6 +229,7 @@ const AddressAutoComplete = ({
             keyExtractor={item => item.place_id}
             renderItem={renderSuggestion}
             style={styles.suggestionsContainer}
+            keyboardShouldPersistTaps="handled"
           />
         </View>
       )}

@@ -102,7 +102,7 @@ const CheckingLocation = () => {
         navigation.replace('home');
       }
     }
-  }, [loader]);
+  }, []);
 
   return (
     <>

@@ -59,6 +59,7 @@ import CurrentLocationMarker from '../../components/address/CurrentLocationMarke
 import {useSelector} from 'react-redux';
 import {
   checkIsWithinKanyakumari,
+  fixedZoomLevel,
   isEmptyObject,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
@@ -84,8 +85,7 @@ const CustomMap = ({
   const [region, setRegion] = useState({
     latitude: addressCordinates?.latitude,
     longitude: addressCordinates?.longitude,
-    latitudeDelta: 0.015,
-    longitudeDelta: 0.0121,
+    ...fixedZoomLevel,
   });
   const fullAddress = useSelector(state => state?.map?.fullAddress);
   const isWithinKanyakumari = useSelector(
@@ -110,9 +110,13 @@ const CustomMap = ({
       }),
     };
   });
-
   const handleRegionChangeComplete = newRegion => {
-    onRegionChangeComplete(newRegion);
+    dispatch(
+      fatchAddressByCords({
+        lat: newRegion?.latitude,
+        long: newRegion?.longitude,
+      }),
+    );
     if (checkIsWithinKanyakumari(fullAddress)) {
       height1.value = hp('77%');
       height2.value = hp('23%');
@@ -133,19 +137,26 @@ const CustomMap = ({
     }
   }, [fullAddress]);
 
-  useEffect(() => {
-    mapRef?.current?.animateToRegion(
-      {
-        latitude: addressCordinates?.latitude,
-        longitude: addressCordinates?.longitude,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121,
-      },
-      2000,
-    );
-  }, [addressCordinates, isWithinKanyakumari]);
+  // useEffect(() => {
+  //   mapRef?.current?.animateToRegion(
+  //     {
+  //       latitude: addressCordinates?.latitude,
+  //       longitude: addressCordinates?.longitude,
+  //       latitudeDelta: 0.015,
+  //       longitudeDelta: 0.0121,
+  //     },
+  //     2000,
+  //   );
+  // }, [addressCordinates, isWithinKanyakumari]);
 
-  console.log(currentCordinates, 'ashdjhsa');
+  console.log(
+    {
+      latitude: region ? region?.latitude : 0,
+      longitude: region ? region?.longitude : 0,
+      ...fixedZoomLevel,
+    },
+    ' map region ',
+  );
 
   return (
     <View style={styles.container}>
@@ -155,11 +166,10 @@ const CustomMap = ({
           ref={mapRef}
           style={{height: '100%', width: '100%'}}
           onRegionChangeComplete={handleRegionChangeComplete}
-          initialRegion={{
+          region={{
             latitude: region ? region?.latitude : 0,
             longitude: region ? region?.longitude : 0,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
+            ...fixedZoomLevel,
           }}>
           {isEnable && !isEmptyObject(currentCordinates) && (
             <>
@@ -171,8 +181,7 @@ const CustomMap = ({
                   longitude: isEmptyObject(currentCordinates)
                     ? 0
                     : currentCordinates?.longitude,
-                  latitudeDelta: 0.015,
-                  longitudeDelta: 0.0121,
+                  ...fixedZoomLevel,
                 }}>
                 <CurrentLocationMarker />
               </Marker>
@@ -202,7 +211,7 @@ const CustomMap = ({
                 <CustomText
                   font="semibold"
                   style={{fontSize: 14, marginStart: '25%'}}>
-                  {isWithinKanyakumari
+                  {checkIsWithinKanyakumari(fullAddress)
                     ? 'Confirm map pin location'
                     : 'Select location'}
                 </CustomText>

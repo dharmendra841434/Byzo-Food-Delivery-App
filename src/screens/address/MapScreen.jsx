@@ -16,6 +16,7 @@ import Geolocation from 'react-native-geolocation-service';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
 import {
   checkIsWithinKanyakumari,
+  fixedZoomLevel,
   storeLocalStorageData,
 } from '../../utils/helperfun';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
@@ -27,10 +28,6 @@ const MapScreen = () => {
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
-  const isWithinKanyakumari = useSelector(
-    state => state?.map?.isWithinKanyakumari,
-  );
-  const addressCordinates = useSelector(state => state?.map?.addressCordinates);
   const addressLoader = useSelector(state => state?.map?.addressLoader);
   const [openSetting, setOpenSetting] = useState(false);
   const dispatch = useDispatch();
@@ -38,12 +35,6 @@ const MapScreen = () => {
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [region, setRegion] = useState({
-    latitude: addressCordinates?.latitude,
-    longitude: addressCordinates?.longitude,
-    latitudeDelta: 0.005,
-    longitudeDelta: 0.005,
-  });
 
   const [isCheckEnabled, setIsCheckEnabled] = useState(
     locationPermission === 'denied' ? true : false,
@@ -77,8 +68,7 @@ const MapScreen = () => {
           {
             latitude: position?.coords?.latitude,
             longitude: position?.coords?.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
+            ...fixedZoomLevel,
           },
           2000,
         );
@@ -90,32 +80,6 @@ const MapScreen = () => {
       {enableHighAccuracy: true, timeout: 15000},
     );
   };
-
-  const onRegionChangeComplete = newRegion => {
-    let cordinatesData = {
-      latitude: newRegion?.latitude,
-      longitude: newRegion?.longitude,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
-    };
-    //console.log(cordinatesData);
-    setRegion(cordinatesData);
-    dispatch(
-      fatchAddressByCords({
-        lat: newRegion?.latitude,
-        long: newRegion?.longitude,
-      }),
-    );
-  };
-
-  useEffect(() => {
-    setRegion({
-      latitude: addressCordinates?.latitude,
-      longitude: addressCordinates?.longitude,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
-    });
-  }, [addressCordinates]);
 
   const checkPermission = async () => {
     check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION) // or PERMISSIONS.IOS.LOCATION_WHEN_IN_USE for iOS
@@ -173,7 +137,6 @@ const MapScreen = () => {
         mapRef={mapRef}
         isEnable={locationPermission === 'granted' ? true : false}
         loader={addressLoader}
-        onRegionChangeComplete={onRegionChangeComplete}
         handleChangeAddress={handlePresentModalPress}
         handleConfirmLocation={handleConfirmLocation}
         handleEnableLocation={() => {

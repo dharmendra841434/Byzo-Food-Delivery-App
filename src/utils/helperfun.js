@@ -86,6 +86,11 @@ const checkIsWithinKanyakumari = fullAddress => {
   const extractedDigits = testExtractDigits(fullAddress);
   return !!extractedDigits;
 };
+
+const fixedZoomLevel = {
+  latitudeDelta: 0.0092, // This defines the zoom level
+  longitudeDelta: 0.0021, // This defines the zoom level
+};
 export {
   storeLocalStorageData,
   getLocalStorageData,
@@ -96,4 +101,5 @@ export {
   testExtractDigits,
   getLocationPermissionStatus,
   checkIsWithinKanyakumari,
+  fixedZoomLevel,
 };

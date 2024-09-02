@@ -91,6 +91,13 @@ const fixedZoomLevel = {
   latitudeDelta: 0.0092, // This defines the zoom level
   longitudeDelta: 0.0021, // This defines the zoom level
 };
+
+function numberToArray(num) {
+  // Convert the number to a string, then split it into an array of characters
+  // Convert each character back to a number
+  return num.toString().split('');
+}
+
 export {
   storeLocalStorageData,
   getLocalStorageData,
@@ -102,4 +109,5 @@ export {
   getLocationPermissionStatus,
   checkIsWithinKanyakumari,
   fixedZoomLevel,
+  numberToArray,
 };

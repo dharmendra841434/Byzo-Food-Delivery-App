@@ -94,15 +94,17 @@ const CheckingLocation = () => {
 
   useEffect(() => {
     if (fullAddress) {
-      console.log(fullAddress, 'full address');
-      console.log(checkIsWithinKanyakumari(fullAddress), 'isWithinKanyakumari');
+      //console.log(fullAddress, 'full address');
+      //console.log(checkIsWithinKanyakumari(fullAddress), 'isWithinKanyakumari');
       if (checkIsWithinKanyakumari(fullAddress)) {
         dispatch(setConfirmAddress(fullAddress));
         console.log('going to home screen');
         navigation.replace('home');
       }
+    } else {
+      dispatch(fatchUserAddress());
     }
-  }, []);
+  }, [fullAddress]);
 
   return (
     <>

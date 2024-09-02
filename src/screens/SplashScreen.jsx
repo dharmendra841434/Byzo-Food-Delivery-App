@@ -49,7 +49,7 @@ const SplashScreen = () => {
                 dispatch(setfullAddress(result));
                 navigation.replace('checking');
               } else {
-                dispatch(fatchUserAddress());
+                // dispatch(fatchUserAddress());
                 console.log('local data not found');
                 navigation.replace('checking');
               }

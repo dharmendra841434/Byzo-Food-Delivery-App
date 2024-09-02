@@ -84,11 +84,13 @@ export default function UserLogin({onSkip}) {
               />
             </View>
             <CustomButton
-              //disabled={true}
+              disabled={!mobileNumber ? true : false}
               title="Continue"
               style={{paddingBottom: 16}}
               onPress={() => {
-                navigation.navigate('otp');
+                navigation.navigate('otp', {
+                  phone: mobileNumber,
+                });
               }}
             />
             <View

@@ -5,7 +5,6 @@ import CustomText from '../CustomText';
 
 export default function OtpTimer() {
   const [seconds, setSeconds] = useState(30);
-
   const handleResendOtp = () => {
     setSeconds(30);
   };

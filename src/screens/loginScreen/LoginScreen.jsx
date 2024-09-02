@@ -1,21 +1,16 @@
 import {
   PermissionsAndroid,
   StyleSheet,
-  Keyboard,
   ToastAndroid,
   StatusBar,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {fatchUserAddress, setLocationPermission} from '../../store/mapSlice';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
-import {
-  getLocalStorageData,
-  storeLocalStorageData,
-} from '../../utils/helperfun';
+import {storeLocalStorageData} from '../../utils/helperfun';
 import {useNavigation} from '@react-navigation/native';
 import UserLogin from './UserLogin';
-import appColors from '../../utils/appColors';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -50,39 +45,12 @@ const LoginScreen = () => {
   };
   useEffect(() => {
     showNavigationBar();
-    // getLocalStorageData('skip-login').then(val => {
-    //   console.log(val);
-    //   if (val !== null) {
-    //     navigation.replace('home');
-    //   }
-    // });
     requestLocationPermission();
   }, []);
 
   useEffect(() => {
     showNavigationBar();
   }, []);
-
-  // useEffect(() => {
-  //   const keyboardDidShowListener = Keyboard.addListener(
-  //     'keyboardDidShow',
-  //     () => {
-  //       setKeyboardVisible(true);
-  //     },
-  //   );
-
-  //   const keyboardDidHideListener = Keyboard.addListener(
-  //     'keyboardDidHide',
-  //     () => {
-  //       setKeyboardVisible(false);
-  //     },
-  //   );
-
-  //   return () => {
-  //     keyboardDidShowListener.remove();
-  //     keyboardDidHideListener.remove();
-  //   };
-  // }, []);
 
   return (
     <>

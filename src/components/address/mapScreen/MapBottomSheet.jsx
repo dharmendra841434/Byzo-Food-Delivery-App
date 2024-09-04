@@ -1,5 +1,11 @@
-import {View, Text, TouchableWithoutFeedback, Keyboard} from 'react-native';
-import React, {useCallback, useMemo, useState} from 'react';
+import {
+  View,
+  Text,
+  TouchableWithoutFeedback,
+  Keyboard,
+  BackHandler,
+} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet';
 import CustomBackdrop from '../../CustomBackDrop';
 import CustomText from '../../CustomText';
@@ -8,7 +14,7 @@ import appColors from '../../../utils/appColors';
 import EnableWarning from './EnableWarning';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
-import {splitAddressAtFirstComma} from '../../../utils/helperfun';
+import {addEllipsis, splitAddressAtFirstComma} from '../../../utils/helperfun';
 
 const MapBottomSheet = ({
   bottomSheetModalRef,
@@ -20,7 +26,7 @@ const MapBottomSheet = ({
   isValidAddress,
 }) => {
   const [keyboardVisible, setKeyboardVisible] = useState(false);
-  const snapPoints = useMemo(() => ['85%', '85%'], []);
+  const snapPoints = useMemo(() => ['5%', '85%'], []);
 
   const handleSheetChanges = useCallback(index => {
     console.log('handleSheetChanges', index);
@@ -36,6 +42,20 @@ const MapBottomSheet = ({
     console.log('close');
     bottomSheetModalRef.current?.close();
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      bottomSheetModalRef?.current?.close();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
   return (
     <BottomSheetModal
       ref={bottomSheetModalRef}
@@ -94,11 +114,16 @@ const MapBottomSheet = ({
                 )}
               </>
             )}
-            <View className="p-3 ">
+            <View className="px-3 ">
+              <View className="px-3 py-3 bg-white rounded-md ">
+                <CustomText font="semibold">
+                  {addEllipsis(fullAddress, 50)}
+                </CustomText>
+              </View>
               <CustomText
                 font="bold"
-                className="-mt-2 text-[15px] text-blackText">
-                Select delivery address
+                className="my-2 text-[15px] text-blackText">
+                Change delivery address
               </CustomText>
             </View>
             <View className="px-3 ">

@@ -1,4 +1,4 @@
-import {View, Text, PermissionsAndroid, StatusBar} from 'react-native';
+import {View, StatusBar, BackHandler} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import AddressBottomSheetModal from '../../components/address/AddressBottomSheetModal';
@@ -17,29 +17,22 @@ import {
   checkIsWithinKanyakumari,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
-import CustomButton from '../../components/CustomButton';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
-import AddressFatchingLoader from '../../components/skeltonLoaders/AddressFatchingLoader';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
+
+import HomeTest from './HomeTest';
 
 const HomeScreen = () => {
   const bottomSheetModalRef = useRef(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [settingModelOpen, setSettingModelOpen] = useState(false);
-  const [userFullAddress, setUserFullAddress] = useState('');
-
-  const isWithinKanyakumari = useSelector(
-    state => state?.map?.isWithinKanyakumari,
-  );
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
-
   const isChecking = useSelector(state => state?.map?.isChecking);
-
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
   const dispatch = useDispatch();
   const fullAddress = useSelector(state => state?.map?.fullAddress);
@@ -119,29 +112,43 @@ const HomeScreen = () => {
   useFocusEffect(
     useCallback(() => {
       showNavigationBar();
+      console.log(confirmAddress, 'home confirmAddress');
       if (confirmAddress) {
         bottomSheetModalRef.current.close();
+        dispatch(setAddressLoader(false));
       } else {
+        console.log(loader, 'home loader');
         dispatch(setAddressLoader(true));
       }
-    }, [confirmAddress]), // Include checkPermission in the dependencies array if it's defined outside of this effect
+    }, [confirmAddress, loader]), // Include checkPermission in the dependencies array if it's defined outside of this effect
   );
 
   //console.log(isWithinKanyakumari, 'isWithinKanyakumari');
 
-  console.log(confirmAddress, 'confirmAddress');
+  useEffect(() => {
+    const backAction = () => {
+      bottomSheetModalRef?.current?.close();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <BottomSheetModalProvider>
       <StatusBar
         backgroundColor={
-          modalVisible ? 'rgba(0,0,0,0.7)' : appColors.background
+          modalVisible ? 'rgba(0,0,0,0.7)' : appColors.topSectionBg
         }
       />
       <View
         style={{
           backgroundColor: appColors.background,
-          paddingHorizontal: '3%',
         }}>
         {loader ? (
           <View style={{height: '100%'}}>
@@ -162,15 +169,9 @@ const HomeScreen = () => {
               </View>
             ) : (
               <View style={{height: '100%'}}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <CustomText font="bold">Delivery Address is : </CustomText>
-                  <CustomText style={{width: '60%'}}>
-                    {splitAddressAtFirstComma(confirmAddress)}
-                  </CustomText>
-                </View>
-                <CustomButton
-                  title="Change delivery address"
-                  onPress={() => bottomSheetModalRef?.current?.present()}
+                <HomeTest
+                  address={splitAddressAtFirstComma(confirmAddress)}
+                  sheetRef={bottomSheetModalRef}
                 />
               </View>
             )}
@@ -179,7 +180,7 @@ const HomeScreen = () => {
       </View>
       <AddressBottomSheetModal
         bottomSheetModalRef={bottomSheetModalRef}
-        handleClose={() => console.log('close')}
+        handleClose={() => bottomSheetModalRef?.current?.close()}
         setModalVisible={setModalVisible}
         keyboardVisible={keyboardVisible}
         handleEnableLocation={enableLocation}

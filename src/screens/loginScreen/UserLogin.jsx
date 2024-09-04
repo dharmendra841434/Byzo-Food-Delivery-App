@@ -24,12 +24,21 @@ import appColors from '../../utils/appColors';
 import {screenWidth} from '../../utils/scaling';
 import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {sendLoginOtp} from '../../store/userSlice';
+import {LoginAPI} from '../../store/api';
+import FullScreenLoader from '../../components/FullScreenLoader';
+import appFonts from '../../utils/appFonts';
+import {showToastWithGravityAndOffset} from '../../utils/helperfun';
 
 export default function UserLogin({onSkip}) {
   const [mobileNumber, setMobileNumber] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const bottomColors = [...lightColors].reverse();
   const bottomValue = useSharedValue(0);
+  const [loader, setLoader] = useState(false);
+
+  const dispatch = useDispatch();
 
   const navigation = useNavigation();
 
@@ -49,6 +58,26 @@ export default function UserLogin({onSkip}) {
     const numericValue = text.replace(/[^0-9]/g, '');
     setMobileNumber(numericValue);
   };
+
+  const handleSendOtp = async () => {
+    setLoader(true);
+    await LoginAPI.sendOtp(mobileNumber)
+      .then(res => {
+        console.log(res, 'send otp res');
+        setLoader(false);
+        showToastWithGravityAndOffset(
+          'We have sent a verification code to you via SMS',
+        );
+        navigation.navigate('otp', {
+          phone: mobileNumber,
+        });
+      })
+      .catch(error => {
+        setLoader(false);
+        console.log(error);
+      });
+  };
+
   return (
     <View style={{height: '100%'}}>
       <ProductSlider />
@@ -84,15 +113,12 @@ export default function UserLogin({onSkip}) {
               />
             </View>
             <CustomButton
-              disabled={!mobileNumber ? true : false}
+              disabled={mobileNumber?.length < 10 ? true : false}
               title="Continue"
               style={{paddingBottom: 16}}
-              onPress={() => {
-                navigation.navigate('otp', {
-                  phone: mobileNumber,
-                });
-              }}
+              onPress={handleSendOtp}
             />
+            <FullScreenLoader loader={loader} setLoader={setLoader} />
             <View
               style={{
                 flexDirection: 'row',
@@ -210,6 +236,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     width: '100%',
     //backgroundColor: 'red',
-    paddingStart: 10,
+    paddingStart: 5,
+    fontFamily: appFonts?.bold,
   },
 });

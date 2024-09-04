@@ -39,7 +39,7 @@ const AddressBottomSheetModal = ({
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
 
   // variables
-  const snapPoints = useMemo(() => ['85%', '85%'], []);
+  const snapPoints = useMemo(() => ['15%', '85%'], []);
   const handleSheetChanges = useCallback(index => {
     //console.log('handleSheetChanges', index);
     setModalVisible(index === 1 ? true : false);
@@ -51,15 +51,19 @@ const AddressBottomSheetModal = ({
         index={1}
         snapPoints={snapPoints}
         handleComponent={null}
-        enableHandlePanningGesture={false}
-        enableContentPanningGesture={false}
-        enablePanDownToClose={false}
+        enableHandlePanningGesture={
+          locationPermission === 'denied' ? false : true
+        }
+        enableContentPanningGesture={
+          locationPermission === 'denied' ? false : true
+        }
+        enablePanDownToClose={locationPermission === 'denied' ? false : true}
         backdropComponent={props => (
           <CustomBackdrop
             {...props}
             handleClose={handleClose}
             keyboardStatus={keyboardVisible}
-            isCloseButton={false}
+            isCloseButton={locationPermission === 'denied' ? false : true}
           />
         )}
         onChange={handleSheetChanges}>

@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ToastAndroid} from 'react-native';
 const storeLocalStorageData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
@@ -82,8 +83,8 @@ const getLocationPermissionStatus = async () => {
 };
 
 const checkIsWithinKanyakumari = fullAddress => {
-  //const extractedDigits = extractDigits(fullAddress);
-  const extractedDigits = testExtractDigits(fullAddress);
+  const extractedDigits = extractDigits(fullAddress);
+  //const extractedDigits = testExtractDigits(fullAddress);
   return !!extractedDigits;
 };
 
@@ -98,6 +99,23 @@ function numberToArray(num) {
   return num.toString().split('');
 }
 
+const showToastWithGravityAndOffset = message => {
+  ToastAndroid.showWithGravityAndOffset(
+    message,
+    ToastAndroid.LONG,
+    ToastAndroid.BOTTOM,
+    25,
+    50,
+  );
+};
+
+function addEllipsis(str, maxLength) {
+  if (str?.length > maxLength) {
+    return str?.substring(0, maxLength - 3) + '...';
+  }
+  return str;
+}
+
 export {
   storeLocalStorageData,
   getLocalStorageData,
@@ -110,4 +128,6 @@ export {
   checkIsWithinKanyakumari,
   fixedZoomLevel,
   numberToArray,
+  showToastWithGravityAndOffset,
+  addEllipsis,
 };

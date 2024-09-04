@@ -67,6 +67,7 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {fatchAddressByCords} from '../../store/mapSlice';
+import CustomHeader from '../../components/CustomHeader';
 
 const CustomMap = ({
   isEnable = true,
@@ -194,31 +195,14 @@ const CustomMap = ({
         <View style={[styles.mapHeader]}>
           {isEnable ? (
             <View>
-              <View
-                style={{
-                  backgroundColor: appColors.background,
-                  alignContent: 'center',
-                  paddingBottom: '3%',
-                  paddingStart: '3%',
-                }}>
-                <TouchableOpacity
-                  style={{position: 'absolute', left: '3%'}}
-                  activeOpacity={0.8}
-                  onPress={() => navigation.goBack()}>
-                  <Icon2
-                    name="chevron-back-outline"
-                    size={20}
-                    color={appColors.blackText}
-                  />
-                </TouchableOpacity>
-                <CustomText
-                  font="semibold"
-                  style={{fontSize: 14, marginStart: '25%'}}>
-                  {checkIsWithinKanyakumari(fullAddress)
+              <CustomHeader
+                isElivation={false}
+                title={
+                  checkIsWithinKanyakumari(fullAddress)
                     ? 'Confirm map pin location'
-                    : 'Select location'}
-                </CustomText>
-              </View>
+                    : 'Select location'
+                }
+              />
               <View style={{paddingHorizontal: '3%', paddingVertical: '2%'}}>
                 <TopSearchBar
                   isElivation={isEnable}
@@ -314,6 +298,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: appColors.background,
+    paddingTop: '13%',
   },
   map: {
     width: '100%',

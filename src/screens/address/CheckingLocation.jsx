@@ -17,7 +17,11 @@ import BottomSheet, {
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import {fatchUserAddress, setConfirmAddress} from '../../store/mapSlice';
+import {
+  fatchUserAddress,
+  setConfirmAddress,
+  setfullAddress,
+} from '../../store/mapSlice';
 import CustomBackdrop from '../../components/CustomBackDrop';
 import {useNavigation} from '@react-navigation/native';
 import AddressAutoComplete from '../../components/address/AddressAutoComplete';
@@ -26,18 +30,15 @@ import NotAllowLocation from '../../components/address/NotAllowLocation';
 import timeOutAnimation from '../../assets/images/animations/wrong.json';
 import addresAnimation from '../../assets/images/animations/ddd.json';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
-import {checkIsWithinKanyakumari} from '../../utils/helperfun';
+import {
+  checkIsWithinKanyakumari,
+  getLocalStorageData,
+} from '../../utils/helperfun';
 
 const CheckingLocation = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
-  const isWithinKanyakumari = useSelector(
-    state => state?.map?.isWithinKanyakumari,
-  );
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
-  );
-  const geolocationErrorMessage = useSelector(
-    state => state?.map?.geolocationErrorMessage,
   );
   const loader = useSelector(state => state?.map?.addressLoader);
   const [modalVisible, setModalVisible] = useState(false);
@@ -50,7 +51,7 @@ const CheckingLocation = () => {
   const bottomSheetModalRef = useRef(null);
 
   // variables
-  const snapPoints = useMemo(() => ['85%', '85%'], []);
+  const snapPoints = useMemo(() => ['1%', '85%'], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -89,7 +90,13 @@ const CheckingLocation = () => {
 
   useEffect(() => {
     showNavigationBar();
-    // dispatch(fatchUserAddress())
+    getLocalStorageData('user-address').then(result => {
+      if (result !== null) {
+        console.log(result, 'result confirm');
+        dispatch(setConfirmAddress(result));
+        navigation.replace('home');
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -102,9 +109,13 @@ const CheckingLocation = () => {
         navigation.replace('home');
       }
     } else {
-      dispatch(fatchUserAddress());
+      if (locationPermission === 'denied') {
+        navigation.replace('home');
+      } else {
+        dispatch(fatchUserAddress());
+      }
     }
-  }, [fullAddress]);
+  }, []);
 
   return (
     <>

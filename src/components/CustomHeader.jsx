@@ -5,12 +5,16 @@ import CustomText from './CustomText';
 import appColors from '../utils/appColors';
 import {useNavigation} from '@react-navigation/native';
 
-export default function CustomHeader({title, showBackButton = true}) {
+export default function CustomHeader({
+  title,
+  showBackButton = true,
+  isElivation = true,
+}) {
   const navigation = useNavigation();
 
   const onBackPress = () => navigation.goBack();
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer, {elevation: isElivation ? 3 : 0}]}>
       {showBackButton && (
         <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
           <Icon name="chevron-back-outline" size={20} color="black" />
@@ -33,7 +37,6 @@ const styles = StyleSheet.create({
     backgroundColor: appColors.background,
     borderBottomWidth: 0.6,
     borderBottomColor: '#ddd',
-    elevation: 3,
     paddingBottom: '3%',
   },
   backButton: {
@@ -44,7 +47,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 14,
     color: appColors.blackText,
   },
 });

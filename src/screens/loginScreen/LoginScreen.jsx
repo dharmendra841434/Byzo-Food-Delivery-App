@@ -3,6 +3,7 @@ import {
   StyleSheet,
   ToastAndroid,
   StatusBar,
+  View,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -11,6 +12,7 @@ import {showNavigationBar} from 'react-native-navigation-bar-color';
 import {storeLocalStorageData} from '../../utils/helperfun';
 import {useNavigation} from '@react-navigation/native';
 import UserLogin from './UserLogin';
+import appColors from '../../utils/appColors';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -48,12 +50,8 @@ const LoginScreen = () => {
     requestLocationPermission();
   }, []);
 
-  useEffect(() => {
-    showNavigationBar();
-  }, []);
-
   return (
-    <>
+    <View style={{flex: 1, backgroundColor: appColors?.background}}>
       <StatusBar backgroundColor={'#e9f7f8'} barStyle="dark-content" />
       <UserLogin
         onSkip={() => {
@@ -66,7 +64,7 @@ const LoginScreen = () => {
           }
         }}
       />
-    </>
+    </View>
   );
 };
 

@@ -127,12 +127,7 @@ const MapScreen = () => {
 
   return (
     <BottomSheetModalProvider>
-      <StatusBar
-        backgroundColor={
-          modalVisible ? appColors.backDropBg : appColors?.background
-        }
-        barStyle="dark-content"
-      />
+      <StatusBar backgroundColor="rgba(0,0,0,0)" translucent={true} />
       <CustomMap
         mapRef={mapRef}
         isEnable={locationPermission === 'granted' ? true : false}

@@ -8,7 +8,6 @@ import {hideNavigationBar} from 'react-native-navigation-bar-color';
 import {getLocalStorageData} from '../utils/helperfun';
 import {useDispatch} from 'react-redux';
 import {
-  fatchUserAddress,
   setConfirmAddress,
   setfullAddress,
   setLocationPermission,
@@ -70,12 +69,19 @@ const SplashScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      getLocalStorageData('skip-login').then(res => {
-        if (res === null) {
-          navigation.replace('login');
+      getLocalStorageData('token').then(token => {
+        if (token !== null) {
+          //console.log(token);
+          navigation.replace('checking');
         } else {
-          //console.log('going to home');
-          checkPermission();
+          getLocalStorageData('skip-login').then(res => {
+            if (res === null) {
+              navigation.replace('login');
+            } else {
+              //console.log('going to home');
+              checkPermission();
+            }
+          });
         }
       });
     }, 2000);

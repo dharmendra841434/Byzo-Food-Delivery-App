@@ -18,9 +18,9 @@ export const fatchUserAddress = createAsyncThunk(
         if (response.results && response.results.length > 0) {
           const fullAddress = response.results[0].formatted_address;
           dispatch(setfullAddress(fullAddress));
-          // const extractedDigits = extractDigits(fullAddress);
+          const extractedDigits = extractDigits(fullAddress);
           //console.log(!!extractedDigits, 'check digits');
-          const extractedDigits = testExtractDigits(fullAddress);
+          // const extractedDigits = testExtractDigits(fullAddress);
           if (!!extractedDigits) {
             console.log('this is from slice', fullAddress);
             dispatch(setConfirmAddress(fullAddress));

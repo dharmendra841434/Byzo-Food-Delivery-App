@@ -34,3 +34,14 @@ export const imageData = [
   require('../assets/products/15.png'),
   require('../assets/products/16.png'),
 ];
+
+export const BASE_URL =
+  'https://byzobackendappbyteam-production.up.railway.app';
+
+export const dummy = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+  23, 24, 25,
+];
+
+export const wavyData =
+  'M 0 2000 0 500 Q 62.5 280 125 500 t 125 0 125 0 125 0 125 0 125 0 125 0 125 0 125 0 125 0 125 0   125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0 v1000 z';

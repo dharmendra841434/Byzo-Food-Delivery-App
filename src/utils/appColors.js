@@ -9,6 +9,8 @@ const appColors = {
   warning: '#d4aa04',
   backDropBg: 'rgba(0,0,0,0.7)',
   disable: '#9197A7',
+  mediumWhite: 'rgba(255,255,255,0.3)',
+  topSectionBg: '#1b6447',
 };
 
 export default appColors;

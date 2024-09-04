@@ -2,11 +2,8 @@ import React, {useRef} from 'react';
 import {TextInput, View, StyleSheet, Text} from 'react-native';
 import appColors from '../../utils/appColors';
 
-export default function OtpInputs({setOtpFields, otpFields}) {
+export default function OtpInputs({setOtpFields, otpFields, verifyOnComplete}) {
   const ref = useRef([]);
-
-  console.log(otpFields, 'this is otp field');
-
   const handleKeyDown = (e, index) => {
     const key = e.nativeEvent.key;
     const copyOtpFields = [...otpFields];
@@ -30,8 +27,14 @@ export default function OtpInputs({setOtpFields, otpFields}) {
 
     if (!isNaN(key)) {
       copyOtpFields[index] = key;
+      //console.log(copyOtpFields, 'copy');
       setOtpFields(copyOtpFields);
-      if (index + 1 < otpFields.length) ref.current[index + 1].focus();
+      if (index + 1 < otpFields.length) {
+        ref.current[index + 1].focus();
+      } else if (index + 1 === otpFields.length) {
+        ref.current[index].blur();
+        verifyOnComplete(copyOtpFields);
+      }
     }
   };
 

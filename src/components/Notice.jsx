@@ -5,9 +5,9 @@ import CustomText from './CustomText';
 import {wavyData} from '../utils/constent';
 import {NoticeHeight} from '../utils/scaling';
 
-const Notice = () => {
+const Notice = ({NoticeHeight}) => {
   return (
-    <View style={{height: NoticeHeight}}>
+    <View style={{height: NoticeHeight, width: '100%', marginTop: '20%'}}>
       <View style={styles.container}>
         <View style={styles.noticeContainer}>
           <SafeAreaView style={{padding: 10}}>

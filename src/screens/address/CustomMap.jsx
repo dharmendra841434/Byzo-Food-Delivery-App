@@ -141,17 +141,17 @@ const CustomMap = ({
     }
   }, [fullAddress]);
 
-  // useEffect(() => {
-  //   mapRef?.current?.animateToRegion(
-  //     {
-  //       latitude: addressCordinates?.latitude,
-  //       longitude: addressCordinates?.longitude,
-  //       latitudeDelta: 0.015,
-  //       longitudeDelta: 0.0121,
-  //     },
-  //     2000,
-  //   );
-  // }, [addressCordinates, isWithinKanyakumari]);
+  useEffect(() => {
+    mapRef?.current?.animateToRegion(
+      {
+        latitude: addressCordinates?.latitude,
+        longitude: addressCordinates?.longitude,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121,
+      },
+      100,
+    );
+  }, [addressCordinates, isWithinKanyakumari]);
 
   console.log(
     {

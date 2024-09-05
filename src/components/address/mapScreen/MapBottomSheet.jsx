@@ -131,6 +131,7 @@ const MapBottomSheet = ({
                 setSettingModelOpen={setSettingModelOpen}
                 setModalVisible={setModalVisible}
                 handleCloseSheet={handleClose}
+                onPressCureentLocation={() => {}}
                 handleSelectAddress={cords => {
                   mapRef?.current?.animateToRegion(
                     {

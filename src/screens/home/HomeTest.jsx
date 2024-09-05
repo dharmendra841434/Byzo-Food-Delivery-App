@@ -12,6 +12,10 @@ import TopBarSection from '../../components/home/TopBarSection';
 import appColors from '../../utils/appColors';
 import Notice from '../../components/Notice';
 import Wave from '../../components/home/testHome/Wave';
+import CustomText from '../../components/CustomText';
+import {NoticeHeight} from '../../utils/scaling';
+
+const NOTICE_HEIGHT = -(NoticeHeight + 12);
 
 const HomeTest = ({address, sheetRef}) => {
   const scrollY = useRef(new Animated.Value(0)).current; // Create an animated value to track the scroll position
@@ -54,6 +58,34 @@ const HomeTest = ({address, sheetRef}) => {
     };
   }, [scrollY]);
 
+  const noticePosition = useRef(new Animated.Value(NOTICE_HEIGHT)).current;
+
+  const slideUp = () => {
+    Animated.timing(noticePosition, {
+      toValue: NOTICE_HEIGHT,
+      duration: 1200,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const slideDown = () => {
+    Animated.timing(noticePosition, {
+      toValue: 0,
+      duration: 1200,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  useEffect(() => {
+    slideDown();
+    const timeoutId = setTimeout(() => {
+      slideUp();
+    }, 3500);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  console.log(noticePosition, 'aksdkshfh');
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="rgba(0,0,0,0)" translucent={true} />
@@ -64,7 +96,10 @@ const HomeTest = ({address, sheetRef}) => {
           styles.header,
           {height: headerHeight, backgroundColor: searchBarBackgroundColor},
         ]}>
-        {/* <Notice /> */}
+        {/* <Notice  /> */}
+        {/* <View>
+          <CustomText>jasgdsjggsf</CustomText>
+        </View> */}
         <TopBarSection
           opacity={textOpacity}
           address={address}

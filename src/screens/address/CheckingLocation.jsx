@@ -34,6 +34,7 @@ import {
   checkIsWithinKanyakumari,
   getLocalStorageData,
 } from '../../utils/helperfun';
+import {screenHeight} from '../../utils/scaling';
 
 const CheckingLocation = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
@@ -51,7 +52,7 @@ const CheckingLocation = () => {
   const bottomSheetModalRef = useRef(null);
 
   // variables
-  const snapPoints = useMemo(() => ['1%', '85%'], []);
+  const snapPoints = useMemo(() => ['10%', '85%'], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -59,6 +60,9 @@ const CheckingLocation = () => {
   }, []);
   const handleSheetChanges = useCallback(index => {
     console.log('handleSheetChanges', index);
+    if (!index) {
+      bottomSheetModalRef.current?.close();
+    }
     setModalVisible(index === 1 ? true : false);
   }, []);
 

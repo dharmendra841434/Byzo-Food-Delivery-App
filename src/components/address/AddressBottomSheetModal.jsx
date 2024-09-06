@@ -35,14 +35,17 @@ const AddressBottomSheetModal = ({
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
-  const fullAddress = useSelector(state => state?.map?.fullAddress);
+
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
 
   // variables
-  const snapPoints = useMemo(() => ['15%', '85%'], []);
+  const snapPoints = useMemo(() => ['1%', '85%'], []);
   const handleSheetChanges = useCallback(index => {
     //console.log('handleSheetChanges', index);
     setModalVisible(index === 1 ? true : false);
+    if (!index) {
+      bottomSheetModalRef?.current?.close();
+    }
   }, []);
   return (
     <>
@@ -77,6 +80,7 @@ const AddressBottomSheetModal = ({
               borderRadius: 14,
             }}>
             <View>
+              {/* <CustomText>Home modal</CustomText> */}
               {locationPermission === 'denied' ? (
                 <View style={{marginHorizontal: '1%', paddingTop: '3%'}}>
                   <EnableWarning

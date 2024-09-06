@@ -84,7 +84,7 @@ const HomeTest = ({address, sheetRef}) => {
     return () => clearTimeout(timeoutId);
   }, []);
 
-  console.log(noticePosition, 'aksdkshfh');
+  //console.log(noticePosition, 'aksdkshfh');
 
   return (
     <View style={styles.container}>

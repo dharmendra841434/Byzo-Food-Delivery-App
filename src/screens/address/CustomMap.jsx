@@ -153,15 +153,6 @@ const CustomMap = ({
     );
   }, [addressCordinates, isWithinKanyakumari]);
 
-  console.log(
-    {
-      latitude: region ? region?.latitude : 0,
-      longitude: region ? region?.longitude : 0,
-      ...fixedZoomLevel,
-    },
-    ' map region ',
-  );
-
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.map, animatedStyle1]}>

@@ -31,6 +31,9 @@ const MapBottomSheet = ({
   const handleSheetChanges = useCallback(index => {
     console.log('handleSheetChanges', index);
     setModalVisible(index === 1 ? true : false);
+    if (!index) {
+      bottomSheetModalRef.current?.close();
+    }
   }, []);
 
   const isWithinKanyakumari = useSelector(
@@ -92,7 +95,7 @@ const MapBottomSheet = ({
               </View>
             ) : (
               <>
-                {isWithinKanyakumari && (
+                {
                   <View className="flex flex-row items-center justify-between p-2 mx-2 bg-white rounded-md ">
                     <View className="flex flex-row ">
                       <View>
@@ -111,15 +114,15 @@ const MapBottomSheet = ({
                       </View>
                     </View>
                   </View>
-                )}
+                }
               </>
             )}
             <View className="px-3 ">
-              <View className="px-3 py-3 bg-white rounded-md ">
+              {/* <View className="px-3 py-3 bg-white rounded-md ">
                 <CustomText font="semibold">
                   {addEllipsis(fullAddress, 50)}
                 </CustomText>
-              </View>
+              </View> */}
               <CustomText
                 font="bold"
                 className="my-2 text-[15px] text-blackText">

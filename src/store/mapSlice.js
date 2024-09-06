@@ -20,9 +20,9 @@ export const fatchUserAddress = createAsyncThunk(
           dispatch(setfullAddress(fullAddress));
           const extractedDigits = extractDigits(fullAddress);
           //console.log(!!extractedDigits, 'check digits');
-          // const extractedDigits = testExtractDigits(fullAddress);
+          //  const extractedDigits = testExtractDigits(fullAddress);
           if (!!extractedDigits) {
-            console.log('this is from slice', fullAddress);
+            //console.log('this is from slice', fullAddress);
             dispatch(setConfirmAddress(fullAddress));
           }
           dispatch(setIsWithinKanyakumari(!!extractedDigits));

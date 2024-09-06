@@ -15,13 +15,13 @@ import {
 import CustomText from '../../components/CustomText';
 import {
   checkIsWithinKanyakumari,
+  getLocalStorageData,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
-
 import HomeTest from './HomeTest';
 
 const HomeScreen = () => {
@@ -32,6 +32,7 @@ const HomeScreen = () => {
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
+
   const isChecking = useSelector(state => state?.map?.isChecking);
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
   const dispatch = useDispatch();
@@ -87,7 +88,7 @@ const HomeScreen = () => {
   };
 
   const enableLocation = async () => {
-    console.log('enable click');
+    // console.log('enable click');
 
     if (locationPermission === 'denied') {
       setSettingModelOpen(true);
@@ -102,6 +103,7 @@ const HomeScreen = () => {
       }, 1000);
     }
     if (isChecking && !confirmAddress) {
+      console.log('present modal call');
       bottomSheetModalRef.current?.present();
     } else {
       bottomSheetModalRef.current?.close();
@@ -111,16 +113,26 @@ const HomeScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
+      //console.log(checkIsWithinKanyakumari(confirmAddress), 'is confirm');
       showNavigationBar();
-      console.log(confirmAddress, 'home confirmAddress');
-      if (confirmAddress) {
-        bottomSheetModalRef.current.close();
-        dispatch(setAddressLoader(false));
-      } else {
-        console.log(loader, 'home loader');
-        dispatch(setAddressLoader(true));
-      }
-    }, [confirmAddress, loader]), // Include checkPermission in the dependencies array if it's defined outside of this effect
+      getLocalStorageData('user-address').then(res => {
+        if (res !== null) {
+          bottomSheetModalRef?.current?.close();
+          console.log('data found');
+          dispatch(setAddressLoader(false));
+        } else {
+          if (confirmAddress) {
+            bottomSheetModalRef?.current?.close();
+            console.log('modal should close');
+            dispatch(setAddressLoader(false));
+          } else {
+            console.log(loader, 'home loader');
+            dispatch(setAddressLoader(true));
+            bottomSheetModalRef.current?.present();
+          }
+        }
+      });
+    }, [confirmAddress, loader, fullAddress]), // Include checkPermission in the dependencies array if it's defined outside of this effect
   );
 
   //console.log(isWithinKanyakumari, 'isWithinKanyakumari');
@@ -187,6 +199,7 @@ const HomeScreen = () => {
         settingModelOpen={settingModelOpen}
         setSettingModelOpen={setSettingModelOpen}
         handleSelectAddress={() => {
+          bottomSheetModalRef?.current?.close();
           dispatch(setIsChecking(false));
         }}
       />

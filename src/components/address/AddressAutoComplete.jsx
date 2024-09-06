@@ -169,7 +169,7 @@ const AddressAutoComplete = ({
         <TextInput
           placeholder="Search for area, street name..."
           placeholderTextColor={appColors.blackText}
-          style={{fontFamily: appFonts.medium}}
+          style={{fontFamily: appFonts.medium, color: appColors.blackText}}
           cursorColor={appColors.blackText}
           className="w-full placeholder:text-[13px] "
           value={query}

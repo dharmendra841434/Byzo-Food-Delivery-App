@@ -16,18 +16,21 @@ import person from '../../assets/images/person.png';
 import AnimatedSearchBar from './AnimatableSearchBar';
 import {useDispatch} from 'react-redux';
 import {setIsOpenDrawer} from '../../store/userSlice';
+import {useNavigation} from '@react-navigation/native';
 
 const TopBarSection = ({
   address,
   opacity,
   bottomSheetModalRef,
   backgroundColor,
+  handleKnowMore,
 }) => {
   const dispatch = useDispatch();
+
+  const navigation = useNavigation();
   return (
     <Animated.View
       style={{
-        backgroundColor: backgroundColor,
         paddingBottom: '2%',
         width: '100%',
         height: '100%',
@@ -47,7 +50,7 @@ const TopBarSection = ({
               }}>
               10 minutes
             </CustomText>
-            <TouchableOpacity style={styles.know}>
+            <TouchableOpacity onPress={handleKnowMore} style={styles.know}>
               <CustomText style={{fontSize: 12, color: appColors.background}}>
                 Know more
               </CustomText>

@@ -45,3 +45,36 @@ export const dummy = [
 
 export const wavyData =
   'M 0 2000 0 500 Q 62.5 280 125 500 t 125 0 125 0 125 0 125 0 125 0 125 0 125 0 125 0 125 0 125 0   125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0  125 0 125 0 125 0 v1000 z';
+
+export const tabsData = [
+  {
+    id: 1,
+    name: 'All',
+    icon: require('../assets/icons/groceries.png'),
+  },
+  {
+    id: 2,
+    name: 'Electronics',
+    icon: require('../assets/icons/headphones.png'),
+  },
+  {
+    id: 3,
+    name: 'Beauty',
+    icon: require('../assets/icons/cosmetics.png'),
+  },
+  {
+    id: 4,
+    name: 'Kids',
+    icon: require('../assets/icons/child.png'),
+  },
+  {
+    id: 5,
+    name: 'Gifting',
+    icon: require('../assets/icons/gift.png'),
+  },
+  {
+    id: 6,
+    name: 'Premiume',
+    icon: require('../assets/icons/diamond.png'),
+  },
+];

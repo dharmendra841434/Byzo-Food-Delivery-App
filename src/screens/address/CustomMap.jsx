@@ -184,7 +184,7 @@ const CustomMap = ({
           )}
         </MapView>
         <View style={[styles.mapHeader]}>
-          {isEnable ? (
+          {!isEnable ? (
             <View>
               <CustomHeader
                 isElivation={false}
@@ -194,52 +194,17 @@ const CustomMap = ({
                     : 'Select location'
                 }
               />
-              <View style={{paddingHorizontal: '3%', paddingVertical: '2%'}}>
-                <TopSearchBar
-                  isElivation={isEnable}
-                  handleSearchPress={handleSearchPress}
-                />
-              </View>
-            </View>
-          ) : (
-            <View style={{backgroundColor: appColors.background, elevation: 5}}>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => navigation.goBack()}
-                style={{
-                  backgroundColor: appColors.background,
-                  alignContent: 'center',
-                  paddingBottom: '3%',
-                  paddingStart: '3%',
-                  justifyContent: 'center',
-                }}>
-                <TouchableOpacity
-                  style={{position: 'absolute', left: '3%'}}
-                  activeOpacity={0.8}
-                  onPress={() => navigation.goBack()}>
-                  <Icon2
-                    name="chevron-back-outline"
-                    size={27}
-                    color={appColors.blackText}
-                  />
-                </TouchableOpacity>
-                <CustomText
-                  font="semibold"
-                  style={{fontSize: 17, marginStart: '25%'}}>
-                  {checkIsWithinKanyakumari(fullAddress)
-                    ? 'Confirm map pin location'
-                    : 'Select location'}
-                </CustomText>
-              </TouchableOpacity>
-              <View
-                style={{
-                  paddingHorizontal: '3%',
-                  paddingVertical: '1%',
-                }}>
-                <TopSearchBar handleSearchPress={handleSearchPress} />
-              </View>
               <EnableWarning handleEnableLocation={handleEnableLocation} />
             </View>
+          ) : (
+            <CustomHeader
+              isElivation={false}
+              title={
+                checkIsWithinKanyakumari(fullAddress)
+                  ? 'Confirm map pin location'
+                  : 'Select location'
+              }
+            />
           )}
         </View>
         <View style={styles.bottomSection}>

@@ -89,7 +89,7 @@ const MapScreen = () => {
             // console.log('This feature is not available on this device.');
             break;
           case RESULTS.DENIED:
-            //console.log('The permission is denied on map');
+            console.log('Checking on Map Screen for permission');
             break;
           case RESULTS.LIMITED:
             // console.log('The permission is limited');

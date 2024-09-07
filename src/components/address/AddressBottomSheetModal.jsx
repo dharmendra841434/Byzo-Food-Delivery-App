@@ -31,12 +31,14 @@ const AddressBottomSheetModal = ({
   setSettingModelOpen,
   settingModelOpen,
   handleSelectAddress,
+  loading,
 }) => {
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
 
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
+  const addressLoader = useSelector(state => state?.map?.addressLoader);
 
   // variables
   const snapPoints = useMemo(() => ['1%', '85%'], []);
@@ -66,7 +68,11 @@ const AddressBottomSheetModal = ({
             {...props}
             handleClose={handleClose}
             keyboardStatus={keyboardVisible}
-            isCloseButton={locationPermission === 'denied' ? false : true}
+            isCloseButton={
+              locationPermission === 'denied' || confirmAddress === ''
+                ? false
+                : true
+            }
           />
         )}
         onChange={handleSheetChanges}>
@@ -132,6 +138,24 @@ const AddressBottomSheetModal = ({
                 />
               </View>
             </View>
+            {loading && (
+              <View
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+
+                  borderTopRightRadius: 15,
+                  borderTopLeftRadius: 15,
+                  marginTop: '45%',
+                  alignItems: 'center',
+                  paddingTop: '55%',
+                }}>
+                <ActivityIndicator color={appColors?.secondry} size={33} />
+              </View>
+            )}
           </BottomSheetView>
         </TouchableWithoutFeedback>
       </BottomSheetModal>

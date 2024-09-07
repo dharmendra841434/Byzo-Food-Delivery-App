@@ -102,6 +102,7 @@ export const mapSlice = createSlice({
     confirmAddress: '',
     geolocationErrorMessage: '',
     isChecking: true,
+    viewNotice: true,
   },
   reducers: {
     setMarkerPosition: (state, action) => {
@@ -144,6 +145,10 @@ export const mapSlice = createSlice({
       //console.log('addresss loaded called');
       state.isChecking = action.payload; // Add reducer to update fetching location state
     },
+    setViewNotice: (state, action) => {
+      //console.log('addresss loaded called');
+      state.viewNotice = action.payload; // Add reducer to update fetching location state
+    },
   },
 });
 
@@ -160,6 +165,7 @@ export const {
   setConfirmAddress,
   setGeolocationErrorMessage,
   setIsChecking,
+  setViewNotice,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

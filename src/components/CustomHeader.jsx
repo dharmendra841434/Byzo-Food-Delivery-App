@@ -4,15 +4,25 @@ import Icon from 'react-native-vector-icons/Ionicons'; // You can use any icon l
 import CustomText from './CustomText';
 import appColors from '../utils/appColors';
 import {useNavigation} from '@react-navigation/native';
+import {setIsOpenDrawer} from '../store/userSlice';
+import {useDispatch} from 'react-redux';
 
 export default function CustomHeader({
   title,
   showBackButton = true,
   isElivation = true,
+  isBack = true,
 }) {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
-  const onBackPress = () => navigation.goBack();
+  const onBackPress = () => {
+    if (isBack) {
+      navigation.goBack();
+    } else {
+      dispatch(dispatch(setIsOpenDrawer(false)));
+    }
+  };
   return (
     <View style={[styles.headerContainer, {elevation: isElivation ? 3 : 0}]}>
       {showBackButton && (

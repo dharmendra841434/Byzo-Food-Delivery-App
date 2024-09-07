@@ -7,7 +7,7 @@ import LoginScreen from '../screens/loginScreen/LoginScreen';
 import CheckingLocation from '../screens/address/CheckingLocation';
 import OtpScreen from '../screens/loginScreen/OtpScreen';
 import RightDrawer from './RightDrawer';
-import ScrollTest from '../screens/home/ScrollTest';
+import ProfileScreen from '../screens/profile/ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,9 +23,10 @@ const StackNavigation = () => {
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="home" component={RightDrawer} />
         <Stack.Screen name="mapview" component={MapScreen} />
-        <Stack.Screen name="test" component={ScrollTest} />
+        {/* <Stack.Screen name="test" component={ScrollTest} /> */}
         <Stack.Screen name="checking" component={CheckingLocation} />
         <Stack.Screen name="otp" component={OtpScreen} />
+        <Stack.Screen name="profile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

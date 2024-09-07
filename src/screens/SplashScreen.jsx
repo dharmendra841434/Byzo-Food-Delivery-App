@@ -67,33 +67,33 @@ const SplashScreen = () => {
       });
   };
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     getLocalStorageData('token').then(token => {
-  //       if (token !== null) {
-  //         //console.log(token);
-  //         navigation.replace('checking');
-  //       } else {
-  //         getLocalStorageData('skip-login').then(res => {
-  //           if (res === null) {
-  //             navigation.replace('login');
-  //           } else {
-  //             //console.log('going to home');
-  //             checkPermission();
-  //           }
-  //         });
-  //       }
-  //     });
-  //   }, 2000);
-  //   hideNavigationBar();
-  // }, []);
-
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace('test');
+      getLocalStorageData('token').then(token => {
+        if (token !== null) {
+          //console.log(token);
+          navigation.replace('checking');
+        } else {
+          getLocalStorageData('skip-login').then(res => {
+            if (res === null) {
+              navigation.replace('login');
+            } else {
+              //console.log('going to home');
+              checkPermission();
+            }
+          });
+        }
+      });
     }, 2000);
     hideNavigationBar();
   }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     navigation.replace('test');
+  //   }, 2000);
+  //   hideNavigationBar();
+  // }, []);
 
   return (
     <View

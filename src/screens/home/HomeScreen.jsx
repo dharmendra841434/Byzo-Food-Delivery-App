@@ -22,7 +22,7 @@ import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
-import HomeTest from './HomeTest';
+import Home from './Home';
 
 const HomeScreen = () => {
   const bottomSheetModalRef = useRef(null);
@@ -39,6 +39,7 @@ const HomeScreen = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
   const loader = useSelector(state => state?.map?.addressLoader);
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const handlePresentModalPress = useCallback(() => {
     dispatch(setAddressLoader(true));
     bottomSheetModalRef.current?.present();
@@ -54,9 +55,7 @@ const HomeScreen = () => {
             console.log('This feature is not available on this device.');
             break;
           case RESULTS.DENIED:
-            console.log(
-              'The permission has not been requested / is denied but requestable.',
-            );
+            console.log('Checking on Home Screen for permission');
             break;
           case RESULTS.LIMITED:
             console.log(
@@ -64,15 +63,19 @@ const HomeScreen = () => {
             );
             break;
           case RESULTS.GRANTED:
+            setLoading(true);
             dispatch(setLocationPermission('granted'));
-            bottomSheetModalRef.current.close();
             dispatch(setIsChecking(false));
-            console.log(confirmAddress, 'confirmAddress');
+            // console.log(confirmAddress, 'confirmAddress');
             if (!confirmAddress) {
               dispatch(fatchUserAddress());
               dispatch(setConfirmAddress(fullAddress));
             }
-            console.log('The permission is granted.');
+            setTimeout(() => {
+              setLoading(false);
+              console.log('The permission is granted.');
+              bottomSheetModalRef.current.close();
+            }, 2000);
 
             break;
           case RESULTS.BLOCKED:
@@ -106,7 +109,11 @@ const HomeScreen = () => {
       console.log('present modal call');
       bottomSheetModalRef.current?.present();
     } else {
-      bottomSheetModalRef.current?.close();
+      if (confirmAddress) {
+        console.log('closed called');
+
+        bottomSheetModalRef.current?.close();
+      }
     }
     return () => clearInterval(timer);
   }, [isChecking]);
@@ -115,6 +122,9 @@ const HomeScreen = () => {
     useCallback(() => {
       //console.log(checkIsWithinKanyakumari(confirmAddress), 'is confirm');
       showNavigationBar();
+      if (locationPermission === 'denied') {
+        dispatch(setIsChecking(true));
+      }
       getLocalStorageData('user-address').then(res => {
         if (res !== null) {
           bottomSheetModalRef?.current?.close();
@@ -132,7 +142,7 @@ const HomeScreen = () => {
           }
         }
       });
-    }, [confirmAddress, loader, fullAddress]), // Include checkPermission in the dependencies array if it's defined outside of this effect
+    }, []), // Include checkPermission in the dependencies array if it's defined outside of this effect
   );
 
   //console.log(isWithinKanyakumari, 'isWithinKanyakumari');
@@ -155,7 +165,7 @@ const HomeScreen = () => {
     <BottomSheetModalProvider>
       <StatusBar
         backgroundColor={
-          modalVisible ? 'rgba(0,0,0,0.7)' : appColors.topSectionBg
+          modalVisible ? 'rgba(0,0,0,0.7)' : appColors.background
         }
       />
       <View
@@ -181,7 +191,7 @@ const HomeScreen = () => {
               </View>
             ) : (
               <View style={{height: '100%'}}>
-                <HomeTest
+                <Home
                   address={splitAddressAtFirstComma(confirmAddress)}
                   sheetRef={bottomSheetModalRef}
                 />
@@ -192,7 +202,12 @@ const HomeScreen = () => {
       </View>
       <AddressBottomSheetModal
         bottomSheetModalRef={bottomSheetModalRef}
-        handleClose={() => bottomSheetModalRef?.current?.close()}
+        handleClose={() => {
+          if (locationPermission !== 'denied' && confirmAddress !== '') {
+            bottomSheetModalRef?.current?.close();
+          }
+        }}
+        loading={loading}
         setModalVisible={setModalVisible}
         keyboardVisible={keyboardVisible}
         handleEnableLocation={enableLocation}

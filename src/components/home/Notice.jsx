@@ -1,10 +1,10 @@
 import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import React from 'react';
 import {Defs, G, Path, Svg, Use} from 'react-native-svg';
-import {NoticeHeight} from '../../../utils/scaling';
-import CustomText from '../../CustomText';
-import {wavyData} from '../../../utils/constent';
-import appColors from '../../../utils/appColors';
+import {NoticeHeight} from '../../utils/scaling';
+import CustomText from '../CustomText';
+import {wavyData} from '../../utils/constent';
+import appColors from '../../utils/appColors';
 
 const Notice = () => {
   return (
@@ -42,7 +42,7 @@ const Notice = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: appColors.background,
+    backgroundColor: 'pink',
   },
   noticeContainer: {
     justifyContent: 'center',
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
   wave: {
     width: '100%',
     transform: [{rotateX: '180deg'}],
+    marginTop: '1%',
   },
 });
 

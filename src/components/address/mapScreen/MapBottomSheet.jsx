@@ -125,7 +125,7 @@ const MapBottomSheet = ({
               </View> */}
               <CustomText
                 font="bold"
-                className="my-2 text-[15px] text-blackText">
+                className="my-2 text-[17px] text-blackText">
                 Change delivery address
               </CustomText>
             </View>

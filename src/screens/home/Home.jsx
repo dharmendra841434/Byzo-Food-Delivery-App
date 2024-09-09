@@ -6,11 +6,12 @@ import {
   Animated,
   StyleSheet,
   StatusBar,
+  ImageBackground,
 } from 'react-native';
 import AnimatedSearchBar from '../../components/home/AnimatableSearchBar';
 import TopBarSection from '../../components/home/TopBarSection';
 import appColors from '../../utils/appColors';
-import {NoticeHeight} from '../../utils/scaling';
+import {NoticeHeight, screenHeight} from '../../utils/scaling';
 import NoticeAnimation from '../../components/home/NoticeAnimation';
 import LinearGradient from 'react-native-linear-gradient';
 import {dummy, tabsData} from '../../utils/constent';
@@ -18,6 +19,7 @@ import CustomText from '../../components/CustomText';
 import {useDispatch, useSelector} from 'react-redux';
 import {setViewNotice} from '../../store/mapSlice';
 import TabManuBar from '../../components/home/TabManuBar';
+import TopSectionCards from '../../components/home/TopSectionCards';
 
 const NOTICE_HEIGHT = -(NoticeHeight + 75);
 
@@ -26,7 +28,10 @@ const Home = ({address, sheetRef}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isShowSearched, setIsShowSearched] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
-  const [gradientColor, setGradientColor] = useState(['#984d25', '#d18d44']);
+  const [gradientColor, setGradientColor] = useState([
+    appColors?.gredientFrom,
+    appColors?.gredientFrom,
+  ]);
   const viewNotice = useSelector(state => state?.map?.viewNotice);
 
   const dispatch = useDispatch();
@@ -63,7 +68,7 @@ const Home = ({address, sheetRef}) => {
         StatusBar.setBarStyle('dark-content'); // Change to dark-content when not at the top
       } else {
         setIsShowSearched(false);
-        setGradientColor(['#984d25', '#d18d44']);
+        setGradientColor([appColors?.gredientFrom, appColors?.gredientFrom]);
         StatusBar.setBarStyle('light-content'); // Change to light-content when search bar sticks to top
       }
     });
@@ -180,6 +185,26 @@ const Home = ({address, sheetRef}) => {
                 flex: 1,
                 width: '100%',
               }}>
+              <View
+                style={{
+                  width: '100%',
+                  backgroundColor: 'red',
+                }}>
+                <ImageBackground
+                  style={{height: screenHeight * 0.28}}
+                  source={require('../../assets/images/ttt.png')}>
+                  <TopSectionCards />
+                </ImageBackground>
+              </View>
+            </LinearGradient>
+            {/* <LinearGradient
+              colors={gradientColor} // Interpolated colors
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{
+                flex: 1,
+                width: '100%',
+              }}>
               <TabManuBar
                 handleActiveTab={index => {
                   setActiveTab(index);
@@ -192,7 +217,7 @@ const Home = ({address, sheetRef}) => {
                   Content of {tabsData[activeTab].name}
                 </CustomText>
               )}
-            </View>
+            </View> */}
             {dummy?.map((item, index) => (
               <CustomText key={index} className=" h-44">
                 {item}

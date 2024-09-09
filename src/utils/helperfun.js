@@ -83,8 +83,8 @@ const getLocationPermissionStatus = async () => {
 };
 
 const checkIsWithinKanyakumari = fullAddress => {
-  const extractedDigits = extractDigits(fullAddress);
-  // const extractedDigits = testExtractDigits(fullAddress);
+  // const extractedDigits = extractDigits(fullAddress);
+  const extractedDigits = testExtractDigits(fullAddress);
   return !!extractedDigits;
 };
 

@@ -5,8 +5,8 @@ import logo from '../assets/images/line.png';
 import CustomText from '../components/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {hideNavigationBar} from 'react-native-navigation-bar-color';
-import {getLocalStorageData} from '../utils/helperfun';
-import {useDispatch} from 'react-redux';
+import {getLocalStorageData, storeLocalStorageData} from '../utils/helperfun';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   setConfirmAddress,
   setfullAddress,
@@ -18,6 +18,7 @@ const SplashScreen = () => {
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
+  const fullAddress = useSelector(state => state?.map?.fullAddress);
 
   const checkPermission = async () => {
     check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION) // or PERMISSIONS.IOS.LOCATION_WHEN_IN_USE for iOS
@@ -41,14 +42,14 @@ const SplashScreen = () => {
           case RESULTS.GRANTED:
             console.log('permission granted');
             dispatch(setLocationPermission('granted'));
+            // dispatch(fatchUserAddress());
             getLocalStorageData('user-address').then(result => {
               if (result !== null) {
                 console.log(result, 'saved address');
                 dispatch(setConfirmAddress(result));
                 dispatch(setfullAddress(result));
-                navigation.replace('checking');
+                navigation.replace('home');
               } else {
-                // dispatch(fatchUserAddress());
                 console.log('local data not found');
                 navigation.replace('checking');
               }

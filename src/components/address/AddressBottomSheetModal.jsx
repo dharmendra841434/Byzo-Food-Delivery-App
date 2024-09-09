@@ -124,7 +124,7 @@ const AddressBottomSheetModal = ({
                 }`}>
                 <CustomText
                   font="bold"
-                  className="-mt-1 text-[15px] text-blackText">
+                  className="-mt-1 text-[17px] text-blackText">
                   Select delivery address
                 </CustomText>
               </View>

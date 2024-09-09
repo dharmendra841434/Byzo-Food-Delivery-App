@@ -11,6 +11,8 @@ const appColors = {
   disable: '#9197A7',
   mediumWhite: 'rgba(255,255,255,0.3)',
   topSectionBg: '#1b6447',
+  gredientFrom: '#a6125c',
+  gredientTo: '#b02d6f',
 };
 
 export default appColors;

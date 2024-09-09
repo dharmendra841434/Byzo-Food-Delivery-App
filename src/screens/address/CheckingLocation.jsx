@@ -33,6 +33,7 @@ import {showNavigationBar} from 'react-native-navigation-bar-color';
 import {
   checkIsWithinKanyakumari,
   getLocalStorageData,
+  storeLocalStorageData,
 } from '../../utils/helperfun';
 import {screenHeight} from '../../utils/scaling';
 
@@ -105,10 +106,9 @@ const CheckingLocation = () => {
 
   useEffect(() => {
     if (fullAddress) {
-      //console.log(fullAddress, 'full address');
-      //console.log(checkIsWithinKanyakumari(fullAddress), 'isWithinKanyakumari');
       if (checkIsWithinKanyakumari(fullAddress)) {
         dispatch(setConfirmAddress(fullAddress));
+        storeLocalStorageData('user-address', fullAddress);
         console.log('going to home screen');
         navigation.replace('home');
       }
@@ -221,7 +221,9 @@ const CheckingLocation = () => {
               }}>
               <View>
                 <View className="p-3 ">
-                  <CustomText font="bold" className="text-lg text-blackText">
+                  <CustomText
+                    font="bold"
+                    className="text-[17px] text-blackText">
                     Select delivery address
                   </CustomText>
                 </View>

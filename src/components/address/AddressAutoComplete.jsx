@@ -6,7 +6,6 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
-  PermissionsAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
 import appColors from '../../utils/appColors';
@@ -22,13 +21,11 @@ import {
   fatchAddressByCords,
   fatchUserAddress,
   setAddressCordinates,
-  setLocationPermission,
 } from '../../store/mapSlice';
 import {useNavigation} from '@react-navigation/native';
 
 const AddressAutoComplete = ({
   setSettingModelOpen,
-  setModalVisible,
   handleCloseSheet,
   handleSelectAddress,
   onPressCureentLocation,
@@ -126,7 +123,6 @@ const AddressAutoComplete = ({
       navigation.navigate('mapview');
       handleCloseSheet();
     } else {
-      setModalVisible(true);
       setSettingModelOpen(true);
       handleCloseSheet();
     }

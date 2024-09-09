@@ -13,6 +13,7 @@ const appColors = {
   topSectionBg: '#1b6447',
   gredientFrom: '#a6125c',
   gredientTo: '#b02d6f',
+  statuBarColor: 'rgba(0,0,0,0.5)',
 };
 
 export default appColors;

@@ -18,7 +18,6 @@ import {addEllipsis, splitAddressAtFirstComma} from '../../../utils/helperfun';
 
 const MapBottomSheet = ({
   bottomSheetModalRef,
-  setModalVisible,
   setSettingModelOpen,
   mapRef,
   isEnable,
@@ -29,8 +28,6 @@ const MapBottomSheet = ({
   const snapPoints = useMemo(() => ['5%', '85%'], []);
 
   const handleSheetChanges = useCallback(index => {
-    console.log('handleSheetChanges', index);
-    setModalVisible(index === 1 ? true : false);
     if (!index) {
       bottomSheetModalRef.current?.close();
     }
@@ -132,7 +129,6 @@ const MapBottomSheet = ({
             <View className="px-3 ">
               <AddressAutoComplete
                 setSettingModelOpen={setSettingModelOpen}
-                setModalVisible={setModalVisible}
                 handleCloseSheet={handleClose}
                 onPressCureentLocation={() => {}}
                 handleSelectAddress={cords => {

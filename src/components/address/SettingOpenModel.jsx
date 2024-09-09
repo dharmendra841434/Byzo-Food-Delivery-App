@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  Modal,
-  TouchableOpacity,
-  Platform,
-  Linking,
-} from 'react-native';
+import {View, Modal, TouchableOpacity, Platform, Linking} from 'react-native';
 import React from 'react';
 import CustomText from '../CustomText';
 

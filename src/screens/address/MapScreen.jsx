@@ -17,6 +17,7 @@ import SettingOpenModel from '../../components/address/SettingOpenModel';
 import {
   checkIsWithinKanyakumari,
   fixedZoomLevel,
+  saveAdressOnLocalStorage,
   storeLocalStorageData,
 } from '../../utils/helperfun';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
@@ -45,7 +46,7 @@ const MapScreen = () => {
   }, []);
 
   const handleConfirmLocation = async () => {
-    storeLocalStorageData('user-address', fullAddress);
+    saveAdressOnLocalStorage('user-address', fullAddress);
     if (checkIsWithinKanyakumari(fullAddress)) {
       dispatch(setConfirmAddress(fullAddress));
     }
@@ -127,7 +128,12 @@ const MapScreen = () => {
 
   return (
     <BottomSheetModalProvider>
-      <StatusBar backgroundColor="rgba(0,0,0,0)" translucent={true} />
+      <StatusBar
+        backgroundColor={
+          !modalVisible ? 'rgba(0,0,0,0)' : appColors?.statuBarColor
+        }
+        translucent={true}
+      />
       <CustomMap
         mapRef={mapRef}
         isEnable={locationPermission === 'granted' ? true : false}

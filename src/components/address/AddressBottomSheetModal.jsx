@@ -2,10 +2,6 @@ import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
-  TouchableOpacity,
-  Modal,
-  Linking,
-  Platform,
   ActivityIndicator,
 } from 'react-native';
 import React, {useCallback, useMemo} from 'react';
@@ -22,6 +18,7 @@ import {
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
 import EnableWarning from './mapScreen/EnableWarning';
+
 const AddressBottomSheetModal = ({
   setModalVisible,
   keyboardVisible,

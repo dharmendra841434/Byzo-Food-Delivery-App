@@ -1,42 +1,5 @@
-// import {View, Text, StyleSheet} from 'react-native';
-// import React from 'react';
-// import CustomText from '../../components/CustomText';
-// import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-
-// const TestMap = () => {
-//   return (
-//     <View style={{flex: 1, backgroundColor: 'green'}}>
-//       <View style={styles.container}>
-//         <MapView
-//           provider={PROVIDER_GOOGLE}
-//           style={{height: 200, width: '100%'}}
-//           region={{
-//             latitude: 37.78825,
-//             longitude: -122.4324,
-//             latitudeDelta: 0.015,
-//             longitudeDelta: 0.0121,
-//           }}></MapView>
-//       </View>
-//       <View style={{height: 300, backgroundColor: 'purple'}}>
-//         <CustomText>jsdfsdff</CustomText>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({});
-
-// export default TestMap;
-
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Button,
-  StyleSheet,
-  Dimensions,
-  StatusBar,
-  TouchableOpacity,
-} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Animated, {
   useSharedValue,
@@ -45,14 +8,11 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import appColors from '../../utils/appColors';
-import CustomText from '../../components/CustomText';
 import EnableWarning from '../../components/address/mapScreen/EnableWarning';
-import TopSearchBar from '../../components/address/mapScreen/TopSearchBar';
 import LocationEnable from '../../components/address/mapScreen/LocationEnable';
 import NotDeliveryWarning from '../../components/address/NotDeliveryWarning';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
 import MapDeliveryAddressCard from '../../components/address/mapScreen/MapDeliveryAddressCard';
-import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
 import AddressFatchingLoader from '../../components/skeltonLoaders/AddressFatchingLoader';
 import CustomMarker from '../../components/address/CustomMarker';
 import CurrentLocationMarker from '../../components/address/CurrentLocationMarker';
@@ -63,7 +23,6 @@ import {
   isEmptyObject,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
-import Icon2 from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {fatchAddressByCords} from '../../store/mapSlice';

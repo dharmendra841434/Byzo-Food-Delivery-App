@@ -15,6 +15,7 @@ import {
 import CustomText from '../../components/CustomText';
 import {
   checkIsWithinKanyakumari,
+  getLocalStorageAddress,
   getLocalStorageData,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
@@ -41,7 +42,6 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const handlePresentModalPress = useCallback(() => {
-    dispatch(setAddressLoader(true));
     bottomSheetModalRef.current?.present();
   }, []);
   const checkPermission = async () => {
@@ -125,7 +125,7 @@ const HomeScreen = () => {
       if (locationPermission === 'denied') {
         dispatch(setIsChecking(true));
       }
-      getLocalStorageData('user-address').then(res => {
+      getLocalStorageAddress('user-address').then(res => {
         if (res !== null) {
           bottomSheetModalRef?.current?.close();
           console.log('data found');
@@ -164,16 +164,16 @@ const HomeScreen = () => {
   return (
     <BottomSheetModalProvider>
       <StatusBar
-        backgroundColor={
-          modalVisible ? 'rgba(0,0,0,0.7)' : appColors.background
-        }
+        backgroundColor="transparent"
+        translucent={true}
+        barStyle={'light-content'}
       />
       <View
         style={{
           backgroundColor: appColors.background,
         }}>
         {loader ? (
-          <View style={{height: '100%'}}>
+          <View style={{height: '100%', paddingStart: '2%', marginTop: '15%'}}>
             <CustomText font="bold" style={{fontSize: 20}}>
               Waiting for location...
             </CustomText>

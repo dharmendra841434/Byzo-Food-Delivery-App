@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
-  Text,
   ScrollView,
   Animated,
   StyleSheet,
@@ -14,11 +13,10 @@ import appColors from '../../utils/appColors';
 import {NoticeHeight, screenHeight} from '../../utils/scaling';
 import NoticeAnimation from '../../components/home/NoticeAnimation';
 import LinearGradient from 'react-native-linear-gradient';
-import {dummy, tabsData} from '../../utils/constent';
+import {dummy} from '../../utils/constent';
 import CustomText from '../../components/CustomText';
 import {useDispatch, useSelector} from 'react-redux';
 import {setViewNotice} from '../../store/mapSlice';
-import TabManuBar from '../../components/home/TabManuBar';
 import TopSectionCards from '../../components/home/TopSectionCards';
 
 const NOTICE_HEIGHT = -(NoticeHeight + 75);
@@ -174,7 +172,7 @@ const Home = ({address, sheetRef}) => {
             {useNativeDriver: false},
           )}
           scrollEventThrottle={16} // Adjust the scroll event throttle
-        >
+          showsVerticalScrollIndicator={false}>
           {/* Add your screen content here */}
           <View style={styles.content}>
             <LinearGradient
@@ -188,7 +186,6 @@ const Home = ({address, sheetRef}) => {
               <View
                 style={{
                   width: '100%',
-                  backgroundColor: 'red',
                 }}>
                 <ImageBackground
                   style={{height: screenHeight * 0.28}}

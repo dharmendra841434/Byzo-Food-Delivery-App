@@ -1,13 +1,18 @@
-import {View, Text, StatusBar, Image} from 'react-native';
+import {View, StatusBar, Image} from 'react-native';
 import React, {useEffect} from 'react';
 import appColors from '../utils/appColors';
 import logo from '../assets/images/line.png';
 import CustomText from '../components/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {hideNavigationBar} from 'react-native-navigation-bar-color';
-import {getLocalStorageData, storeLocalStorageData} from '../utils/helperfun';
+import {
+  getLocalStorageAddress,
+  getLocalStorageData,
+  saveAdressOnLocalStorage,
+} from '../utils/helperfun';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  fatchUserAddress,
   setConfirmAddress,
   setfullAddress,
   setLocationPermission,
@@ -28,7 +33,18 @@ const SplashScreen = () => {
             console.log('This feature is not available on this device.');
             break;
           case RESULTS.DENIED:
-            navigation.replace('home');
+            getLocalStorageAddress('user-address').then(result => {
+              if (result !== null) {
+                console.log(result, ' denied saved address');
+                dispatch(setConfirmAddress(result));
+                dispatch(setfullAddress(result));
+                saveAdressOnLocalStorage('user-address', result);
+                navigation.replace('home');
+              } else {
+                navigation.replace('home');
+              }
+            });
+
             // handleDenied();
             console.log(
               'The permission has not been requested / is denied but requestable.',
@@ -43,13 +59,15 @@ const SplashScreen = () => {
             console.log('permission granted');
             dispatch(setLocationPermission('granted'));
             // dispatch(fatchUserAddress());
-            getLocalStorageData('user-address').then(result => {
+            getLocalStorageAddress('user-address').then(result => {
               if (result !== null) {
                 console.log(result, 'saved address');
                 dispatch(setConfirmAddress(result));
                 dispatch(setfullAddress(result));
+                saveAdressOnLocalStorage('user-address', result);
                 navigation.replace('home');
               } else {
+                //dispatch(fatchUserAddress());
                 console.log('local data not found');
                 navigation.replace('checking');
               }

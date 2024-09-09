@@ -1,41 +1,29 @@
-import {
-  View,
-  StatusBar,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-  TouchableOpacity,
-} from 'react-native';
+import {View, StatusBar, StyleSheet, Keyboard} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import appColors from '../../utils/appColors';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
 import CustomText from '../../components/CustomText';
 import LottieView from 'lottie-react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import BottomSheet, {
+import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import {
-  fatchUserAddress,
-  setConfirmAddress,
-  setfullAddress,
-} from '../../store/mapSlice';
+import {fatchUserAddress, setConfirmAddress} from '../../store/mapSlice';
 import CustomBackdrop from '../../components/CustomBackDrop';
 import {useNavigation} from '@react-navigation/native';
 import AddressAutoComplete from '../../components/address/AddressAutoComplete';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
-import timeOutAnimation from '../../assets/images/animations/wrong.json';
 import addresAnimation from '../../assets/images/animations/ddd.json';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
 import {
   checkIsWithinKanyakumari,
-  getLocalStorageData,
-  storeLocalStorageData,
+  getLocalStorageAddress,
+  saveAdressOnLocalStorage,
 } from '../../utils/helperfun';
-import {screenHeight} from '../../utils/scaling';
+import HomeLoader from '../../components/skeltonLoaders/HomeLoader';
 
 const CheckingLocation = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
@@ -43,7 +31,6 @@ const CheckingLocation = () => {
     state => state?.map?.locationPermission,
   );
   const loader = useSelector(state => state?.map?.addressLoader);
-  const [modalVisible, setModalVisible] = useState(false);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [settingModelOpen, setSettingModelOpen] = useState(false);
   const navigation = useNavigation();
@@ -60,11 +47,9 @@ const CheckingLocation = () => {
     bottomSheetModalRef.current?.present();
   }, []);
   const handleSheetChanges = useCallback(index => {
-    console.log('handleSheetChanges', index);
     if (!index) {
       bottomSheetModalRef.current?.close();
     }
-    setModalVisible(index === 1 ? true : false);
   }, []);
 
   const handleClose = () => {
@@ -95,20 +80,10 @@ const CheckingLocation = () => {
 
   useEffect(() => {
     showNavigationBar();
-    getLocalStorageData('user-address').then(result => {
-      if (result !== null) {
-        console.log(result, 'result confirm');
-        dispatch(setConfirmAddress(result));
-        navigation.replace('home');
-      }
-    });
-  }, []);
-
-  useEffect(() => {
     if (fullAddress) {
       if (checkIsWithinKanyakumari(fullAddress)) {
         dispatch(setConfirmAddress(fullAddress));
-        storeLocalStorageData('user-address', fullAddress);
+        saveAdressOnLocalStorage('user-address', fullAddress);
         console.log('going to home screen');
         navigation.replace('home');
       }
@@ -119,19 +94,19 @@ const CheckingLocation = () => {
         dispatch(fatchUserAddress());
       }
     }
-  }, []);
+  }, [loader]);
 
   return (
     <>
       <BottomSheetModalProvider>
         <View style={{flex: 1}} className="h-screen bg-white ">
           <StatusBar
-            backgroundColor={
-              modalVisible ? appColors.backDropBg : appColors.background
-            }
+            backgroundColor="rgba(0,0,0,0)"
+            translucent
+            barStyle="dark-content"
           />
           {loader ? (
-            <>
+            <View className="mt-16 ">
               <AddressScreenLoader />
               <View className="flex items-center h-full px-3 pt-[30%]">
                 <LottieView
@@ -146,9 +121,9 @@ const CheckingLocation = () => {
                   Everything you need, delivered in minutes
                 </CustomText>
               </View>
-            </>
+            </View>
           ) : (
-            <View>
+            <View style={{flex: 1}}>
               {/* {geolocationErrorMessage ? (
                 <View
                   style={{
@@ -192,10 +167,27 @@ const CheckingLocation = () => {
                   
                 </>
               )} */}
-              {!checkIsWithinKanyakumari(fullAddress) && (
+              {!checkIsWithinKanyakumari(fullAddress) ? (
                 <NotAllowLocation
                   handlePresentModalPress={handlePresentModalPress}
                 />
+              ) : (
+                <View className="mt-16 ">
+                  <AddressScreenLoader />
+                  <View className="flex items-center h-full px-3 pt-[30%]">
+                    <LottieView
+                      source={addresAnimation}
+                      autoPlay
+                      style={{height: 150, width: 250}}
+                      speed={0.5}
+                    />
+                    <CustomText
+                      className="w-[70%] text-center text-gray-400/80 text-[14px] -mt-7"
+                      font="medium">
+                      Everything you need, delivered in minutes
+                    </CustomText>
+                  </View>
+                </View>
               )}
             </View>
           )}
@@ -230,7 +222,6 @@ const CheckingLocation = () => {
                 <View className="px-3 ">
                   <AddressAutoComplete
                     setSettingModelOpen={setSettingModelOpen}
-                    setModalVisible={setModalVisible}
                     handleCloseSheet={() => {}}
                     handleSelectAddress={() => {}}
                     onPressCureentLocation={() => {}}

@@ -17,6 +17,38 @@ const getLocalStorageData = async key => {
   }
 };
 
+const saveAdressOnLocalStorage = async (key, value) => {
+  try {
+    const currentTime = new Date().getTime();
+    const expiryTime = 5 * 60 * 1000; // 8 hours in milliseconds
+    const data = {value, expiry: currentTime + expiryTime};
+
+    await AsyncStorage.setItem(key, JSON.stringify(data));
+  } catch (error) {
+    console.error('Error storing data with expiry', error);
+  }
+};
+
+const getLocalStorageAddress = async key => {
+  try {
+    const data = await AsyncStorage.getItem(key);
+    if (!data) return null;
+
+    const parsedData = JSON.parse(data);
+    const currentTime = new Date().getTime();
+
+    if (currentTime > parsedData.expiry) {
+      await AsyncStorage.removeItem(key); // Delete if expired
+      return null;
+    }
+
+    return parsedData.value;
+  } catch (error) {
+    console.error('Error retrieving data with expiry', error);
+    return null;
+  }
+};
+
 function extractDigits(fullAddress) {
   const regex = /\b629\d{3}\b/g;
   const matches = fullAddress.match(regex);
@@ -83,8 +115,8 @@ const getLocationPermissionStatus = async () => {
 };
 
 const checkIsWithinKanyakumari = fullAddress => {
-  // const extractedDigits = extractDigits(fullAddress);
-  const extractedDigits = testExtractDigits(fullAddress);
+  const extractedDigits = extractDigits(fullAddress);
+  // const extractedDigits = testExtractDigits(fullAddress);
   return !!extractedDigits;
 };
 
@@ -130,4 +162,6 @@ export {
   numberToArray,
   showToastWithGravityAndOffset,
   addEllipsis,
+  getLocalStorageAddress,
+  saveAdressOnLocalStorage,
 };

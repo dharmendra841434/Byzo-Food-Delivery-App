@@ -18,13 +18,60 @@ export const fatchUserAddress = createAsyncThunk(
         if (response.results && response.results.length > 0) {
           const fullAddress = response.results[0].formatted_address;
           dispatch(setfullAddress(fullAddress));
-          const extractedDigits = extractDigits(fullAddress);
-          //console.log(!!extractedDigits, 'check digits');
           //const extractedDigits = testExtractDigits(fullAddress);
+          const extractedDigits = extractDigits(fullAddress);
+          // console.log(!!extractedDigits, 'check digits');
+          //console.log(fullAddress, 'fulll');
           if (!!extractedDigits) {
             //console.log('this is from slice', fullAddress);
             dispatch(setConfirmAddress(fullAddress));
           }
+          dispatch(setIsWithinKanyakumari(!!extractedDigits));
+          dispatch(setAddressLoader(false));
+        } else {
+          console.log('- Full Address: No results found');
+          dispatch(setfullAddress('No results found'));
+          dispatch(setAddressLoader(false));
+        }
+      };
+      Geolocation.getCurrentPosition(
+        position => {
+          //console.log(position, values);
+          dispatch(setAddressCordinates(position?.coords));
+          dispatch(setCurrentCordinates(position?.coords));
+          fatchAddress({
+            lat: position?.coords?.latitude,
+            long: position?.coords?.longitude,
+          });
+        },
+        error => {
+          // See error code charts below.
+          console.log(error.code, error.message, 'this is error');
+        },
+        {enableHighAccuracy: true, timeout: 15000},
+      );
+    } catch (error) {
+      if (error.response) {
+        return rejectWithValue({hasError: error.response.data.message});
+      }
+    }
+  },
+);
+
+export const fatchCurrentLocationAddress = createAsyncThunk(
+  'address',
+  async (values, {dispatch, rejectWithValue}) => {
+    try {
+      const fatchAddress = async cords => {
+        dispatch(setAddressLoader(true));
+        const response = await locationAPI.getUserAddress(cords);
+        // console.log(response, 'address response');
+        if (response.results && response.results.length > 0) {
+          const fullAddress = response.results[0].formatted_address;
+          dispatch(setfullAddress(fullAddress));
+          const extractedDigits = extractDigits(fullAddress);
+          //console.log(!!extractedDigits, 'check digits');
+          //const extractedDigits = testExtractDigits(fullAddress);
           dispatch(setIsWithinKanyakumari(!!extractedDigits));
           dispatch(setAddressLoader(false));
         } else {
@@ -68,10 +115,6 @@ export const fatchAddressByCords = createAsyncThunk(
         // console.log(response.results, 'addres response');
         const fullAddress = response.results[0].formatted_address;
         dispatch(setfullAddress(fullAddress));
-        // const extractedDigits = extractDigits(fullAddress);
-        //console.log(!!extractedDigits, 'check digits');
-        //const extractedDigits = testExtractDigits(fullAddress);
-        // dispatch(setIsWithinKanyakumari(!!extractedDigits));
         dispatch(setAddressLoader(false));
       } else {
         console.log('- Full Address: No results found');

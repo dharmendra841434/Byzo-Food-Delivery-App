@@ -121,8 +121,8 @@ const CustomMap = ({
           style={{height: '100%', width: '100%'}}
           onRegionChangeComplete={handleRegionChangeComplete}
           region={{
-            latitude: region ? region?.latitude : 0,
-            longitude: region ? region?.longitude : 0,
+            latitude: region !== null ? region?.latitude : 0,
+            longitude: region !== null ? region?.longitude : 0,
             ...fixedZoomLevel,
           }}>
           {isEnable && !isEmptyObject(currentCordinates) && (

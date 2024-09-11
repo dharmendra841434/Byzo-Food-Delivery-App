@@ -1,4 +1,10 @@
-import {View, StatusBar, StyleSheet, Keyboard} from 'react-native';
+import {
+  View,
+  StatusBar,
+  StyleSheet,
+  Keyboard,
+  Animated as RNAnimated,
+} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import appColors from '../../utils/appColors';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
@@ -20,27 +26,32 @@ import addresAnimation from '../../assets/images/animations/ddd.json';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
 import {
   checkIsWithinKanyakumari,
-  getLocalStorageAddress,
   saveAdressOnLocalStorage,
+  toPercentage,
 } from '../../utils/helperfun';
 import HomeLoader from '../../components/skeltonLoaders/HomeLoader';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import TestBottomSheet from '../../components/address/TestBottomSheet';
 
 const CheckingLocation = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
+  const confirmAddress = useSelector(state => state?.map?.confirmAddress);
   const loader = useSelector(state => state?.map?.addressLoader);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [settingModelOpen, setSettingModelOpen] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
+  const [loading, setLoading] = useState(false);
+  const [snapPoints, setSnapPoints] = useState(['10%', '75%']);
   // ref
   const bottomSheetModalRef = useRef(null);
-
-  // variables
-  const snapPoints = useMemo(() => ['10%', '85%'], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -58,27 +69,6 @@ const CheckingLocation = () => {
   };
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true);
-      },
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false);
-      },
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  useEffect(() => {
     showNavigationBar();
     if (fullAddress) {
       if (checkIsWithinKanyakumari(fullAddress)) {
@@ -91,10 +81,52 @@ const CheckingLocation = () => {
       if (locationPermission === 'denied') {
         navigation.replace('home');
       } else {
+        console.log('fatching address');
+        setLoading(true);
         dispatch(fatchUserAddress());
+        setLoading(false);
       }
     }
-  }, [loader]);
+  }, [confirmAddress]);
+  // console.log(confirmAddress, 'confirmadd');
+
+  const translateY = useSharedValue(150); // Initial position
+  const animatedPaddingTop = useSharedValue(120);
+
+  // Animated style for bottom sheet container
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{translateY: translateY.value}],
+  }));
+
+  useEffect(() => {
+    // Listen to keyboard events
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      onKeyboardShow,
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      onKeyboardHide,
+    );
+
+    return () => {
+      // Cleanup keyboard event listeners
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const onKeyboardShow = e => {
+    translateY.value = withTiming(toPercentage(13), {duration: 300}); // Move up by keyboard height
+    animatedPaddingTop.value = withTiming(60, {duration: 300});
+  };
+
+  const onKeyboardHide = () => {
+    translateY.value = withTiming(toPercentage(21), {duration: 300}); // Move back to original position
+    animatedPaddingTop.value = withTiming(120, {duration: 300});
+  };
+
+  // console.log(animatedStyle, 'thussu');
 
   return (
     <>
@@ -191,26 +223,32 @@ const CheckingLocation = () => {
               )}
             </View>
           )}
-
           <BottomSheetModal
             ref={bottomSheetModalRef}
             index={1}
-            snapPoints={snapPoints}
+            snapPoints={['10%', '80%']}
             handleComponent={null}
+            style={animatedStyle}
             backdropComponent={props => (
               <CustomBackdrop
                 {...props}
                 handleClose={handleClose}
                 keyboardStatus={keyboardVisible}
+                animatedPaddingTop={animatedPaddingTop}
               />
             )}
+            keyboardBehavior="interactive"
+            enablePanDownToClose={true}
             onChange={handleSheetChanges}>
             <BottomSheetView
-              style={{
-                height: '100%',
-                backgroundColor: appColors.bottomSheetBg,
-                borderRadius: 14,
-              }}>
+              style={[
+                {
+                  borderTopLeftRadius: 14,
+                  borderTopRightRadius: 14,
+                  backgroundColor: appColors?.bottomSheetBg,
+                  flex: 1,
+                },
+              ]}>
               <View>
                 <View className="p-3 ">
                   <CustomText

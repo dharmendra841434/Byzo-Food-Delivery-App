@@ -116,12 +116,10 @@ const Home = ({address, sheetRef}) => {
   return (
     <NoticeAnimation noticePosition={noticePosition}>
       <View style={styles.container}>
-        <StatusBar backgroundColor="rgba(0,0,0,0)" translucent={true} />
-
         <Animated.View
           style={[
             styles.header,
-            {height: headerHeight, backgroundColor: searchBarBackgroundColor},
+            {height: headerHeight, backgroundColor: appColors?.gredientFrom},
           ]}>
           <LinearGradient
             colors={gradientColor} // Interpolated colors
@@ -130,7 +128,6 @@ const Home = ({address, sheetRef}) => {
             style={{
               flex: 1,
               width: '100%',
-              height: 300,
             }}>
             <TopBarSection
               opacity={textOpacity}
@@ -182,6 +179,7 @@ const Home = ({address, sheetRef}) => {
               style={{
                 flex: 1,
                 width: '100%',
+                backgroundColor: appColors?.gredientFrom,
               }}>
               <View
                 style={{

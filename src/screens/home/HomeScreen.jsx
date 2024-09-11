@@ -111,7 +111,6 @@ const HomeScreen = () => {
     } else {
       if (confirmAddress) {
         console.log('closed called');
-
         bottomSheetModalRef.current?.close();
       }
     }
@@ -120,7 +119,7 @@ const HomeScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      //console.log(checkIsWithinKanyakumari(confirmAddress), 'is confirm');
+      console.log(checkIsWithinKanyakumari(confirmAddress), 'is confirm');
       showNavigationBar();
       if (locationPermission === 'denied') {
         dispatch(setIsChecking(true));
@@ -130,6 +129,7 @@ const HomeScreen = () => {
           bottomSheetModalRef?.current?.close();
           console.log('data found');
           dispatch(setAddressLoader(false));
+          dispatch(setConfirmAddress(res));
         } else {
           if (confirmAddress) {
             bottomSheetModalRef?.current?.close();
@@ -161,6 +161,8 @@ const HomeScreen = () => {
     return () => backHandler.remove();
   }, []);
 
+  //console.log(confirmAddress, 'this is confirm address');
+
   return (
     <BottomSheetModalProvider>
       <StatusBar
@@ -190,7 +192,10 @@ const HomeScreen = () => {
                 />
               </View>
             ) : (
-              <View style={{height: '100%'}}>
+              <View
+                style={{
+                  height: '100%',
+                }}>
                 <Home
                   address={splitAddressAtFirstComma(confirmAddress)}
                   sheetRef={bottomSheetModalRef}

@@ -41,7 +41,15 @@ const MapScreen = () => {
     locationPermission === 'denied' ? true : false,
   );
 
+  const inputRef = useRef(null);
+
   const handlePresentModalPress = useCallback(() => {
+    console.log('focus');
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus(); // Focus on the TextInput after the BottomSheet opens
+      }
+    }, 300);
     bottomSheetModalRef.current?.present();
   }, []);
 
@@ -157,6 +165,7 @@ const MapScreen = () => {
           setOpenSetting(true);
           setModalVisible(true);
         }}
+        inputRef={inputRef}
       />
       <SettingOpenModel
         setSettingModelOpen={setOpenSetting}

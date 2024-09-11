@@ -11,7 +11,7 @@ import React from 'react';
 import CustomText from '../CustomText';
 import appColors from '../../utils/appColors';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {addEllipsis} from '../../utils/helperfun';
+import {addEllipsis, isWithinTimeRange} from '../../utils/helperfun';
 import person from '../../assets/images/person.png';
 import AnimatedSearchBar from './AnimatableSearchBar';
 import {useDispatch} from 'react-redux';
@@ -38,7 +38,9 @@ const TopBarSection = ({
       <Animated.View style={[styles.conatiner, {opacity: opacity}]}>
         <View>
           <CustomText font="semibold" style={{color: appColors?.background}}>
-            Delivery in
+            {isWithinTimeRange()
+              ? 'Delivery in'
+              : 'Please come back at 7:00 am'}
           </CustomText>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <CustomText
@@ -48,7 +50,7 @@ const TopBarSection = ({
                 fontSize: 28,
                 marginTop: -9,
               }}>
-              10 minutes
+              {isWithinTimeRange() ? '10 minutes' : 'Store closed'}
             </CustomText>
             <TouchableOpacity onPress={handleKnowMore} style={styles.know}>
               <CustomText style={{fontSize: 12, color: appColors.background}}>

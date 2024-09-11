@@ -23,6 +23,7 @@ const MapBottomSheet = ({
   isEnable,
   handleEnableLocation,
   isValidAddress,
+  inputRef,
 }) => {
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const snapPoints = useMemo(() => ['5%', '85%'], []);
@@ -142,6 +143,7 @@ const MapBottomSheet = ({
                     2000,
                   );
                 }}
+                inputRef={inputRef}
               />
             </View>
           </View>

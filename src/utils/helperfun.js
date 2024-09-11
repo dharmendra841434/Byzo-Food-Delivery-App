@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ToastAndroid} from 'react-native';
+import {screenHeight} from './scaling';
 const storeLocalStorageData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
@@ -116,7 +117,7 @@ const getLocationPermissionStatus = async () => {
 
 const checkIsWithinKanyakumari = fullAddress => {
   const extractedDigits = extractDigits(fullAddress);
-  // const extractedDigits = testExtractDigits(fullAddress);
+  //const extractedDigits = testExtractDigits(fullAddress);
   return !!extractedDigits;
 };
 
@@ -148,6 +149,23 @@ function addEllipsis(str, maxLength) {
   return str;
 }
 
+const toPercentage = percent => (screenHeight * percent) / 100;
+
+function isWithinTimeRange() {
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinutes = now.getMinutes();
+
+  // Check if the time is between 7 AM (07:00) and 9:59 PM (21:59)
+  if (
+    currentHour >= 7 &&
+    (currentHour < 22 || (currentHour === 21 && currentMinutes <= 59))
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export {
   storeLocalStorageData,
   getLocalStorageData,
@@ -164,4 +182,6 @@ export {
   addEllipsis,
   getLocalStorageAddress,
   saveAdressOnLocalStorage,
+  toPercentage,
+  isWithinTimeRange,
 };

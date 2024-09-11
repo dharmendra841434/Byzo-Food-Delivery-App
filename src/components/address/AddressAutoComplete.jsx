@@ -19,6 +19,7 @@ import locationIcon from '../../assets/images/addressIcon.png';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   fatchAddressByCords,
+  fatchCurrentLocationAddress,
   fatchUserAddress,
   setAddressCordinates,
 } from '../../store/mapSlice';
@@ -29,6 +30,7 @@ const AddressAutoComplete = ({
   handleCloseSheet,
   handleSelectAddress,
   onPressCureentLocation,
+  inputRef,
 }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -119,7 +121,7 @@ const AddressAutoComplete = ({
 
   const handleCurrentLocation = async () => {
     if (locationPermission === 'granted') {
-      dispatch(fatchUserAddress());
+      dispatch(fatchCurrentLocationAddress());
       navigation.navigate('mapview');
       handleCloseSheet();
     } else {
@@ -170,6 +172,7 @@ const AddressAutoComplete = ({
           className="w-full placeholder:text-[13px] "
           value={query}
           onChangeText={handleInputChange}
+          ref={inputRef}
         />
         <View style={{position: 'absolute', top: loader ? 15 : 13, right: 15}}>
           {loader ? (

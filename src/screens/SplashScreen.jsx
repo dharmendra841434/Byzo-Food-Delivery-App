@@ -26,64 +26,53 @@ const SplashScreen = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
 
   const checkPermission = async () => {
-    check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION) // or PERMISSIONS.IOS.LOCATION_WHEN_IN_USE for iOS
-      .then(result => {
-        switch (result) {
-          case RESULTS.UNAVAILABLE:
-            console.log('This feature is not available on this device.');
-            break;
-          case RESULTS.DENIED:
-            getLocalStorageAddress('user-address').then(result => {
-              if (result !== null) {
-                console.log(result, ' denied saved address');
-                dispatch(setConfirmAddress(result));
-                dispatch(setfullAddress(result));
-                saveAdressOnLocalStorage('user-address', result);
-                navigation.replace('home');
-              } else {
-                navigation.replace('home');
-              }
-            });
+    try {
+      const result = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION); // Adjust for iOS as needed
 
-            // handleDenied();
-            console.log(
-              'The permission has not been requested / is denied but requestable.',
-            );
-            break;
-          case RESULTS.LIMITED:
-            console.log(
-              'The permission is limited: some actions are possible.',
-            );
-            break;
-          case RESULTS.GRANTED:
-            console.log('permission granted');
-            dispatch(setLocationPermission('granted'));
-            // dispatch(fatchUserAddress());
-            getLocalStorageAddress('user-address').then(result => {
-              if (result !== null) {
-                console.log(result, 'saved address');
-                dispatch(setConfirmAddress(result));
-                dispatch(setfullAddress(result));
-                saveAdressOnLocalStorage('user-address', result);
-                navigation.replace('home');
-              } else {
-                //dispatch(fatchUserAddress());
-                console.log('local data not found');
-                navigation.replace('checking');
-              }
-            });
-
-            break;
-          case RESULTS.BLOCKED:
-            console.log(
-              'The permission is denied and not requestable anymore.',
-            );
-            break;
+      const handleLocalStorageAddress = async () => {
+        const savedAddress = await getLocalStorageAddress('user-address');
+        if (savedAddress) {
+          console.log(savedAddress, 'saved address');
+          dispatch(setConfirmAddress(savedAddress));
+          dispatch(setfullAddress(savedAddress));
+          saveAdressOnLocalStorage('user-address', savedAddress);
+          navigation.replace('home');
+        } else {
+          console.log('Local data not found');
+          navigation.replace(result === RESULTS.GRANTED ? 'checking' : 'home');
         }
-      })
-      .catch(error => {
-        console.log('Error checking permission:', error);
-      });
+      };
+
+      switch (result) {
+        case RESULTS.UNAVAILABLE:
+          console.log('This feature is not available on this device.');
+          break;
+
+        case RESULTS.DENIED:
+          console.log('Permission denied but requestable.');
+          await handleLocalStorageAddress();
+          break;
+
+        case RESULTS.LIMITED:
+          console.log('The permission is limited: some actions are possible.');
+          break;
+
+        case RESULTS.GRANTED:
+          console.log('Permission granted');
+          dispatch(setLocationPermission('granted'));
+          await handleLocalStorageAddress();
+          break;
+
+        case RESULTS.BLOCKED:
+          console.log('The permission is denied and not requestable anymore.');
+          break;
+
+        default:
+          console.log('Unknown permission status:', result);
+      }
+    } catch (error) {
+      console.log('Error checking permission:', error);
+    }
   };
 
   useEffect(() => {

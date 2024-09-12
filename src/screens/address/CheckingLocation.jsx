@@ -16,9 +16,13 @@ import {
   BottomSheetView,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import {fatchUserAddress, setConfirmAddress} from '../../store/mapSlice';
+import {
+  fatchUserAddress,
+  setAddressLoader,
+  setConfirmAddress,
+} from '../../store/mapSlice';
 import CustomBackdrop from '../../components/CustomBackDrop';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import AddressAutoComplete from '../../components/address/AddressAutoComplete';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
@@ -26,6 +30,7 @@ import addresAnimation from '../../assets/images/animations/ddd.json';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
 import {
   checkIsWithinKanyakumari,
+  getLocalStorageAddress,
   saveAdressOnLocalStorage,
   toPercentage,
 } from '../../utils/helperfun';
@@ -68,27 +73,44 @@ const CheckingLocation = () => {
     bottomSheetModalRef.current?.close();
   };
 
-  useEffect(() => {
-    showNavigationBar();
-    if (fullAddress) {
-      if (checkIsWithinKanyakumari(fullAddress)) {
-        dispatch(setConfirmAddress(fullAddress));
-        saveAdressOnLocalStorage('user-address', fullAddress);
-        console.log('going to home screen');
-        navigation.replace('home');
-      }
-    } else {
-      if (locationPermission === 'denied') {
-        navigation.replace('home');
-      } else {
-        console.log('fatching address');
-        setLoading(true);
-        dispatch(fatchUserAddress());
-        setLoading(false);
-      }
-    }
-  }, [confirmAddress]);
-  // console.log(confirmAddress, 'confirmadd');
+  useFocusEffect(
+    useCallback(() => {
+      const checkAddressAndNavigate = async () => {
+        showNavigationBar();
+
+        const localAddress = await getLocalStorageAddress('user-address');
+        if (localAddress) {
+          console.log('Address found in local storage');
+          bottomSheetModalRef?.current?.close();
+          dispatch(setConfirmAddress(localAddress));
+          dispatch(setAddressLoader(false));
+          navigation.replace('home');
+          return;
+        }
+
+        if (fullAddress) {
+          if (checkIsWithinKanyakumari(fullAddress)) {
+            console.log('Address is within Kanyakumari, navigating to home');
+            dispatch(setConfirmAddress(fullAddress));
+            saveAdressOnLocalStorage('user-address', fullAddress);
+            navigation.replace('home');
+          }
+        } else {
+          if (locationPermission === 'denied') {
+            console.log('Permission denied, navigating to home');
+            navigation.replace('home');
+          } else {
+            console.log('Fetching address...');
+            setLoading(true);
+            await dispatch(fatchUserAddress());
+            setLoading(false);
+          }
+        }
+      };
+
+      checkAddressAndNavigate();
+    }, [fullAddress, locationPermission, dispatch, navigation]),
+  );
 
   const translateY = useSharedValue(150); // Initial position
   const animatedPaddingTop = useSharedValue(120);

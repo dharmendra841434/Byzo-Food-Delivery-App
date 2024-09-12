@@ -100,52 +100,67 @@ const HomeScreen = () => {
 
   useEffect(() => {
     let timer;
+
     if (isChecking) {
+      // Set an interval to check permission every second
       timer = setInterval(() => {
         checkPermission();
       }, 1000);
-    }
-    if (isChecking && !confirmAddress) {
-      console.log('present modal call');
-      bottomSheetModalRef.current?.present();
-    } else {
-      if (confirmAddress) {
-        console.log('closed called');
+
+      // Handle modal state based on the presence of confirmAddress
+      if (!confirmAddress) {
+        console.log('present modal call');
+        bottomSheetModalRef.current?.present();
+      } else {
+        console.log('close called');
         bottomSheetModalRef.current?.close();
       }
     }
-    return () => clearInterval(timer);
-  }, [isChecking]);
+
+    // Clean up the interval on component unmount or when isChecking changes
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isChecking, confirmAddress]);
 
   useFocusEffect(
     useCallback(() => {
-      console.log(checkIsWithinKanyakumari(confirmAddress), 'is confirm');
-      showNavigationBar();
-      if (locationPermission === 'denied') {
-        dispatch(setIsChecking(true));
-      }
-      getLocalStorageAddress('user-address').then(res => {
-        if (res !== null) {
-          bottomSheetModalRef?.current?.close();
-          console.log('data found');
-          dispatch(setAddressLoader(false));
-          dispatch(setConfirmAddress(res));
-        } else {
-          if (confirmAddress) {
-            bottomSheetModalRef?.current?.close();
-            console.log('modal should close');
-            dispatch(setAddressLoader(false));
-          } else {
-            console.log(loader, 'home loader');
-            dispatch(setAddressLoader(true));
-            bottomSheetModalRef.current?.present();
-          }
-        }
-      });
-    }, []), // Include checkPermission in the dependencies array if it's defined outside of this effect
-  );
+      const handleAddressCheck = async () => {
+        console.log(checkIsWithinKanyakumari(confirmAddress), 'is confirm');
+        showNavigationBar();
 
-  //console.log(isWithinKanyakumari, 'isWithinKanyakumari');
+        if (locationPermission === 'denied') {
+          dispatch(setIsChecking(true));
+        }
+
+        const localAddress = await getLocalStorageAddress('user-address');
+
+        if (localAddress !== null) {
+          handleModalClose();
+          console.log('data found');
+          dispatch(setConfirmAddress(localAddress));
+        } else if (confirmAddress) {
+          handleModalClose();
+          console.log('modal should close');
+        } else {
+          handleModalPresent();
+        }
+      };
+
+      const handleModalClose = () => {
+        bottomSheetModalRef?.current?.close();
+        dispatch(setAddressLoader(false));
+      };
+
+      const handleModalPresent = () => {
+        console.log(loader, 'home loader');
+        dispatch(setAddressLoader(true));
+        bottomSheetModalRef.current?.present();
+      };
+
+      handleAddressCheck();
+    }, [confirmAddress, locationPermission, dispatch]),
+  );
 
   useEffect(() => {
     const backAction = () => {
@@ -161,7 +176,8 @@ const HomeScreen = () => {
     return () => backHandler.remove();
   }, []);
 
-  //console.log(confirmAddress, 'this is confirm address');
+  console.log(confirmAddress, 'ccc');
+  console.log(loader, 'loader');
 
   return (
     <BottomSheetModalProvider>

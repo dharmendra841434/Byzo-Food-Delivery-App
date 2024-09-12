@@ -18,6 +18,7 @@ import CustomText from '../../components/CustomText';
 import {useDispatch, useSelector} from 'react-redux';
 import {setViewNotice} from '../../store/mapSlice';
 import TopSectionCards from '../../components/home/TopSectionCards';
+import {isWithinTimeRange} from '../../utils/helperfun';
 
 const NOTICE_HEIGHT = -(NoticeHeight + 75);
 
@@ -103,7 +104,7 @@ const Home = ({address, sheetRef}) => {
 
   useEffect(() => {
     let timeoutId = '';
-    if (viewNotice) {
+    if (viewNotice && isWithinTimeRange()) {
       slideDown();
       timeoutId = setTimeout(() => {
         slideUp();

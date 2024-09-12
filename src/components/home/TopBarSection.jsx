@@ -52,11 +52,13 @@ const TopBarSection = ({
               }}>
               {isWithinTimeRange() ? '10 minutes' : 'Store closed'}
             </CustomText>
-            <TouchableOpacity onPress={handleKnowMore} style={styles.know}>
-              <CustomText style={{fontSize: 12, color: appColors.background}}>
-                Know more
-              </CustomText>
-            </TouchableOpacity>
+            {isWithinTimeRange() && (
+              <TouchableOpacity onPress={handleKnowMore} style={styles.know}>
+                <CustomText style={{fontSize: 12, color: appColors.background}}>
+                  Know more
+                </CustomText>
+              </TouchableOpacity>
+            )}
           </View>
           <TouchableOpacity
             activeOpacity={0.6}

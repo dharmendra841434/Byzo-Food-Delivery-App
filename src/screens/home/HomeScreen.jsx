@@ -16,7 +16,6 @@ import CustomText from '../../components/CustomText';
 import {
   checkIsWithinKanyakumari,
   getLocalStorageAddress,
-  getLocalStorageData,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
@@ -24,11 +23,9 @@ import NotAllowLocation from '../../components/address/NotAllowLocation';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
 import Home from './Home';
-
 const HomeScreen = () => {
   const bottomSheetModalRef = useRef(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [settingModelOpen, setSettingModelOpen] = useState(false);
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
@@ -39,7 +36,7 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const fullAddress = useSelector(state => state?.map?.fullAddress);
   const loader = useSelector(state => state?.map?.addressLoader);
-  const navigation = useNavigation();
+
   const [loading, setLoading] = useState(false);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -221,6 +218,7 @@ const HomeScreen = () => {
           </>
         )}
       </View>
+
       <AddressBottomSheetModal
         bottomSheetModalRef={bottomSheetModalRef}
         handleClose={() => {
@@ -230,7 +228,6 @@ const HomeScreen = () => {
         }}
         loading={loading}
         setModalVisible={setModalVisible}
-        keyboardVisible={keyboardVisible}
         handleEnableLocation={enableLocation}
         settingModelOpen={settingModelOpen}
         setSettingModelOpen={setSettingModelOpen}

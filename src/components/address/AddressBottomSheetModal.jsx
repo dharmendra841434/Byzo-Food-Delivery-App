@@ -18,11 +18,10 @@ import {
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
 import EnableWarning from './mapScreen/EnableWarning';
+import CustomBottomSheet from '../CustomBottomSheet';
 
 const AddressBottomSheetModal = ({
   setModalVisible,
-  keyboardVisible,
-  handleClose,
   bottomSheetModalRef,
   handleEnableLocation,
   setSettingModelOpen,
@@ -48,11 +47,12 @@ const AddressBottomSheetModal = ({
   }, []);
   return (
     <>
-      <BottomSheetModal
-        ref={bottomSheetModalRef}
-        index={1}
-        snapPoints={snapPoints}
-        handleComponent={null}
+      <CustomBottomSheet
+        isCloseButton={
+          locationPermission === 'denied' || confirmAddress === ''
+            ? false
+            : true
+        }
         enableHandlePanningGesture={
           locationPermission === 'denied' ? false : true
         }
@@ -60,104 +60,83 @@ const AddressBottomSheetModal = ({
           locationPermission === 'denied' ? false : true
         }
         enablePanDownToClose={locationPermission === 'denied' ? false : true}
-        backdropComponent={props => (
-          <CustomBackdrop
-            {...props}
-            handleClose={handleClose}
-            keyboardStatus={keyboardVisible}
-            isCloseButton={
-              locationPermission === 'denied' || confirmAddress === ''
-                ? false
-                : true
-            }
-          />
-        )}
-        onChange={handleSheetChanges}>
-        <TouchableWithoutFeedback
-          onPress={() => Keyboard.dismiss()}
-          style={{height: '100%'}}>
-          <BottomSheetView
-            style={{
-              height: '100%',
-              backgroundColor: '#e6ecf0',
-              borderRadius: 14,
-            }}>
-            <View>
-              {/* <CustomText>Home modal</CustomText> */}
-              {locationPermission === 'denied' ? (
-                <View style={{marginHorizontal: '1%', paddingTop: '3%'}}>
-                  <EnableWarning
-                    className="rounded-md"
-                    handleEnableLocation={handleEnableLocation}
-                  />
-                </View>
-              ) : (
-                <>
-                  {checkIsWithinKanyakumari(confirmAddress) && (
-                    <View className="flex flex-row items-center justify-between p-2 m-2 bg-white rounded-md ">
-                      <View className="flex flex-row ">
-                        <View>
-                          <Icon
-                            name="location-outline"
-                            size={25}
-                            color={appColors.blackText}
-                          />
-                        </View>
-                        <View className="w-[85%] ml-2 ">
-                          <CustomText
-                            font="semibold"
-                            className=" text-[13px] text-blackText">
-                            {splitAddressAtFirstComma(confirmAddress)}
-                          </CustomText>
-                        </View>
-                      </View>
-                    </View>
-                  )}
-                </>
-              )}
-              <View
-                className={` px-3 ${
-                  checkIsWithinKanyakumari(confirmAddress) ? ' pb-2  ' : 'py-3'
-                }`}>
-                <CustomText
-                  font="bold"
-                  className="-mt-1 text-[17px] text-blackText">
-                  Select delivery address
-                </CustomText>
-              </View>
-              <View className="px-3 ">
-                <AddressAutoComplete
-                  setSettingModelOpen={setSettingModelOpen}
-                  setModalVisible={setModalVisible}
-                  handleCloseSheet={() => {}}
-                  handleSelectAddress={handleSelectAddress}
-                  onPressCureentLocation={() => {
-                    console.log('handle current location');
-                  }}
-                />
-              </View>
+        bottomSheetModalRef={bottomSheetModalRef}
+        handleSheetChanges={handleSheetChanges}>
+        <View>
+          {/* <CustomText>Home modal</CustomText> */}
+          {locationPermission === 'denied' ? (
+            <View style={{marginHorizontal: '1%', paddingTop: '3%'}}>
+              <EnableWarning
+                className="rounded-md"
+                handleEnableLocation={handleEnableLocation}
+              />
             </View>
-            {loading && (
-              <View
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
+          ) : (
+            <>
+              {checkIsWithinKanyakumari(confirmAddress) && (
+                <View className="flex flex-row items-center justify-between p-2 m-2 bg-white rounded-md ">
+                  <View className="flex flex-row ">
+                    <View>
+                      <Icon
+                        name="location-outline"
+                        size={25}
+                        color={appColors.blackText}
+                      />
+                    </View>
+                    <View className="w-[85%] ml-2 ">
+                      <CustomText
+                        font="semibold"
+                        className=" text-[13px] text-blackText">
+                        {splitAddressAtFirstComma(confirmAddress)}
+                      </CustomText>
+                    </View>
+                  </View>
+                </View>
+              )}
+            </>
+          )}
+          <View
+            className={` px-3 ${
+              checkIsWithinKanyakumari(confirmAddress) ? ' pb-2  ' : 'py-3'
+            }`}>
+            <CustomText
+              font="bold"
+              className="-mt-1 text-[17px] text-blackText">
+              Select delivery address
+            </CustomText>
+          </View>
+          <View className="px-3 ">
+            <AddressAutoComplete
+              setSettingModelOpen={setSettingModelOpen}
+              setModalVisible={setModalVisible}
+              handleCloseSheet={() => {}}
+              handleSelectAddress={handleSelectAddress}
+              onPressCureentLocation={() => {
+                console.log('handle current location');
+              }}
+            />
+          </View>
+        </View>
+        {loading && (
+          <View
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
 
-                  borderTopRightRadius: 15,
-                  borderTopLeftRadius: 15,
-                  marginTop: '45%',
-                  alignItems: 'center',
-                  paddingTop: '55%',
-                }}>
-                <ActivityIndicator color={appColors?.secondry} size={33} />
-              </View>
-            )}
-          </BottomSheetView>
-        </TouchableWithoutFeedback>
-      </BottomSheetModal>
+              borderTopRightRadius: 15,
+              borderTopLeftRadius: 15,
+              marginTop: '45%',
+              alignItems: 'center',
+              paddingTop: '55%',
+            }}>
+            <ActivityIndicator color={appColors?.secondry} size={33} />
+          </View>
+        )}
+      </CustomBottomSheet>
+
       <SettingOpenModel
         setSettingModelOpen={setSettingModelOpen}
         settingModelOpen={settingModelOpen}

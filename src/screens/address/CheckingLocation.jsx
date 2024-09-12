@@ -41,6 +41,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import TestBottomSheet from '../../components/address/TestBottomSheet';
+import CustomBottomSheet from '../../components/CustomBottomSheet';
 
 const CheckingLocation = () => {
   const fullAddress = useSelector(state => state?.map?.fullAddress);
@@ -54,7 +55,7 @@ const CheckingLocation = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [snapPoints, setSnapPoints] = useState(['10%', '75%']);
+  const [snapPoints, setSnapPoints] = useState(['10%', '80%']);
   // ref
   const bottomSheetModalRef = useRef(null);
 
@@ -67,11 +68,6 @@ const CheckingLocation = () => {
       bottomSheetModalRef.current?.close();
     }
   }, []);
-
-  const handleClose = () => {
-    // console.log('close');
-    bottomSheetModalRef.current?.close();
-  };
 
   useFocusEffect(
     useCallback(() => {
@@ -111,44 +107,6 @@ const CheckingLocation = () => {
       checkAddressAndNavigate();
     }, [fullAddress, locationPermission, dispatch, navigation]),
   );
-
-  const translateY = useSharedValue(150); // Initial position
-  const animatedPaddingTop = useSharedValue(120);
-
-  // Animated style for bottom sheet container
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{translateY: translateY.value}],
-  }));
-
-  useEffect(() => {
-    // Listen to keyboard events
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      onKeyboardShow,
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      onKeyboardHide,
-    );
-
-    return () => {
-      // Cleanup keyboard event listeners
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
-
-  const onKeyboardShow = e => {
-    translateY.value = withTiming(toPercentage(13), {duration: 300}); // Move up by keyboard height
-    animatedPaddingTop.value = withTiming(60, {duration: 300});
-  };
-
-  const onKeyboardHide = () => {
-    translateY.value = withTiming(toPercentage(21), {duration: 300}); // Move back to original position
-    animatedPaddingTop.value = withTiming(120, {duration: 300});
-  };
-
-  // console.log(animatedStyle, 'thussu');
 
   return (
     <>
@@ -245,51 +203,26 @@ const CheckingLocation = () => {
               )}
             </View>
           )}
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={1}
-            snapPoints={['10%', '80%']}
-            handleComponent={null}
-            style={animatedStyle}
-            backdropComponent={props => (
-              <CustomBackdrop
-                {...props}
-                handleClose={handleClose}
-                keyboardStatus={keyboardVisible}
-                animatedPaddingTop={animatedPaddingTop}
-              />
-            )}
-            keyboardBehavior="interactive"
-            enablePanDownToClose={true}
-            onChange={handleSheetChanges}>
-            <BottomSheetView
-              style={[
-                {
-                  borderTopLeftRadius: 14,
-                  borderTopRightRadius: 14,
-                  backgroundColor: appColors?.bottomSheetBg,
-                  flex: 1,
-                },
-              ]}>
-              <View>
-                <View className="p-3 ">
-                  <CustomText
-                    font="bold"
-                    className="text-[17px] text-blackText">
-                    Select delivery address
-                  </CustomText>
-                </View>
-                <View className="px-3 ">
-                  <AddressAutoComplete
-                    setSettingModelOpen={setSettingModelOpen}
-                    handleCloseSheet={() => {}}
-                    handleSelectAddress={() => {}}
-                    onPressCureentLocation={() => {}}
-                  />
-                </View>
+
+          <CustomBottomSheet
+            handleSheetChanges={handleSheetChanges}
+            bottomSheetModalRef={bottomSheetModalRef}>
+            <View style={{flex: 1}}>
+              <View className="p-3 ">
+                <CustomText font="bold" className="text-[17px] text-blackText">
+                  Select delivery address
+                </CustomText>
               </View>
-            </BottomSheetView>
-          </BottomSheetModal>
+              <View className="px-3 ">
+                <AddressAutoComplete
+                  setSettingModelOpen={setSettingModelOpen}
+                  handleCloseSheet={() => {}}
+                  handleSelectAddress={() => {}}
+                  onPressCureentLocation={() => {}}
+                />
+              </View>
+            </View>
+          </CustomBottomSheet>
         </View>
       </BottomSheetModalProvider>
       <SettingOpenModel

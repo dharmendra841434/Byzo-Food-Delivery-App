@@ -15,6 +15,7 @@ import EnableWarning from './EnableWarning';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {addEllipsis, splitAddressAtFirstComma} from '../../../utils/helperfun';
+import CustomBottomSheet from '../../CustomBottomSheet';
 
 const MapBottomSheet = ({
   bottomSheetModalRef,
@@ -58,98 +59,72 @@ const MapBottomSheet = ({
     return () => backHandler.remove();
   }, []);
   return (
-    <BottomSheetModal
-      ref={bottomSheetModalRef}
-      index={1}
-      snapPoints={snapPoints}
-      handleStyle={{
-        backgroundColor: appColors.bottomSheetBg,
-        borderTopRightRadius: 14,
-        borderTopLeftRadius: 14,
-      }}
-      backdropComponent={props => (
-        <CustomBackdrop
-          {...props}
-          handleClose={handleClose}
-          keyboardStatus={keyboardVisible}
-        />
-      )}
-      onChange={handleSheetChanges}>
-      <TouchableWithoutFeedback
-        onPress={() => Keyboard.dismiss()}
-        style={{height: '100%'}}>
-        <BottomSheetView
-          style={{
-            height: '100%',
-            backgroundColor: appColors.bottomSheetBg,
-          }}>
-          <View>
-            {!isEnable ? (
-              <View style={{marginHorizontal: '1%'}}>
-                <EnableWarning
-                  className="rounded-md"
-                  handleEnableLocation={handleEnableLocation}
-                />
-              </View>
-            ) : (
-              <>
-                {
-                  <View className="flex flex-row items-center justify-between p-2 mx-2 bg-white rounded-md ">
-                    <View className="flex flex-row ">
-                      <View>
-                        <Icon
-                          name="location-outline"
-                          size={25}
-                          color={appColors.blackText}
-                        />
-                      </View>
-                      <View className="w-[85%] ml-2  ">
-                        <CustomText
-                          font="bold"
-                          className=" text-blackText text-[12px]">
-                          {splitAddressAtFirstComma(fullAddress)}
-                        </CustomText>
-                      </View>
-                    </View>
+    <CustomBottomSheet
+      bottomSheetModalRef={bottomSheetModalRef}
+      handleSheetChanges={handleSheetChanges}>
+      <View style={{marginTop: '2%'}}>
+        {!isEnable ? (
+          <View style={{marginHorizontal: '1%'}}>
+            <EnableWarning
+              className="rounded-md"
+              handleEnableLocation={handleEnableLocation}
+            />
+          </View>
+        ) : (
+          <>
+            {
+              <View className="flex flex-row items-center justify-between p-2 mx-2 bg-white rounded-md ">
+                <View className="flex flex-row ">
+                  <View>
+                    <Icon
+                      name="location-outline"
+                      size={25}
+                      color={appColors.blackText}
+                    />
                   </View>
-                }
-              </>
-            )}
-            <View className="px-3 ">
-              {/* <View className="px-3 py-3 bg-white rounded-md ">
+                  <View className="w-[85%] ml-2  ">
+                    <CustomText
+                      font="bold"
+                      className=" text-blackText text-[12px]">
+                      {splitAddressAtFirstComma(fullAddress)}
+                    </CustomText>
+                  </View>
+                </View>
+              </View>
+            }
+          </>
+        )}
+        <View className="px-3 ">
+          {/* <View className="px-3 py-3 bg-white rounded-md ">
                 <CustomText font="semibold">
                   {addEllipsis(fullAddress, 50)}
                 </CustomText>
               </View> */}
-              <CustomText
-                font="bold"
-                className="my-2 text-[17px] text-blackText">
-                Change delivery address
-              </CustomText>
-            </View>
-            <View className="px-3 ">
-              <AddressAutoComplete
-                setSettingModelOpen={setSettingModelOpen}
-                handleCloseSheet={handleClose}
-                onPressCureentLocation={() => {}}
-                handleSelectAddress={cords => {
-                  mapRef?.current?.animateToRegion(
-                    {
-                      latitude: cords?.latitude,
-                      longitude: cords?.longitude,
-                      latitudeDelta: 15,
-                      longitudeDelta: 15,
-                    },
-                    2000,
-                  );
-                }}
-                inputRef={inputRef}
-              />
-            </View>
-          </View>
-        </BottomSheetView>
-      </TouchableWithoutFeedback>
-    </BottomSheetModal>
+          <CustomText font="bold" className="my-2 text-[17px] text-blackText">
+            Change delivery address
+          </CustomText>
+        </View>
+        <View className="px-3 ">
+          <AddressAutoComplete
+            setSettingModelOpen={setSettingModelOpen}
+            handleCloseSheet={handleClose}
+            onPressCureentLocation={() => {}}
+            handleSelectAddress={cords => {
+              mapRef?.current?.animateToRegion(
+                {
+                  latitude: cords?.latitude,
+                  longitude: cords?.longitude,
+                  latitudeDelta: 15,
+                  longitudeDelta: 15,
+                },
+                2000,
+              );
+            }}
+            inputRef={inputRef}
+          />
+        </View>
+      </View>
+    </CustomBottomSheet>
   );
 };
 

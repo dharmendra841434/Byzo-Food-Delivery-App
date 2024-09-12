@@ -7,13 +7,14 @@ const appColors = {
   borderGray: '#d1d1d1',
   cardBg: '#f2f9fc',
   warning: '#d4aa04',
-  backDropBg: 'rgba(0,0,0,0.7)',
+  backDropBg: 'rgba(0,0,0,0.6)',
   disable: '#9197A7',
   mediumWhite: 'rgba(255,255,255,0.3)',
   topSectionBg: '#1b6447',
   gredientFrom: '#a6125c',
   gredientTo: '#b02d6f',
   statuBarColor: 'rgba(0,0,0,0.5)',
+  closeButton: '#3c3c4f',
 };
 
 export default appColors;

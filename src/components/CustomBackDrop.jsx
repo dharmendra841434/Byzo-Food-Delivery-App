@@ -5,22 +5,10 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import {
-  TouchableOpacity,
-  Animated as RNAnimated,
-  View,
-  StyleSheet,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import {StyleSheet} from 'react-native';
 import appColors from '../utils/appColors';
 
-const CustomBackdrop = ({
-  animatedIndex,
-  style,
-  handleClose,
-  isCloseButton = true,
-  animatedPaddingTop,
-}) => {
+const CustomBackdrop = ({animatedIndex, style, handleClose}) => {
   // Animated styles for backdrop container
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
@@ -39,15 +27,8 @@ const CustomBackdrop = ({
 
   return (
     <Animated.View style={containerStyle}>
-      <TouchableWithoutFeedback onPress={handleClose}>
-        <View style={styles.fullScreen}>
-          {isCloseButton && (
-            <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-              <Icon name="close" size={20} color="white" />
-            </TouchableOpacity>
-          )}
-        </View>
-      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback
+        onPress={handleClose}></TouchableWithoutFeedback>
     </Animated.View>
   );
 };
@@ -66,7 +47,6 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: appColors?.closeButton,
     borderRadius: 50,
-    top: '13%',
   },
 });
 

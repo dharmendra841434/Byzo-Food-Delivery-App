@@ -38,7 +38,13 @@ const StackNavigation = () => {
           headerShown: false,
         }}
         initialRouteName="splash">
-        <Stack.Screen name="splash" component={SplashScreen} />
+        <Stack.Screen
+          name="splash"
+          options={{
+            animation: 'none',
+          }}
+          component={SplashScreen}
+        />
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="home" component={RightDrawer} />
         <Stack.Screen name="mapview" component={MapScreen} />

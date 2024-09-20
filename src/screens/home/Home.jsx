@@ -53,15 +53,15 @@ const Home = ({address, sheetRef}) => {
   });
 
   const searchBarBackgroundColor = scrollY.interpolate({
-    inputRange: [0, 250],
-    outputRange: ['rgba(0,0,0,0)', appColors?.background], // Change colors from green to red
+    inputRange: [300, 320],
+    outputRange: [appColors?.gredientFrom, appColors?.background], // Change colors from green to red
     extrapolate: 'clamp',
   });
 
   // Effect to change the status bar style based on scroll position
   useEffect(() => {
     const listenerId = scrollY.addListener(({value}) => {
-      if (value >= 200) {
+      if (value >= 320) {
         setIsShowSearched(true);
         setGradientColor(['#ffff', '#ffff']);
         StatusBar.setBarStyle('dark-content'); // Change to dark-content when not at the top
@@ -83,7 +83,7 @@ const Home = ({address, sheetRef}) => {
   const slideUp = () => {
     Animated.timing(noticePosition, {
       toValue: NOTICE_HEIGHT,
-      duration: 1200,
+      duration: 800,
       useNativeDriver: false,
     }).start(() => {
       StatusBar.setBarStyle('light-content');
@@ -94,7 +94,7 @@ const Home = ({address, sheetRef}) => {
   const slideDown = () => {
     Animated.timing(noticePosition, {
       toValue: 40,
-      duration: 1200,
+      duration: 800,
       useNativeDriver: false,
     }).start(() => {
       StatusBar.setBarStyle('dark-content');
@@ -109,7 +109,7 @@ const Home = ({address, sheetRef}) => {
       timeoutId = setTimeout(() => {
         slideUp();
         dispatch(setViewNotice(false));
-      }, 3500);
+      }, 2500);
     }
     return () => clearTimeout(timeoutId);
   }, []);
@@ -135,12 +135,11 @@ const Home = ({address, sheetRef}) => {
               address={address}
               bottomSheetModalRef={sheetRef}
               handleKnowMore={() => {
-                console.log(noticePosition > 0, 'postion');
-                if (isVisible) {
+                slideDown();
+                const timeoutId = setTimeout(() => {
                   slideUp();
-                } else {
-                  slideDown();
-                }
+                }, 3500);
+                return () => clearTimeout(timeoutId);
               }}
             />
           </LinearGradient>
@@ -214,11 +213,13 @@ const Home = ({address, sheetRef}) => {
                 </CustomText>
               )}
             </View> */}
-            {dummy?.map((item, index) => (
-              <CustomText key={index} className=" h-44">
-                {item}
-              </CustomText>
-            ))}
+            <View style={{backgroundColor: appColors?.background}}>
+              {dummy?.map((item, index) => (
+                <CustomText key={index} className=" h-44">
+                  {item}
+                </CustomText>
+              ))}
+            </View>
           </View>
           {/* Add more content as needed */}
         </ScrollView>
@@ -258,9 +259,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   contentContainer: {
-    paddingTop: 200, // Make sure there's space for the header
-    paddingBottom: 300, // Extra space for smooth scrolling
-    backgroundColor: appColors?.background,
+    paddingTop: '50%', // Make sure there's space for the header
+    backgroundColor: appColors?.gredientFrom,
   },
   content: {
     justifyContent: 'center',

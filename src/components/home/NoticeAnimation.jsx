@@ -5,7 +5,7 @@ import {
   Animated as RNAnimated,
   ImageBackground,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {NoticeHeight} from '../../utils/scaling';
 import Notice from './Notice';
 import appColors from '../../utils/appColors';
@@ -16,31 +16,34 @@ import LottieView from 'lottie-react-native';
 const NOTICE_HEIGHT = -(NoticeHeight + 12);
 
 const NoticeAnimation = ({noticePosition, children}) => {
+  const [isRaining, setIsRaining] = useState(false);
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          backgroundColor: 'black',
-          left: 0,
-          right: 0,
-          height: 95,
-        }}>
-        <ImageBackground source={cloud} style={{height: '100%'}}>
-          <LottieView
-            autoPlay={true}
-            enableMergePathsAndroidForKitKatAndAbove={true}
-            loop={true}
-            style={{
-              width: '100%',
-              height: 150,
-              transform: [{scaleX: -1}],
-            }}
-            source={rain}
-          />
-        </ImageBackground>
-      </View>
+      {isRaining && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            backgroundColor: 'black',
+            left: 0,
+            right: 0,
+            height: 95,
+          }}>
+          <ImageBackground source={cloud} style={{height: '100%'}}>
+            <LottieView
+              autoPlay={true}
+              enableMergePathsAndroidForKitKatAndAbove={true}
+              loop={true}
+              style={{
+                width: '100%',
+                height: 150,
+                transform: [{scaleX: -1}],
+              }}
+              source={rain}
+            />
+          </ImageBackground>
+        </View>
+      )}
       <RNAnimated.View
         style={[
           styles.noticeContainer,
@@ -54,7 +57,7 @@ const NoticeAnimation = ({noticePosition, children}) => {
           {
             paddingTop: noticePosition.interpolate({
               inputRange: [NOTICE_HEIGHT, 0],
-              outputRange: [0, NoticeHeight + 20],
+              outputRange: [0, NoticeHeight + 18],
             }),
           },
         ]}>
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
     zIndex: 999,
     position: 'absolute',
     backgroundColor: 'purple',
-    top: 10,
+    top: 5,
   },
   contentContainer: {
     flex: 1,

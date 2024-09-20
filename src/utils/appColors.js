@@ -7,7 +7,7 @@ const appColors = {
   borderGray: '#d1d1d1',
   cardBg: '#f2f9fc',
   warning: '#d4aa04',
-  backDropBg: 'rgba(0,0,0,0.6)',
+  backDropBg: 'rgba(0,0,0,0.8)',
   disable: '#9197A7',
   mediumWhite: 'rgba(255,255,255,0.3)',
   topSectionBg: '#1b6447',

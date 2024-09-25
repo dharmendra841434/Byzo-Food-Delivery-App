@@ -78,3 +78,36 @@ export const tabsData = [
     icon: require('../assets/icons/diamond.png'),
   },
 ];
+
+export const dummyData = [
+  {
+    address: 'Shannachester, Fiji',
+    jobTitle: 'Future Division Director',
+    name: 'Dawn Fay',
+  },
+  {
+    address: 'New Haskell, Antarctica (the territory South of 60 deg S)',
+    jobTitle: 'International Marketing Orchestrator',
+    name: "Raphael O'Hara",
+  },
+  {
+    address: "O'Reillyside, United Arab Emirates",
+    jobTitle: 'Senior Solutions Facilitator',
+    name: 'Raegan Buckridge',
+  },
+  {
+    address: 'Padbergfort, Heard Island and McDonald Islands',
+    jobTitle: 'Future Brand Supervisor',
+    name: 'Isobel Parker',
+  },
+  {
+    address: 'New William, Greece',
+    jobTitle: 'Dynamic Branding Technician',
+    name: 'Thurman Bednar',
+  },
+  {
+    address: 'Wilbertburgh, Fiji',
+    jobTitle: 'Customer Accountability Administrator',
+    name: 'Arnaldo Hills',
+  },
+];

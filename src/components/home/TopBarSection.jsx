@@ -62,7 +62,7 @@ const TopBarSection = ({
           </View>
           <TouchableOpacity
             activeOpacity={0.6}
-            onPress={() => bottomSheetModalRef?.current?.present()}
+            onPress={() => bottomSheetModalRef?.current?.expand()}
             style={{flexDirection: 'row', alignItems: 'center'}}>
             <CustomText
               style={{color: appColors?.background, marginTop: -5}}

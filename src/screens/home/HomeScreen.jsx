@@ -23,6 +23,7 @@ import NotAllowLocation from '../../components/address/NotAllowLocation';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
 import Home from './Home';
+import CustomBottomSheet2 from '../../components/bottomsheet/CustomBottomSheet2';
 const HomeScreen = () => {
   const bottomSheetModalRef = useRef(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -39,7 +40,7 @@ const HomeScreen = () => {
 
   const [loading, setLoading] = useState(false);
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+    bottomSheetModalRef.current?.expand();
   }, []);
   const checkPermission = async () => {
     if (!confirmAddress) {
@@ -107,7 +108,7 @@ const HomeScreen = () => {
       // Handle modal state based on the presence of confirmAddress
       if (!confirmAddress) {
         console.log('present modal call');
-        bottomSheetModalRef.current?.present();
+        bottomSheetModalRef.current?.expand();
       } else {
         console.log('close called');
         bottomSheetModalRef.current?.close();
@@ -152,7 +153,7 @@ const HomeScreen = () => {
       const handleModalPresent = () => {
         console.log(loader, 'home loader');
         dispatch(setAddressLoader(true));
-        bottomSheetModalRef.current?.present();
+        bottomSheetModalRef.current?.expand();
       };
 
       handleAddressCheck();
@@ -177,7 +178,7 @@ const HomeScreen = () => {
   console.log(loader, 'loader');
 
   return (
-    <BottomSheetModalProvider>
+    <View>
       <StatusBar
         backgroundColor="transparent"
         translucent={true}
@@ -205,10 +206,7 @@ const HomeScreen = () => {
                 />
               </View>
             ) : (
-              <View
-                style={{
-                  height: '100%',
-                }}>
+              <View style={{height: '100%'}}>
                 <Home
                   address={splitAddressAtFirstComma(confirmAddress)}
                   sheetRef={bottomSheetModalRef}
@@ -218,8 +216,9 @@ const HomeScreen = () => {
           </>
         )}
       </View>
+      <CustomBottomSheet2 bottomSheetRef={bottomSheetModalRef} />
 
-      <AddressBottomSheetModal
+      {/* <AddressBottomSheetModal
         bottomSheetModalRef={bottomSheetModalRef}
         handleClose={() => {
           if (locationPermission !== 'denied' && confirmAddress !== '') {
@@ -235,8 +234,8 @@ const HomeScreen = () => {
           bottomSheetModalRef?.current?.close();
           dispatch(setIsChecking(false));
         }}
-      />
-    </BottomSheetModalProvider>
+      /> */}
+    </View>
   );
 };
 

@@ -18,8 +18,8 @@ export const fatchUserAddress = createAsyncThunk(
         if (response.results && response.results.length > 0) {
           const fullAddress = response.results[0].formatted_address;
           dispatch(setfullAddress(fullAddress));
-          //const extractedDigits = testExtractDigits(fullAddress);
-          const extractedDigits = extractDigits(fullAddress);
+          const extractedDigits = testExtractDigits(fullAddress);
+          // const extractedDigits = extractDigits(fullAddress);
           // console.log(!!extractedDigits, 'check digits');
           //console.log(fullAddress, 'fulll');
           if (!!extractedDigits) {
@@ -129,6 +129,23 @@ export const fatchAddressByCords = createAsyncThunk(
   },
 );
 
+export const fetchAddressSuggestions = createAsyncThunk(
+  'addressSuggetion',
+  async (textInput, {dispatch, rejectWithValue}) => {
+    try {
+      dispatch(setAddressSuggetionLoader(true));
+      const response = await locationAPI.getAddressSuggetion(textInput);
+      console.log(response?.predictions, 'sugges');
+      dispatch(setSuggestedAddress(response?.predictions));
+      dispatch(setAddressSuggetionLoader(false));
+    } catch (error) {
+      if (error.response) {
+        return rejectWithValue({hasError: error.response.data.message});
+      }
+    }
+  },
+);
+
 // Map slice with fetching location state
 export const mapSlice = createSlice({
   name: 'map',
@@ -146,6 +163,9 @@ export const mapSlice = createSlice({
     geolocationErrorMessage: '',
     isChecking: true,
     viewNotice: true,
+    suggetionLoader: false,
+    suggestedAddress: [],
+    searchInput: '',
   },
   reducers: {
     setMarkerPosition: (state, action) => {
@@ -192,6 +212,18 @@ export const mapSlice = createSlice({
       //console.log('addresss loaded called');
       state.viewNotice = action.payload; // Add reducer to update fetching location state
     },
+    setAddressSuggetionLoader: (state, action) => {
+      //console.log('addresss loaded called');
+      state.suggetionLoader = action.payload; // Add reducer to update fetching location state
+    },
+    setSuggestedAddress: (state, action) => {
+      //console.log('addresss loaded called');
+      state.suggestedAddress = action.payload; // Add reducer to update fetching location state
+    },
+    setSearchInput: (state, action) => {
+      //console.log('addresss loaded called');
+      state.searchInput = action.payload; // Add reducer to update fetching location state
+    },
   },
 });
 
@@ -209,6 +241,9 @@ export const {
   setGeolocationErrorMessage,
   setIsChecking,
   setViewNotice,
+  setAddressSuggetionLoader,
+  setSuggestedAddress,
+  setSearchInput,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

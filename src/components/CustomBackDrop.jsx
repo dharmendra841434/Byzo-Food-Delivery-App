@@ -4,12 +4,9 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import {StyleSheet} from 'react-native';
-import appColors from '../utils/appColors';
 
-const CustomBackdrop = ({animatedIndex, style, handleClose}) => {
-  // Animated styles for backdrop container
+const CustomBackdrop = ({animatedIndex, style}) => {
+  // animated variables
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
       animatedIndex.value,
@@ -19,35 +16,19 @@ const CustomBackdrop = ({animatedIndex, style, handleClose}) => {
     ),
   }));
 
-  // Combine provided styles with animated style
+  // styles
   const containerStyle = useMemo(
-    () => [style, styles.backdrop, containerAnimatedStyle],
+    () => [
+      style,
+      {
+        backgroundColor: '#a8b5eb',
+      },
+      containerAnimatedStyle,
+    ],
     [style, containerAnimatedStyle],
   );
 
-  return (
-    <Animated.View style={containerStyle}>
-      <TouchableWithoutFeedback
-        onPress={handleClose}></TouchableWithoutFeedback>
-    </Animated.View>
-  );
+  return <Animated.View style={containerStyle} />;
 };
-
-const styles = StyleSheet.create({
-  backdrop: {
-    backgroundColor: appColors.backDropBg,
-  },
-  fullScreen: {
-    height: '100%',
-    width: '100%',
-  },
-  closeButton: {
-    position: 'absolute',
-    right: '45%',
-    padding: 8,
-    backgroundColor: appColors?.closeButton,
-    borderRadius: 50,
-  },
-});
 
 export default CustomBackdrop;

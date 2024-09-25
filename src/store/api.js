@@ -9,6 +9,22 @@ export const locationAPI = {
       )
       .then(res => res.data);
   },
+  getAddressSuggetion: async input => {
+    console.log(input, 'sdsa');
+
+    return await axios
+      .get(
+        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&components=country:in&key=AIzaSyCIWbUh6hK1P_ARYXLVwqm2B_IOeACS8is`,
+      )
+      .then(res => res.data);
+  },
+  getReverseLocation: async placeId => {
+    return await axios
+      .get(
+        `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=AIzaSyCIWbUh6hK1P_ARYXLVwqm2B_IOeACS8is`,
+      )
+      .then(res => res.data);
+  },
 };
 
 export const LoginAPI = {

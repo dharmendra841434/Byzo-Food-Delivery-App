@@ -4,7 +4,7 @@ import CustomText from '../CustomText';
 
 const NotAllowLocation = ({handlePresentModalPress}) => {
   return (
-    <View className="flex items-center pt-[50%] ">
+    <View className="flex items-center justify-center flex-1 h-full ">
       <Image
         source={require('../../assets/images/location_not_found.png')}
         className="w-40 h-40 "

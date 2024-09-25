@@ -24,6 +24,7 @@ import {
   setAddressCordinates,
 } from '../../store/mapSlice';
 import {useNavigation} from '@react-navigation/native';
+import {BottomSheetTextInput} from '@gorhom/bottom-sheet';
 
 const AddressAutoComplete = ({
   setSettingModelOpen,
@@ -164,7 +165,7 @@ const AddressAutoComplete = ({
     <View>
       <View style={styles.container}>
         <Icon name="search" size={20} color={appColors.secondry} />
-        <TextInput
+        <BottomSheetTextInput
           placeholder="Search for area, street name..."
           placeholderTextColor={appColors.blackText}
           style={{fontFamily: appFonts.medium, color: appColors.blackText}}
@@ -173,6 +174,7 @@ const AddressAutoComplete = ({
           value={query}
           onChangeText={handleInputChange}
           ref={inputRef}
+          
         />
         <View style={{position: 'absolute', top: loader ? 15 : 13, right: 15}}>
           {loader ? (

@@ -10,6 +10,7 @@ import RightDrawer from './RightDrawer';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetConnection from '../screens/NoInternetConnection';
+import TestingScreen from '../screens/testing/TestingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,7 +49,7 @@ const StackNavigation = () => {
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="home" component={RightDrawer} />
         <Stack.Screen name="mapview" component={MapScreen} />
-        {/* <Stack.Screen name="test" component={ScrollTest} /> */}
+        <Stack.Screen name="test" component={TestingScreen} />
         <Stack.Screen name="checking" component={CheckingLocation} />
         <Stack.Screen name="otp" component={OtpScreen} />
         <Stack.Screen name="profile" component={ProfileScreen} />

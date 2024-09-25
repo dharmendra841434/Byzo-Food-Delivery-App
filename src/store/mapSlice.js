@@ -18,8 +18,8 @@ export const fatchUserAddress = createAsyncThunk(
         if (response.results && response.results.length > 0) {
           const fullAddress = response.results[0].formatted_address;
           dispatch(setfullAddress(fullAddress));
-          //const extractedDigits = testExtractDigits(fullAddress);
-          const extractedDigits = extractDigits(fullAddress);
+          const extractedDigits = testExtractDigits(fullAddress);
+          // const extractedDigits = extractDigits(fullAddress);
           // console.log(!!extractedDigits, 'check digits');
           //console.log(fullAddress, 'fulll');
           if (!!extractedDigits) {
@@ -36,7 +36,7 @@ export const fatchUserAddress = createAsyncThunk(
       };
       Geolocation.getCurrentPosition(
         position => {
-          //console.log(position, values);
+          //console.log(position, 'current position');
           dispatch(setAddressCordinates(position?.coords));
           dispatch(setCurrentCordinates(position?.coords));
           fatchAddress({
@@ -69,11 +69,12 @@ export const fatchCurrentLocationAddress = createAsyncThunk(
         if (response.results && response.results.length > 0) {
           const fullAddress = response.results[0].formatted_address;
           dispatch(setfullAddress(fullAddress));
-          const extractedDigits = extractDigits(fullAddress);
+          // const extractedDigits = extractDigits(fullAddress);
           //console.log(!!extractedDigits, 'check digits');
-          //const extractedDigits = testExtractDigits(fullAddress);
+          const extractedDigits = testExtractDigits(fullAddress);
           dispatch(setIsWithinKanyakumari(!!extractedDigits));
           dispatch(setAddressLoader(false));
+          // console.log('address fatched', fullAddress);
         } else {
           console.log('- Full Address: No results found');
           dispatch(setfullAddress('No results found'));

@@ -1,20 +1,12 @@
-import {
-  View,
-  Text,
-  TouchableWithoutFeedback,
-  Keyboard,
-  BackHandler,
-} from 'react-native';
+import {View, BackHandler} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet';
-import CustomBackdrop from '../../CustomBackDrop';
 import CustomText from '../../CustomText';
 import AddressAutoComplete from '../AddressAutoComplete';
 import appColors from '../../../utils/appColors';
 import EnableWarning from './EnableWarning';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
-import {addEllipsis, splitAddressAtFirstComma} from '../../../utils/helperfun';
+import {splitAddressAtFirstComma} from '../../../utils/helperfun';
 import CustomBottomSheet from '../../CustomBottomSheet';
 
 const MapBottomSheet = ({
@@ -26,18 +18,12 @@ const MapBottomSheet = ({
   isValidAddress,
   inputRef,
 }) => {
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
-  const snapPoints = useMemo(() => ['5%', '85%'], []);
-
   const handleSheetChanges = useCallback(index => {
     if (!index) {
       bottomSheetModalRef.current?.close();
     }
   }, []);
 
-  const isWithinKanyakumari = useSelector(
-    state => state?.map?.isWithinKanyakumari,
-  );
   const fullAddress = useSelector(state => state?.map?.fullAddress);
 
   const handleClose = () => {
@@ -63,6 +49,7 @@ const MapBottomSheet = ({
       bottomSheetModalRef={bottomSheetModalRef}
       handleSheetChanges={handleSheetChanges}>
       <View style={{marginTop: '2%'}}>
+        {/* <CustomText>map modal</CustomText> */}
         {!isEnable ? (
           <View style={{marginHorizontal: '1%'}}>
             <EnableWarning

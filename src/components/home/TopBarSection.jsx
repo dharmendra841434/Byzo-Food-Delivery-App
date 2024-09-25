@@ -21,9 +21,8 @@ import {useNavigation} from '@react-navigation/native';
 const TopBarSection = ({
   address,
   opacity,
-  bottomSheetModalRef,
-  backgroundColor,
   handleKnowMore,
+  handleChangeAddress,
 }) => {
   const dispatch = useDispatch();
 
@@ -62,7 +61,7 @@ const TopBarSection = ({
           </View>
           <TouchableOpacity
             activeOpacity={0.6}
-            onPress={() => bottomSheetModalRef?.current?.present()}
+            onPress={handleChangeAddress}
             style={{flexDirection: 'row', alignItems: 'center'}}>
             <CustomText
               style={{color: appColors?.background, marginTop: -5}}

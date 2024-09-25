@@ -27,7 +27,10 @@ import AddressAutoComplete from '../../components/address/AddressAutoComplete';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
 import addresAnimation from '../../assets/images/animations/ddd.json';
-import {showNavigationBar} from 'react-native-navigation-bar-color';
+import {
+  hideNavigationBar,
+  showNavigationBar,
+} from 'react-native-navigation-bar-color';
 import {
   checkIsWithinKanyakumari,
   getLocalStorageAddress,
@@ -55,12 +58,13 @@ const CheckingLocation = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [snapPoints, setSnapPoints] = useState(['10%', '80%']);
+  const [snapPoints, setSnapPoints] = useState(['1%', '80%']);
   // ref
   const bottomSheetModalRef = useRef(null);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
+    // hideNavigationBar();
     bottomSheetModalRef.current?.present();
   }, []);
   const handleSheetChanges = useCallback(index => {
@@ -73,7 +77,6 @@ const CheckingLocation = () => {
     useCallback(() => {
       const checkAddressAndNavigate = async () => {
         showNavigationBar();
-
         const localAddress = await getLocalStorageAddress('user-address');
         if (localAddress) {
           console.log('Address found in local storage');
@@ -208,6 +211,7 @@ const CheckingLocation = () => {
             handleSheetChanges={handleSheetChanges}
             bottomSheetModalRef={bottomSheetModalRef}>
             <View style={{flex: 1}}>
+              {/* <CustomText>Checking modal</CustomText> */}
               <View className="p-3 ">
                 <CustomText font="bold" className="text-[17px] text-blackText">
                   Select delivery address

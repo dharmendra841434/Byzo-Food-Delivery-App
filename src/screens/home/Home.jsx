@@ -22,7 +22,7 @@ import {isWithinTimeRange} from '../../utils/helperfun';
 
 const NOTICE_HEIGHT = -(NoticeHeight + 75);
 
-const Home = ({address, sheetRef}) => {
+const Home = ({address, handleChangeAddress}) => {
   const scrollY = useRef(new Animated.Value(0)).current; // Create an animated value to track the scroll position
   const [isVisible, setIsVisible] = useState(false);
   const [isShowSearched, setIsShowSearched] = useState(false);
@@ -133,7 +133,7 @@ const Home = ({address, sheetRef}) => {
             <TopBarSection
               opacity={textOpacity}
               address={address}
-              bottomSheetModalRef={sheetRef}
+              handleChangeAddress={handleChangeAddress}
               handleKnowMore={() => {
                 slideDown();
                 const timeoutId = setTimeout(() => {

@@ -8,7 +8,7 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {StyleSheet} from 'react-native';
 import appColors from '../utils/appColors';
 
-const CustomBackdrop = ({animatedIndex, style, handleClose}) => {
+const CustomBackdrop = ({animatedIndex, style, handleClose, isCloseButton}) => {
   // Animated styles for backdrop container
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
@@ -27,8 +27,11 @@ const CustomBackdrop = ({animatedIndex, style, handleClose}) => {
 
   return (
     <Animated.View style={containerStyle}>
-      <TouchableWithoutFeedback
-        onPress={handleClose}></TouchableWithoutFeedback>
+      {isCloseButton && (
+        <TouchableWithoutFeedback
+          style={{height: '100%', width: '100%'}}
+          onPress={handleClose}></TouchableWithoutFeedback>
+      )}
     </Animated.View>
   );
 };

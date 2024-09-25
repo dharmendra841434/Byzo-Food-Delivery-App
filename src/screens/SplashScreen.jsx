@@ -1,9 +1,9 @@
 import {View, StatusBar, Image} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import appColors from '../utils/appColors';
 import logo from '../assets/images/line.png';
 import CustomText from '../components/CustomText';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {hideNavigationBar} from 'react-native-navigation-bar-color';
 import {
   getLocalStorageAddress,
@@ -18,6 +18,7 @@ import {
   setLocationPermission,
 } from '../store/mapSlice';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import NetInfo from '@react-native-community/netinfo';
 
 const SplashScreen = () => {
   const navigation = useNavigation();
@@ -75,26 +76,36 @@ const SplashScreen = () => {
     }
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      getLocalStorageData('token').then(token => {
-        if (token !== null) {
-          //console.log(token);
-          navigation.replace('checking');
-        } else {
-          getLocalStorageData('skip-login').then(res => {
-            if (res === null) {
-              navigation.replace('login');
-            } else {
-              //console.log('going to home');
-              checkPermission();
-            }
-          });
+  useFocusEffect(
+    useCallback(() => {
+      NetInfo.fetch().then(state => {
+        if (state.isConnected) {
+          setTimeout(() => {
+            getLocalStorageData('token').then(token => {
+              if (token !== null) {
+                navigation.replace('checking');
+              } else {
+                getLocalStorageData('skip-login').then(res => {
+                  if (res === null) {
+                    navigation.replace('login');
+                  } else {
+                    checkPermission();
+                  }
+                });
+              }
+            });
+          }, 2000);
         }
       });
-    }, 2000);
-    hideNavigationBar();
-  }, []);
+
+      hideNavigationBar();
+
+      // Optional cleanup, in case anything needs to be cleaned up when the screen is unfocused
+      return () => {
+        // Cleanup logic if necessary
+      };
+    }, []),
+  );
 
   // useEffect(() => {
   //   setTimeout(() => {

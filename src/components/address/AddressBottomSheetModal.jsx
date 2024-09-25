@@ -1,12 +1,5 @@
-import {
-  View,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ActivityIndicator,
-} from 'react-native';
-import React, {useCallback, useMemo} from 'react';
-import {BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet';
-import CustomBackdrop from '../CustomBackDrop';
+import {View, ActivityIndicator, StyleSheet} from 'react-native';
+import React, {useCallback} from 'react';
 import CustomText from '../CustomText';
 import appColors from '../../utils/appColors';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -34,10 +27,6 @@ const AddressBottomSheetModal = ({
   );
 
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
-  const addressLoader = useSelector(state => state?.map?.addressLoader);
-
-  // variables
-  const snapPoints = useMemo(() => ['1%', '85%'], []);
   const handleSheetChanges = useCallback(index => {
     //console.log('handleSheetChanges', index);
     setModalVisible(index === 1 ? true : false);
@@ -118,20 +107,7 @@ const AddressBottomSheetModal = ({
           </View>
         </View>
         {loading && (
-          <View
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
-
-              borderTopRightRadius: 15,
-              borderTopLeftRadius: 15,
-              marginTop: '45%',
-              alignItems: 'center',
-              paddingTop: '55%',
-            }}>
+          <View style={styles.loaderContainer}>
             <ActivityIndicator color={appColors?.secondry} size={33} />
           </View>
         )}
@@ -145,5 +121,20 @@ const AddressBottomSheetModal = ({
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  loaderContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
+    marginTop: '45%',
+    alignItems: 'center',
+    paddingTop: '55%',
+  },
+});
 
 export default AddressBottomSheetModal;

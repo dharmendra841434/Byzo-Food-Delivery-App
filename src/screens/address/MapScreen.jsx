@@ -1,4 +1,4 @@
-import {StatusBar, StyleSheet} from 'react-native';
+import {StatusBar} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import appColors from '../../utils/appColors';
@@ -18,7 +18,6 @@ import {
   checkIsWithinKanyakumari,
   fixedZoomLevel,
   saveAdressOnLocalStorage,
-  storeLocalStorageData,
 } from '../../utils/helperfun';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import CustomMap from './CustomMap';
@@ -50,14 +49,12 @@ const MapScreen = () => {
         inputRef.current.focus(); // Focus on the TextInput after the BottomSheet opens
       }
     }, 300);
-    bottomSheetModalRef.current?.present();
+    bottomSheetModalRef?.current?.present();
   }, []);
 
   const handleConfirmLocation = async () => {
     saveAdressOnLocalStorage('user-address', fullAddress);
-    if (checkIsWithinKanyakumari(fullAddress)) {
-      dispatch(setConfirmAddress(fullAddress));
-    }
+    dispatch(setConfirmAddress(fullAddress));
     navigation.navigate('home');
     setIsCheckEnabled(false);
   };
@@ -107,7 +104,7 @@ const MapScreen = () => {
             dispatch(fatchUserAddress());
             setIsCheckEnabled(false);
             dispatch(setLocationPermission('granted'));
-            bottomSheetModalRef.current.close();
+            bottomSheetModalRef.current.dismiss();
             setModalVisible(false);
             // console.log('The permission is granted.');
             break;
@@ -153,7 +150,6 @@ const MapScreen = () => {
           setModalVisible(true);
         }}
         handleGoToCureentLocation={handleGoToCureent}
-        handleSearchPress={handlePresentModalPress}
       />
       <MapBottomSheet
         bottomSheetModalRef={bottomSheetModalRef}

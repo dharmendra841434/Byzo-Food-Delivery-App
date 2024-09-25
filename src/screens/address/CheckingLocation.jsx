@@ -1,4 +1,4 @@
-import {View, StatusBar, StyleSheet} from 'react-native';
+import {View, StatusBar} from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
 import CustomText from '../../components/CustomText';
@@ -8,44 +8,37 @@ import {
   fatchUserAddress,
   setAddressLoader,
   setConfirmAddress,
-  setSearchInput,
-  setSuggestedAddress,
 } from '../../store/mapSlice';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
 import addresAnimation from '../../assets/images/animations/ddd.json';
-import changeNavigationBarColor, {
-  showNavigationBar,
-} from 'react-native-navigation-bar-color';
+import {showNavigationBar} from 'react-native-navigation-bar-color';
 import {
   checkIsWithinKanyakumari,
   getLocalStorageAddress,
   saveAdressOnLocalStorage,
 } from '../../utils/helperfun';
-import CustomBottomSheet2 from '../../components/bottomsheet/CustomBottomSheet2';
 import appColors from '../../utils/appColors';
+import AddressAutoComplete from '../../components/address/AddressAutoComplete';
+import CustomBottomSheet from '../../components/bottomsheet/CustomBottomSheet';
 
 const CheckingLocation = () => {
+  const bottomSheetRef = useRef(null);
   const fullAddress = useSelector(state => state?.map?.fullAddress);
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
   const loader = useSelector(state => state?.map?.addressLoader);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [settingModelOpen, setSettingModelOpen] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  // ref
-  const bottomSheetModalRef = useRef(null);
 
   // callbacks
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.expand();
-    setIsModalOpen(true);
-  }, []);
-
+  const handlePresentModalPress = () => {
+    bottomSheetRef?.current?.expand();
+  };
   useFocusEffect(
     useCallback(() => {
       const checkAddressAndNavigate = async () => {
@@ -53,7 +46,7 @@ const CheckingLocation = () => {
         const localAddress = await getLocalStorageAddress('user-address');
         if (localAddress) {
           console.log('Address found in local storage');
-          bottomSheetModalRef?.current?.close();
+          bottomSheetRef?.current?.close();
           dispatch(setConfirmAddress(localAddress));
           dispatch(setAddressLoader(false));
           navigation.replace('home');
@@ -88,7 +81,7 @@ const CheckingLocation = () => {
       className="h-[110vh] ">
       <StatusBar
         backgroundColor="rgba(0,0,0,0)"
-        barStyle={isModalOpen ? 'light-content' : 'dark-content'}
+        barStyle={false ? 'light-content' : 'dark-content'}
         translucent
       />
       <View style={{flex: 1}}>
@@ -113,10 +106,18 @@ const CheckingLocation = () => {
           <NotAllowLocation handlePresentModalPress={handlePresentModalPress} />
         )}
       </View>
-      <CustomBottomSheet2
-        setModalState={setIsModalOpen}
-        bottomSheetRef={bottomSheetModalRef}
-      />
+      <CustomBottomSheet bottomSheetRef={bottomSheetRef}>
+        <View style={{flex: 1}}>
+          <View className="p-3 ">
+            <CustomText font="bold" className="text-[17px] text-blackText">
+              Select delivery address
+            </CustomText>
+          </View>
+          <View className="px-3 ">
+            <AddressAutoComplete setSettingModelOpen={setSettingModelOpen} />
+          </View>
+        </View>
+      </CustomBottomSheet>
       <SettingOpenModel
         setSettingModelOpen={setSettingModelOpen}
         settingModelOpen={settingModelOpen}

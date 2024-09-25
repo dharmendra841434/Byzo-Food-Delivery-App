@@ -5,8 +5,8 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-const CustomBackdrop = ({animatedIndex, style}) => {
-  // animated variables
+const CustomBackdrop = ({animatedIndex, style, handleClose, isCloseButton}) => {
+  // Animated styles for backdrop container
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
       animatedIndex.value,
@@ -28,7 +28,15 @@ const CustomBackdrop = ({animatedIndex, style}) => {
     [style, containerAnimatedStyle],
   );
 
-  return <Animated.View style={containerStyle} />;
+  return (
+    <Animated.View style={containerStyle}>
+      {isCloseButton && (
+        <TouchableWithoutFeedback
+          style={{height: '100%', width: '100%'}}
+          onPress={handleClose}></TouchableWithoutFeedback>
+      )}
+    </Animated.View>
+  );
 };
 
 export default CustomBackdrop;

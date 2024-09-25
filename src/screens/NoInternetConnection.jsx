@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   ToastAndroid,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import appColors from '../utils/appColors';
 import CustomText from '../components/CustomText';
 import NetInfo from '@react-native-community/netinfo';
 import {useNavigation} from '@react-navigation/native';
+import {showNavigationBar} from 'react-native-navigation-bar-color';
 
 const NoInternetConnection = () => {
   const navigation = useNavigation();
@@ -31,9 +32,28 @@ const NoInternetConnection = () => {
       }
     });
   };
+
+  useEffect(() => {
+    showNavigationBar();
+    const unsubscribe = NetInfo.addEventListener(state => {
+      if (state.isConnected) {
+        // If not connected, navigate to NoInternetScreen
+        console.log('connected go Back');
+        navigation.goBack();
+      }
+    });
+    return () => {
+      unsubscribe(); // Clean up the listener on unmount
+    };
+  }, []);
+
   return (
     <View style={styles.screen}>
-      <StatusBar backgroundColor={appColors?.background} />
+      <StatusBar
+        backgroundColor={appColors?.background}
+        barStyle="light-content"
+        translucent
+      />
       <Image
         source={require('../assets/images/offline.png')}
         style={{height: 200, width: 200}}

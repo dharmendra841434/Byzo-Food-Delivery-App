@@ -116,8 +116,8 @@ const getLocationPermissionStatus = async () => {
 };
 
 const checkIsWithinKanyakumari = fullAddress => {
-  // const extractedDigits = extractDigits(fullAddress);
-  const extractedDigits = testExtractDigits(fullAddress);
+  const extractedDigits = extractDigits(fullAddress);
+  // const extractedDigits = testExtractDigits(fullAddress);
   return !!extractedDigits;
 };
 
@@ -166,6 +166,14 @@ function isWithinTimeRange() {
   return false;
 }
 
+const getRegionWithDefaults = region => {
+  return {
+    latitude: region?.latitude !== undefined ? region.latitude : 0,
+    longitude: region?.longitude !== undefined ? region.longitude : 0,
+    ...fixedZoomLevel, // Spread any additional properties like zoom level
+  };
+};
+
 export {
   storeLocalStorageData,
   getLocalStorageData,
@@ -184,4 +192,5 @@ export {
   saveAdressOnLocalStorage,
   toPercentage,
   isWithinTimeRange,
+  getRegionWithDefaults,
 };

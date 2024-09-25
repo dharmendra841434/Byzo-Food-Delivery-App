@@ -20,6 +20,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   checkIsWithinKanyakumari,
   fixedZoomLevel,
+  getRegionWithDefaults,
   isEmptyObject,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
@@ -31,12 +32,10 @@ import CustomHeader from '../../components/CustomHeader';
 const CustomMap = ({
   isEnable = true,
   loader = false,
-  onRegionChangeComplete,
   handleConfirmLocation,
   handleChangeAddress,
   handleGoToCureentLocation,
   handleEnableLocation,
-  handleSearchPress,
   mapRef,
 }) => {
   const height1 = useSharedValue(hp('80%')); // Initial height for View 1
@@ -55,7 +54,6 @@ const CustomMap = ({
 
   const dispatch = useDispatch();
 
-  const navigation = useNavigation();
   const animatedStyle1 = useAnimatedStyle(() => {
     return {
       height: withTiming(height1.value, {
@@ -74,6 +72,7 @@ const CustomMap = ({
     };
   });
   const handleRegionChangeComplete = newRegion => {
+    console.log('new region');
     dispatch(
       fatchAddressByCords({
         lat: newRegion?.latitude,
@@ -110,7 +109,7 @@ const CustomMap = ({
       },
       100,
     );
-  }, [addressCordinates, isWithinKanyakumari]);
+  }, [addressCordinates, isWithinKanyakumari, currentCordinates]);
 
   return (
     <View style={styles.container}>
@@ -120,11 +119,7 @@ const CustomMap = ({
           ref={mapRef}
           style={{height: '100%', width: '100%'}}
           onRegionChangeComplete={handleRegionChangeComplete}
-          region={{
-            latitude: region !== null ? region?.latitude : 0,
-            longitude: region !== null ? region?.longitude : 0,
-            ...fixedZoomLevel,
-          }}>
+          initialRegion={getRegionWithDefaults(region)}>
           {isEnable && !isEmptyObject(currentCordinates) && (
             <>
               <Marker

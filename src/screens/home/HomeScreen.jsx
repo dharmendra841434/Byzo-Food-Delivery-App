@@ -1,9 +1,6 @@
 import {View, StatusBar, BackHandler} from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import AddressBottomSheetModal from '../../components/address/AddressBottomSheetModal';
+import React, {useEffect, useRef, useState} from 'react';
 import appColors from '../../utils/appColors';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   fatchUserAddress,
@@ -23,15 +20,14 @@ import NotAllowLocation from '../../components/address/NotAllowLocation';
 import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
 import Home from './Home';
-import CustomBottomSheet2 from '../../components/bottomsheet/CustomBottomSheet2';
+import HomeBottomSheetModal from '../../components/home/HomeBottomSheetModal';
+
 const HomeScreen = () => {
-  const bottomSheetModalRef = useRef(null);
-  const [modalVisible, setModalVisible] = useState(false);
+  const bottomSheetRef = useRef(null);
   const [settingModelOpen, setSettingModelOpen] = useState(false);
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
-
   const isChecking = useSelector(state => state?.map?.isChecking);
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
   const dispatch = useDispatch();
@@ -39,9 +35,10 @@ const HomeScreen = () => {
   const loader = useSelector(state => state?.map?.addressLoader);
 
   const [loading, setLoading] = useState(false);
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.expand();
-  }, []);
+
+  const handlePresentModalPress = () => {
+    bottomSheetRef?.current?.expand();
+  };
   const checkPermission = async () => {
     if (!confirmAddress) {
       dispatch(setAddressLoader(true));
@@ -72,7 +69,7 @@ const HomeScreen = () => {
             setTimeout(() => {
               setLoading(false);
               console.log('The permission is granted.');
-              bottomSheetModalRef.current.close();
+              bottomSheetRef?.current?.close();
             }, 2000);
 
             break;
@@ -90,7 +87,6 @@ const HomeScreen = () => {
 
   const enableLocation = async () => {
     // console.log('enable click');
-
     if (locationPermission === 'denied') {
       setSettingModelOpen(true);
     }
@@ -98,71 +94,48 @@ const HomeScreen = () => {
 
   useEffect(() => {
     let timer;
-
     if (isChecking) {
       // Set an interval to check permission every second
       timer = setInterval(() => {
         checkPermission();
       }, 1000);
-
-      // Handle modal state based on the presence of confirmAddress
-      if (!confirmAddress) {
-        console.log('present modal call');
-        bottomSheetModalRef.current?.expand();
-      } else {
-        console.log('close called');
-        bottomSheetModalRef.current?.close();
-      }
     }
-
     // Clean up the interval on component unmount or when isChecking changes
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, [isChecking, confirmAddress]);
+  }, [isChecking]);
 
-  useFocusEffect(
-    useCallback(() => {
-      const handleAddressCheck = async () => {
-        console.log(checkIsWithinKanyakumari(confirmAddress), 'is confirm');
-        showNavigationBar();
-
-        if (locationPermission === 'denied') {
-          dispatch(setIsChecking(true));
-        }
-
-        const localAddress = await getLocalStorageAddress('user-address');
-
-        if (localAddress !== null) {
-          handleModalClose();
-          console.log('data found');
-          dispatch(setConfirmAddress(localAddress));
-        } else if (confirmAddress) {
-          handleModalClose();
-          console.log('modal should close');
-        } else {
-          handleModalPresent();
-        }
-      };
-
-      const handleModalClose = () => {
-        bottomSheetModalRef?.current?.close();
-        dispatch(setAddressLoader(false));
-      };
-
-      const handleModalPresent = () => {
-        console.log(loader, 'home loader');
+  useEffect(() => {
+    const handleAddressCheck = async () => {
+      showNavigationBar();
+      if (locationPermission === 'denied') {
+        dispatch(setIsChecking(true));
         dispatch(setAddressLoader(true));
-        bottomSheetModalRef.current?.expand();
-      };
+        bottomSheetRef?.current?.expand();
+      }
+      if (confirmAddress) {
+        handleModalClose();
+      } else {
+        const localAddress = await getLocalStorageAddress('user-address');
+        if (localAddress !== null) {
+          dispatch(setConfirmAddress(localAddress));
+          bottomSheetRef?.current?.close();
+        }
+      }
+    };
 
-      handleAddressCheck();
-    }, [confirmAddress, locationPermission, dispatch]),
-  );
+    const handleModalClose = () => {
+      bottomSheetRef?.current?.close();
+      dispatch(setAddressLoader(false));
+    };
+
+    handleAddressCheck();
+  }, [confirmAddress, fullAddress]);
 
   useEffect(() => {
     const backAction = () => {
-      bottomSheetModalRef?.current?.close();
+      bottomSheetRef?.current?.close();
       return true;
     };
 
@@ -174,11 +147,10 @@ const HomeScreen = () => {
     return () => backHandler.remove();
   }, []);
 
-  console.log(confirmAddress, 'ccc');
-  console.log(loader, 'loader');
-
   return (
-    <View>
+    <View
+      style={{backgroundColor: appColors?.background}}
+      className="h-[110vh] ">
       <StatusBar
         backgroundColor="transparent"
         translucent={true}
@@ -209,32 +181,25 @@ const HomeScreen = () => {
               <View style={{height: '100%'}}>
                 <Home
                   address={splitAddressAtFirstComma(confirmAddress)}
-                  sheetRef={bottomSheetModalRef}
+                  handleChangeAddress={handlePresentModalPress}
                 />
               </View>
             )}
           </>
         )}
       </View>
-      <CustomBottomSheet2 bottomSheetRef={bottomSheetModalRef} />
 
-      {/* <AddressBottomSheetModal
-        bottomSheetModalRef={bottomSheetModalRef}
-        handleClose={() => {
-          if (locationPermission !== 'denied' && confirmAddress !== '') {
-            bottomSheetModalRef?.current?.close();
-          }
-        }}
+      <HomeBottomSheetModal
+        bottomSheetRef={bottomSheetRef}
         loading={loading}
-        setModalVisible={setModalVisible}
         handleEnableLocation={enableLocation}
         settingModelOpen={settingModelOpen}
         setSettingModelOpen={setSettingModelOpen}
         handleSelectAddress={() => {
-          bottomSheetModalRef?.current?.close();
+          bottomSheetRef?.current?.close();
           dispatch(setIsChecking(false));
         }}
-      /> */}
+      />
     </View>
   );
 };

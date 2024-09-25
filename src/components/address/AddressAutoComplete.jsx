@@ -22,6 +22,7 @@ import {
   fatchCurrentLocationAddress,
   fatchUserAddress,
   setAddressCordinates,
+  setfullAddress,
 } from '../../store/mapSlice';
 import {useNavigation} from '@react-navigation/native';
 import {BottomSheetTextInput} from '@gorhom/bottom-sheet';
@@ -123,6 +124,7 @@ const AddressAutoComplete = ({
   const handleCurrentLocation = async () => {
     if (locationPermission === 'granted') {
       dispatch(fatchCurrentLocationAddress());
+      console.log('going to map with current location');
       navigation.navigate('mapview');
       handleCloseSheet();
     } else {

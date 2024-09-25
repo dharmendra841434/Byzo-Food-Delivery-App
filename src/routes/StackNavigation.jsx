@@ -10,24 +10,25 @@ import RightDrawer from './RightDrawer';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetConnection from '../screens/NoInternetConnection';
-import TestingScreen from '../screens/testing/TestingScreen';
+import TestScreen from '../screens/testingScreen/TestScreen';
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigation = () => {
   const navigationRef = useRef();
-
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (!state.isConnected) {
         // If not connected, navigate to NoInternetScreen
+        console.log('no internet go NoInternet');
         navigationRef.current?.navigate('NoInternet');
       } else {
+        //navigationRef.current?.goBack();
         // Optional: Handle if the user regains connection
-        // navigationRef.current?.goBack();
+        //console.log('yes internet go home');
+        //navigationRef.current?.navigate('checking');
       }
     });
-
     return () => {
       unsubscribe(); // Clean up the listener on unmount
     };
@@ -49,7 +50,7 @@ const StackNavigation = () => {
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="home" component={RightDrawer} />
         <Stack.Screen name="mapview" component={MapScreen} />
-        <Stack.Screen name="test" component={TestingScreen} />
+        <Stack.Screen name="test" component={TestScreen} />
         <Stack.Screen name="checking" component={CheckingLocation} />
         <Stack.Screen name="otp" component={OtpScreen} />
         <Stack.Screen name="profile" component={ProfileScreen} />

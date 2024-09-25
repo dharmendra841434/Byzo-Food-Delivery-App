@@ -22,10 +22,10 @@ const CustomBottomSheet = ({
   ...props
 }) => {
   const handleClose = () => {
-    // console.log('close');
+    console.log('close');
     bottomSheetModalRef.current?.close();
   };
-  const snapPoints = useMemo(() => ['10%', '80%'], []);
+  const snapPoints = useMemo(() => ['1%', '80%'], []);
   const translateY = useSharedValue(150); // Initial position
   const animatedPaddingTop = useSharedValue(120);
 
@@ -68,8 +68,9 @@ const CustomBottomSheet = ({
       index={1}
       snapPoints={snapPoints}
       handleComponent={null}
+      keyboardBehavior="interactive"
+      keyboardBlurBehavior="restore"
       {...props}
-      style={animatedStyle}
       backdropComponent={props => (
         <CustomBackdrop
           {...props}

@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import appColors from '../../utils/appColors';
@@ -27,11 +28,13 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {BottomSheetTextInput} from '@gorhom/bottom-sheet';
 
+const none = () => {};
+
 const AddressAutoComplete = ({
   setSettingModelOpen,
-  handleCloseSheet,
-  handleSelectAddress,
-  onPressCureentLocation,
+  handleCloseSheet = none,
+  handleSelectAddress = none,
+  onPressCureentLocation = none,
   inputRef,
 }) => {
   const [query, setQuery] = useState('');
@@ -170,13 +173,17 @@ const AddressAutoComplete = ({
         <BottomSheetTextInput
           placeholder="Search for area, street name..."
           placeholderTextColor={appColors.blackText}
-          style={{fontFamily: appFonts.medium, color: appColors.blackText}}
+          style={{
+            fontFamily: appFonts.medium,
+            color: appColors.blackText,
+            height: '100%',
+            backgroundColor: appColors?.background,
+            width: '100%',
+          }}
           cursorColor={appColors.blackText}
-          className="w-full placeholder:text-[13px] "
           value={query}
           onChangeText={handleInputChange}
           ref={inputRef}
-          
         />
         <View style={{position: 'absolute', top: loader ? 15 : 13, right: 15}}>
           {loader ? (
@@ -199,43 +206,46 @@ const AddressAutoComplete = ({
           )}
         </View>
       </View>
-      {suggestions?.length === 0 ? (
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            onPressCureentLocation();
-            handleCurrentLocation();
-          }}
-          className="flex flex-row items-center justify-between px-2 py-2 mt-3 bg-white rounded-lg ">
-          <View className="flex flex-row ">
-            <Icon2
-              name="location-crosshairs"
-              size={22}
-              color={appColors.secondry}
+      <View>
+        {suggestions?.length === 0 ? (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              onPressCureentLocation();
+              handleCurrentLocation();
+            }}
+            className="flex flex-row items-center justify-between px-2 py-2 mt-3 bg-white rounded-lg ">
+            <View className="flex flex-row ">
+              <Icon2
+                name="location-crosshairs"
+                size={22}
+                color={appColors.secondry}
+              />
+              <CustomText
+                className="ml-3 text-secondry text-[13px]"
+                font="semibold">
+                Use your current location
+              </CustomText>
+            </View>
+            <Icon3
+              name="keyboard-arrow-right"
+              size={20}
+              color={appColors.blackText}
             />
-            <CustomText
-              className="ml-3 text-secondry text-[13px]"
-              font="semibold">
-              Use your current location
-            </CustomText>
+          </TouchableOpacity>
+        ) : (
+          <View style={{marginTop: '2%'}}>
+            <FlatList
+              data={suggestions}
+              scrollEnabled={false}
+              keyExtractor={item => item.place_id}
+              renderItem={renderSuggestion}
+              style={styles.suggestionsContainer}
+              keyboardShouldPersistTaps="handled"
+            />
           </View>
-          <Icon3
-            name="keyboard-arrow-right"
-            size={20}
-            color={appColors.blackText}
-          />
-        </TouchableOpacity>
-      ) : (
-        <View style={{marginTop: '2%'}}>
-          <FlatList
-            data={suggestions}
-            keyExtractor={item => item.place_id}
-            renderItem={renderSuggestion}
-            style={styles.suggestionsContainer}
-            keyboardShouldPersistTaps="handled"
-          />
-        </View>
-      )}
+        )}
+      </View>
     </View>
   );
 };
@@ -248,6 +258,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: '3%',
     borderRadius: 8,
+    overflow: 'hidden',
   },
   suggestionItem: {
     backgroundColor: appColors.background,

@@ -1,8 +1,7 @@
-import {StatusBar} from 'react-native';
+import {StatusBar, View} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import appColors from '../../utils/appColors';
-import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import MapBottomSheet from '../../components/address/mapScreen/MapBottomSheet';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -14,15 +13,13 @@ import {
 } from '../../store/mapSlice';
 import Geolocation from 'react-native-geolocation-service';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
-import {
-  checkIsWithinKanyakumari,
-  fixedZoomLevel,
-  saveAdressOnLocalStorage,
-} from '../../utils/helperfun';
+import {fixedZoomLevel, saveAdressOnLocalStorage} from '../../utils/helperfun';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import CustomMap from './CustomMap';
 
 const MapScreen = () => {
+  const bottomSheetRef = useRef(null);
+  const inputRef = useRef(null);
   const fullAddress = useSelector(state => state?.map?.fullAddress);
   // console.log(fullAddress, 'this is full address');
   const locationPermission = useSelector(
@@ -33,15 +30,10 @@ const MapScreen = () => {
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const navigation = useNavigation();
-  const bottomSheetModalRef = useRef(null);
   const [modalVisible, setModalVisible] = useState(false);
-
   const [isCheckEnabled, setIsCheckEnabled] = useState(
     locationPermission === 'denied' ? true : false,
   );
-
-  const inputRef = useRef(null);
-
   const handlePresentModalPress = useCallback(() => {
     console.log('focus');
     setTimeout(() => {
@@ -49,7 +41,7 @@ const MapScreen = () => {
         inputRef.current.focus(); // Focus on the TextInput after the BottomSheet opens
       }
     }, 300);
-    bottomSheetModalRef?.current?.present();
+    bottomSheetRef?.current?.expand();
   }, []);
 
   const handleConfirmLocation = async () => {
@@ -104,7 +96,7 @@ const MapScreen = () => {
             dispatch(fatchUserAddress());
             setIsCheckEnabled(false);
             dispatch(setLocationPermission('granted'));
-            bottomSheetModalRef.current.dismiss();
+            bottomSheetRef?.current?.close();
             setModalVisible(false);
             // console.log('The permission is granted.');
             break;
@@ -132,13 +124,17 @@ const MapScreen = () => {
   }, [isCheckEnabled]);
 
   return (
-    <BottomSheetModalProvider>
+    <View
+      style={{backgroundColor: appColors?.background}}
+      className="h-[110vh] ">
       <StatusBar
         backgroundColor={
           !modalVisible ? 'rgba(0,0,0,0)' : appColors?.statuBarColor
         }
+        barStyle={false ? 'light-content' : 'dark-content'}
         translucent={true}
       />
+
       <CustomMap
         mapRef={mapRef}
         isEnable={locationPermission === 'granted' ? true : false}
@@ -152,7 +148,7 @@ const MapScreen = () => {
         handleGoToCureentLocation={handleGoToCureent}
       />
       <MapBottomSheet
-        bottomSheetModalRef={bottomSheetModalRef}
+        bottomSheetRef={bottomSheetRef}
         setModalVisible={setModalVisible}
         setSettingModelOpen={setOpenSetting}
         mapRef={mapRef}
@@ -163,12 +159,13 @@ const MapScreen = () => {
         }}
         inputRef={inputRef}
       />
+
       <SettingOpenModel
         setSettingModelOpen={setOpenSetting}
         settingModelOpen={openSetting}
         setIsVisible={setModalVisible}
       />
-    </BottomSheetModalProvider>
+    </View>
   );
 };
 

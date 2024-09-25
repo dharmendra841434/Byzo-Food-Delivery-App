@@ -7,33 +7,25 @@ import EnableWarning from './EnableWarning';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {splitAddressAtFirstComma} from '../../../utils/helperfun';
-import CustomBottomSheet from '../../CustomBottomSheet';
+import CustomBottomSheet2 from '../../bottomsheet/CustomBottomSheet';
 
 const MapBottomSheet = ({
-  bottomSheetModalRef,
   setSettingModelOpen,
   mapRef,
   isEnable,
   handleEnableLocation,
-  isValidAddress,
   inputRef,
+  bottomSheetRef,
 }) => {
-  const handleSheetChanges = useCallback(index => {
-    if (!index) {
-      bottomSheetModalRef.current?.close();
-    }
-  }, []);
-
   const fullAddress = useSelector(state => state?.map?.fullAddress);
 
   const handleClose = () => {
-    console.log('close');
-    bottomSheetModalRef.current?.close();
+    bottomSheetRef?.current?.close();
   };
 
   useEffect(() => {
     const backAction = () => {
-      bottomSheetModalRef?.current?.close();
+      bottomSheetRef?.current?.close();
       return true;
     };
 
@@ -45,10 +37,10 @@ const MapBottomSheet = ({
     return () => backHandler.remove();
   }, []);
   return (
-    <CustomBottomSheet
-      bottomSheetModalRef={bottomSheetModalRef}
-      handleSheetChanges={handleSheetChanges}>
-      <View style={{marginTop: '2%'}}>
+    <CustomBottomSheet2
+      isBackdropClosable={isEnable}
+      bottomSheetRef={bottomSheetRef}>
+      <View style={{marginTop: '2%', height: '100%'}}>
         {/* <CustomText>map modal</CustomText> */}
         {!isEnable ? (
           <View style={{marginHorizontal: '1%'}}>
@@ -95,7 +87,6 @@ const MapBottomSheet = ({
           <AddressAutoComplete
             setSettingModelOpen={setSettingModelOpen}
             handleCloseSheet={handleClose}
-            onPressCureentLocation={() => {}}
             handleSelectAddress={cords => {
               mapRef?.current?.animateToRegion(
                 {
@@ -111,7 +102,7 @@ const MapBottomSheet = ({
           />
         </View>
       </View>
-    </CustomBottomSheet>
+    </CustomBottomSheet2>
   );
 };
 

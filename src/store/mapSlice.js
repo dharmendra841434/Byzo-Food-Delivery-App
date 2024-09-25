@@ -1,8 +1,8 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {locationAPI} from './api';
 import {
+  checkIsWithinKanyakumari,
   extractDigits,
-  parseAddress,
   testExtractDigits,
 } from '../utils/helperfun';
 import Geolocation from 'react-native-geolocation-service';
@@ -18,15 +18,17 @@ export const fatchUserAddress = createAsyncThunk(
         if (response.results && response.results.length > 0) {
           const fullAddress = response.results[0].formatted_address;
           dispatch(setfullAddress(fullAddress));
-          const extractedDigits = testExtractDigits(fullAddress);
+          // //const extractedDigits = testExtractDigits(fullAddress);
           // const extractedDigits = extractDigits(fullAddress);
-          // console.log(!!extractedDigits, 'check digits');
-          //console.log(fullAddress, 'fulll');
-          if (!!extractedDigits) {
+          // // console.log(!!extractedDigits, 'check digits');
+          // //console.log(fullAddress, 'fulll');
+          if (checkIsWithinKanyakumari(fullAddress)) {
             //console.log('this is from slice', fullAddress);
             dispatch(setConfirmAddress(fullAddress));
           }
-          dispatch(setIsWithinKanyakumari(!!extractedDigits));
+          dispatch(
+            setIsWithinKanyakumari(checkIsWithinKanyakumari(fullAddress)),
+          );
           dispatch(setAddressLoader(false));
         } else {
           console.log('- Full Address: No results found');
@@ -70,9 +72,11 @@ export const fatchCurrentLocationAddress = createAsyncThunk(
           const fullAddress = response.results[0].formatted_address;
           dispatch(setfullAddress(fullAddress));
           // const extractedDigits = extractDigits(fullAddress);
-          //console.log(!!extractedDigits, 'check digits');
-          const extractedDigits = testExtractDigits(fullAddress);
-          dispatch(setIsWithinKanyakumari(!!extractedDigits));
+          // //console.log(!!extractedDigits, 'check digits');
+          // //const extractedDigits = testExtractDigits(fullAddress);
+          dispatch(
+            setIsWithinKanyakumari(checkIsWithinKanyakumari(fullAddress)),
+          );
           dispatch(setAddressLoader(false));
           // console.log('address fatched', fullAddress);
         } else {
@@ -164,9 +168,6 @@ export const mapSlice = createSlice({
     geolocationErrorMessage: '',
     isChecking: true,
     viewNotice: true,
-    suggetionLoader: false,
-    suggestedAddress: [],
-    searchInput: '',
   },
   reducers: {
     setMarkerPosition: (state, action) => {
@@ -213,18 +214,6 @@ export const mapSlice = createSlice({
       //console.log('addresss loaded called');
       state.viewNotice = action.payload; // Add reducer to update fetching location state
     },
-    setAddressSuggetionLoader: (state, action) => {
-      //console.log('addresss loaded called');
-      state.suggetionLoader = action.payload; // Add reducer to update fetching location state
-    },
-    setSuggestedAddress: (state, action) => {
-      //console.log('addresss loaded called');
-      state.suggestedAddress = action.payload; // Add reducer to update fetching location state
-    },
-    setSearchInput: (state, action) => {
-      //console.log('addresss loaded called');
-      state.searchInput = action.payload; // Add reducer to update fetching location state
-    },
   },
 });
 
@@ -242,9 +231,6 @@ export const {
   setGeolocationErrorMessage,
   setIsChecking,
   setViewNotice,
-  setAddressSuggetionLoader,
-  setSuggestedAddress,
-  setSearchInput,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

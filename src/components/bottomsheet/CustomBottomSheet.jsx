@@ -1,38 +1,36 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {
   StyleSheet,
   Dimensions,
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
-import {showNavigationBar} from 'react-native-navigation-bar-color';
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
 import appColors from '../../utils/appColors';
-import AddressList from './AddressList';
-import SearchHandle from './SearchHandle';
-import {useDispatch} from 'react-redux';
-import {setSearchInput, setSuggestedAddress} from '../../store/mapSlice';
-const CustomBottomSheet2 = ({
-  bottomSheetRef,
-  setModalState,
+import {useSelector} from 'react-redux';
+const CustomBottomSheet = ({
   isBackdropClosable = true,
+  children,
+  bottomSheetRef,
 }) => {
   const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-  const dispatch = useDispatch();
+  const locationPermission = useSelector(
+    state => state?.map?.locationPermission,
+  );
 
   // variables
-  const snapPoints = useMemo(() => [10, SCREEN_HEIGHT], [SCREEN_HEIGHT]);
-  const handleClosePress = useCallback(() => {
-    bottomSheetRef.current?.close();
-  }, []);
+  const snapPoints = useMemo(() => [1, SCREEN_HEIGHT], [SCREEN_HEIGHT]);
+  const handleClosePress = () => {
+    bottomSheetRef?.current?.close();
+  };
   // Handle closing the modal
   const handleBackdropPress = () => {
     if (isBackdropClosable) {
-      bottomSheetRef.current?.close();
-      if (setModalState) {
-        setModalState(false);
-      }
+      handleClosePress();
     }
   };
 
@@ -41,12 +39,6 @@ const CustomBottomSheet2 = ({
       console.log(index, 'current ind3x');
       handleClosePress();
       Keyboard.dismiss();
-      showNavigationBar();
-      if (setModalState) {
-        setModalState(false);
-      }
-      dispatch(setSuggestedAddress([]));
-      dispatch(setSearchInput(''));
     }
   };
 
@@ -66,7 +58,7 @@ const CustomBottomSheet2 = ({
     <BottomSheet
       ref={bottomSheetRef}
       snapPoints={snapPoints}
-      index={-1}
+      index={locationPermission === 'denied' ? 1 : -1}
       style={styles.sheetStyle}
       backgroundStyle={{
         backgroundColor: appColors?.bottomSheetBg,
@@ -76,9 +68,10 @@ const CustomBottomSheet2 = ({
       enablePanDownToClose={true} // Allow closing by swiping down
       keyboardBehavior="interactive"
       keyboardBlurBehavior="restore"
-      handleComponent={() => <SearchHandle />}
+      enableOverDrag={false}
+      handleComponent={null}
       onChange={handleOnchange}>
-      <AddressList handleCloseSheet={() => {}} handleSelectAddress={() => {}} />
+      <BottomSheetView style={{height: '100%'}}>{children}</BottomSheetView>
     </BottomSheet>
   );
 };
@@ -94,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomBottomSheet2;
+export default CustomBottomSheet;

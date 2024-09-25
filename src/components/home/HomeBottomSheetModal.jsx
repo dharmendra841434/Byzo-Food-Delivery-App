@@ -1,56 +1,37 @@
 import {View, ActivityIndicator, StyleSheet} from 'react-native';
-import React, {useCallback} from 'react';
+import React from 'react';
 import CustomText from '../CustomText';
 import appColors from '../../utils/appColors';
 import Icon from 'react-native-vector-icons/Ionicons';
-import AddressAutoComplete from './AddressAutoComplete';
-import SettingOpenModel from './SettingOpenModel';
+import AddressAutoComplete from '../address/AddressAutoComplete';
+import SettingOpenModel from '../address/SettingOpenModel';
 import {useSelector} from 'react-redux';
 import {
   checkIsWithinKanyakumari,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
-import EnableWarning from './mapScreen/EnableWarning';
-import CustomBottomSheet from '../CustomBottomSheet';
+import EnableWarning from '../address/mapScreen/EnableWarning';
+import CustomBottomSheet2 from '../bottomsheet/CustomBottomSheet';
 
-const AddressBottomSheetModal = ({
-  setModalVisible,
-  bottomSheetModalRef,
+const HomeBottomSheetModal = ({
   handleEnableLocation,
   setSettingModelOpen,
   settingModelOpen,
   handleSelectAddress,
   loading,
+  bottomSheetRef,
 }) => {
   const locationPermission = useSelector(
     state => state?.map?.locationPermission,
   );
 
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
-  const handleSheetChanges = useCallback(index => {
-    //console.log('handleSheetChanges', index);
-    setModalVisible(index === 1 ? true : false);
-    if (!index) {
-      bottomSheetModalRef?.current?.close();
-    }
-  }, []);
+
   return (
     <>
-      <CustomBottomSheet
-        isCloseButton={
-          locationPermission === 'denied' || confirmAddress === ''
-            ? false
-            : true
-        }
-        enableHandlePanningGesture={
-          locationPermission === 'denied' ? false : true
-        }
-        enableContentPanningGesture={
-          locationPermission === 'denied' ? false : true
-        }
-        enablePanDownToClose={locationPermission === 'denied' ? false : true}
-        bottomSheetModalRef={bottomSheetModalRef}
-        handleSheetChanges={handleSheetChanges}>
+      <CustomBottomSheet2
+        bottomSheetRef={bottomSheetRef}
+        isBackdropClosable={locationPermission === 'denied' ? false : true}>
         <View>
           {/* <CustomText>Home modal</CustomText> */}
           {locationPermission === 'denied' ? (
@@ -97,11 +78,10 @@ const AddressBottomSheetModal = ({
           <View className="px-3 ">
             <AddressAutoComplete
               setSettingModelOpen={setSettingModelOpen}
-              setModalVisible={setModalVisible}
               handleCloseSheet={() => {}}
               handleSelectAddress={handleSelectAddress}
               onPressCureentLocation={() => {
-                console.log('handle current location');
+                bottomSheetRef?.current?.close();
               }}
             />
           </View>
@@ -111,7 +91,7 @@ const AddressBottomSheetModal = ({
             <ActivityIndicator color={appColors?.secondry} size={33} />
           </View>
         )}
-      </CustomBottomSheet>
+      </CustomBottomSheet2>
 
       <SettingOpenModel
         setSettingModelOpen={setSettingModelOpen}
@@ -137,4 +117,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddressBottomSheetModal;
+export default HomeBottomSheetModal;

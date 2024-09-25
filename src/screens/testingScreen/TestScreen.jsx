@@ -1,75 +1,50 @@
-import React, {useCallback, useMemo, useState} from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
-import {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetModalProvider,
-} from '@gorhom/bottom-sheet';
+import React, {useState, useEffect, useRef} from 'react';
+import {View, Button, StyleSheet} from 'react-native';
+import CustomBottomSheet2 from '../../components/bottomsheet/CustomBottomSheet';
 
 const TestScreen = () => {
-  // state for controlling modal visibility
-  const [isModalOpen, setIsModalOpen] = useState(true);
-
-  // ref for modal
-  const bottomSheetModalRef = React.useRef(null);
-
-  // variables
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
-
-  // callbacks
-  const openModal = useCallback(() => {
-    setIsModalOpen(true);
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-    bottomSheetModalRef.current?.dismiss();
-  }, []);
-
-  const handleSheetChanges = useCallback(index => {
-    console.log('handleSheetChanges', index);
-  }, []);
-
-  // Effect to open or close modal based on state
-  React.useEffect(() => {
-    if (isModalOpen) {
-      bottomSheetModalRef.current?.present();
+  const [loader, setLoader] = useState(true); // Loader state initially set to true
+  const bottomSheetRef = useRef(null); // Reference to BottomSheet
+  // Toggle loader state for testing
+  const toggleLoader = () => {
+    setLoader(prev => !prev);
+  };
+  // Open the sheet when loader is true
+  useEffect(() => {
+    if (loader) {
+      bottomSheetRef.current?.expand();
     } else {
-      bottomSheetModalRef.current?.dismiss();
+      bottomSheetRef.current?.close();
     }
-  }, [isModalOpen]);
+  }, [loader]);
 
-  console.log(isModalOpen, 'is open');
-
-  // renders
   return (
-    <BottomSheetModalProvider>
-      <View style={styles.container}>
-        <Button onPress={openModal} title="Open Modal" color="black" />
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={1}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}>
-          <BottomSheetView style={styles.contentContainer}>
-            <Text>Awesome 🎉</Text>
-            <Button onPress={closeModal} title="Close Modal" color="red" />
-          </BottomSheetView>
-        </BottomSheetModal>
-      </View>
-    </BottomSheetModalProvider>
+    <View style={styles.container}>
+      <Button title="Toggle Loader" onPress={toggleLoader} />
+
+      <CustomBottomSheet2
+        bottomSheetRef={bottomSheetRef}
+        initialIndex={loader ? 1 : -1}
+        setModalState={setLoader}>
+        {/* Pass the content inside the sheet */}
+        <View style={styles.sheetContent}>
+          {/* You can add loader or other content here */}
+          <Button title="Close Sheet" onPress={() => setLoader(false)} />
+        </View>
+      </CustomBottomSheet2>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
     justifyContent: 'center',
-    backgroundColor: 'grey',
+    alignItems: 'center',
   },
-  contentContainer: {
+  sheetContent: {
     flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
 });

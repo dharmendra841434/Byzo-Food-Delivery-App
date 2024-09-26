@@ -15,12 +15,9 @@ const CustomBottomSheet = ({
   isBackdropClosable = true,
   children,
   bottomSheetRef,
+  isOpened = false,
 }) => {
   const {height: SCREEN_HEIGHT} = Dimensions.get('window');
-
-  const locationPermission = useSelector(
-    state => state?.map?.locationPermission,
-  );
 
   // variables
   const snapPoints = useMemo(() => [1, SCREEN_HEIGHT], [SCREEN_HEIGHT]);
@@ -58,7 +55,7 @@ const CustomBottomSheet = ({
     <BottomSheet
       ref={bottomSheetRef}
       snapPoints={snapPoints}
-      index={locationPermission === 'denied' ? 1 : -1}
+      index={isOpened ? 1 : -1}
       style={styles.sheetStyle}
       backgroundStyle={{
         backgroundColor: appColors?.bottomSheetBg,

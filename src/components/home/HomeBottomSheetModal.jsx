@@ -5,13 +5,14 @@ import appColors from '../../utils/appColors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AddressAutoComplete from '../address/AddressAutoComplete';
 import SettingOpenModel from '../address/SettingOpenModel';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   checkIsWithinKanyakumari,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
 import EnableWarning from '../address/mapScreen/EnableWarning';
-import CustomBottomSheet2 from '../bottomsheet/CustomBottomSheet';
+import CustomBottomSheet from '../bottomsheet/CustomBottomSheet';
+import {setAddressLoader} from '../../store/mapSlice';
 
 const HomeBottomSheetModal = ({
   handleEnableLocation,
@@ -25,15 +26,18 @@ const HomeBottomSheetModal = ({
     state => state?.map?.locationPermission,
   );
 
+  const dispatch = useDispatch();
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
 
   return (
     <>
-      <CustomBottomSheet2
+      <CustomBottomSheet
         bottomSheetRef={bottomSheetRef}
+        isOpened={
+          locationPermission === 'denied' && !confirmAddress ? true : false
+        }
         isBackdropClosable={locationPermission === 'denied' ? false : true}>
         <View>
-          {/* <CustomText>Home modal</CustomText> */}
           {locationPermission === 'denied' ? (
             <View style={{marginHorizontal: '1%', paddingTop: '3%'}}>
               <EnableWarning
@@ -78,7 +82,10 @@ const HomeBottomSheetModal = ({
           <View className="px-3 ">
             <AddressAutoComplete
               setSettingModelOpen={setSettingModelOpen}
-              handleCloseSheet={() => {}}
+              handleCloseSheet={() => {
+                bottomSheetRef?.current?.close();
+                dispatch(setAddressLoader(false));
+              }}
               handleSelectAddress={handleSelectAddress}
               onPressCureentLocation={() => {
                 bottomSheetRef?.current?.close();
@@ -91,7 +98,7 @@ const HomeBottomSheetModal = ({
             <ActivityIndicator color={appColors?.secondry} size={33} />
           </View>
         )}
-      </CustomBottomSheet2>
+      </CustomBottomSheet>
 
       <SettingOpenModel
         setSettingModelOpen={setSettingModelOpen}

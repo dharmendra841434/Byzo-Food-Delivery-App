@@ -1,5 +1,5 @@
 import {View, StatusBar, BackHandler} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import appColors from '../../utils/appColors';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -21,6 +21,7 @@ import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLo
 import {showNavigationBar} from 'react-native-navigation-bar-color';
 import Home from './Home';
 import HomeBottomSheetModal from '../../components/home/HomeBottomSheetModal';
+import {useFocusEffect} from '@react-navigation/native';
 
 const HomeScreen = () => {
   const bottomSheetRef = useRef(null);
@@ -42,6 +43,9 @@ const HomeScreen = () => {
   const checkPermission = async () => {
     if (!confirmAddress) {
       dispatch(setAddressLoader(true));
+    }
+    if (locationPermission !== 'denied') {
+      dispatch(setIsChecking(false));
     }
     check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION) // or PERMISSIONS.IOS.LOCATION_WHEN_IN_USE for iOS
       .then(result => {
@@ -98,7 +102,7 @@ const HomeScreen = () => {
       // Set an interval to check permission every second
       timer = setInterval(() => {
         checkPermission();
-      }, 1000);
+      }, 2000);
     }
     // Clean up the interval on component unmount or when isChecking changes
     return () => {
@@ -106,32 +110,30 @@ const HomeScreen = () => {
     };
   }, [isChecking]);
 
-  useEffect(() => {
-    const handleAddressCheck = async () => {
-      showNavigationBar();
-      if (locationPermission === 'denied') {
-        dispatch(setIsChecking(true));
-        dispatch(setAddressLoader(true));
-        bottomSheetRef?.current?.expand();
-      }
-      if (confirmAddress) {
-        handleModalClose();
-      } else {
-        const localAddress = await getLocalStorageAddress('user-address');
-        if (localAddress !== null) {
-          dispatch(setConfirmAddress(localAddress));
-          bottomSheetRef?.current?.close();
+  useFocusEffect(
+    useCallback(() => {
+      const handleAddressCheck = async () => {
+        showNavigationBar();
+        if (confirmAddress) {
+          console.log('modal is closed');
+          handleModalClose();
+        } else {
+          const localAddress = await getLocalStorageAddress('user-address');
+          if (localAddress !== null) {
+            dispatch(setConfirmAddress(localAddress));
+            bottomSheetRef?.current?.close();
+          }
         }
-      }
-    };
+      };
 
-    const handleModalClose = () => {
-      bottomSheetRef?.current?.close();
-      dispatch(setAddressLoader(false));
-    };
+      const handleModalClose = () => {
+        bottomSheetRef?.current?.close();
+        dispatch(setAddressLoader(false));
+      };
 
-    handleAddressCheck();
-  }, [confirmAddress, fullAddress]);
+      handleAddressCheck();
+    }, [confirmAddress, fullAddress]), // Include checkPermission in the dependencies array if it's defined outside of this effect
+  );
 
   useEffect(() => {
     const backAction = () => {
@@ -198,6 +200,7 @@ const HomeScreen = () => {
         handleSelectAddress={() => {
           bottomSheetRef?.current?.close();
           dispatch(setIsChecking(false));
+          dispatch(setAddressLoader(false));
         }}
       />
     </View>

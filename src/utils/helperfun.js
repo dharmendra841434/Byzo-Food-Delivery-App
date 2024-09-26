@@ -21,7 +21,7 @@ const getLocalStorageData = async key => {
 const saveAdressOnLocalStorage = async (key, value) => {
   try {
     const currentTime = new Date().getTime();
-    const expiryTime = 5 * 60 * 1000; // 8 hours in milliseconds
+    const expiryTime = 1 * 60 * 1000; // 8 hours in milliseconds
     const data = {value, expiry: currentTime + expiryTime};
 
     await AsyncStorage.setItem(key, JSON.stringify(data));
@@ -116,8 +116,8 @@ const getLocationPermissionStatus = async () => {
 };
 
 const checkIsWithinKanyakumari = fullAddress => {
-  const extractedDigits = extractDigits(fullAddress);
-  // const extractedDigits = testExtractDigits(fullAddress);
+  //const extractedDigits = extractDigits(fullAddress);
+  const extractedDigits = testExtractDigits(fullAddress);
   return !!extractedDigits;
 };
 

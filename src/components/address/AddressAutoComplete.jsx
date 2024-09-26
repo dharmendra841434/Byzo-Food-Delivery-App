@@ -96,6 +96,7 @@ const AddressAutoComplete = ({
             long: lng,
           }),
         );
+        handleCloseSheet();
         navigation.navigate('mapview');
       }
     } catch (error) {
@@ -119,7 +120,7 @@ const AddressAutoComplete = ({
 
   const handleSuggestionPress = async placeId => {
     handleSuggestionAPI(placeId);
-    handleCloseSheet();
+
     setSuggestions([]);
     setQuery('');
   };
@@ -127,7 +128,6 @@ const AddressAutoComplete = ({
   const handleCurrentLocation = async () => {
     if (locationPermission === 'granted') {
       dispatch(fatchCurrentLocationAddress());
-      console.log('going to map with current location');
       navigation.navigate('mapview');
       handleCloseSheet();
     } else {

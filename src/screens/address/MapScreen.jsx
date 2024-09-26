@@ -8,7 +8,9 @@ import {
   fatchAddressByCords,
   fatchUserAddress,
   setAddressCordinates,
+  setAddressLoader,
   setConfirmAddress,
+  setIsChecking,
   setLocationPermission,
 } from '../../store/mapSlice';
 import Geolocation from 'react-native-geolocation-service';
@@ -46,6 +48,7 @@ const MapScreen = () => {
 
   const handleConfirmLocation = async () => {
     saveAdressOnLocalStorage('user-address', fullAddress);
+    dispatch(setIsChecking(locationPermission === 'denied' ? true : false));
     dispatch(setConfirmAddress(fullAddress));
     navigation.navigate('home');
     setIsCheckEnabled(false);
@@ -118,10 +121,15 @@ const MapScreen = () => {
       timer = setInterval(() => {
         // console.log('map checked');
         checkPermission();
-      }, 1000);
+      }, 2000);
     }
     return () => clearInterval(timer);
   }, [isCheckEnabled]);
+
+  useEffect(() => {
+    bottomSheetRef?.current?.close();
+    dispatch(setAddressLoader(false));
+  }, []);
 
   return (
     <View

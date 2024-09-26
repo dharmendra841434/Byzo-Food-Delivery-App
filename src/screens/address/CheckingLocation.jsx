@@ -4,11 +4,7 @@ import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLo
 import CustomText from '../../components/CustomText';
 import LottieView from 'lottie-react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  fatchUserAddress,
-  setAddressLoader,
-  setConfirmAddress,
-} from '../../store/mapSlice';
+import {setAddressLoader, setConfirmAddress} from '../../store/mapSlice';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
@@ -45,34 +41,25 @@ const CheckingLocation = () => {
         showNavigationBar();
         const localAddress = await getLocalStorageAddress('user-address');
         if (localAddress) {
-          console.log('Address found in local storage');
           bottomSheetRef?.current?.close();
           dispatch(setConfirmAddress(localAddress));
           dispatch(setAddressLoader(false));
           navigation.replace('home');
           return;
         }
-
         if (confirmAddress) {
-          if (checkIsWithinKanyakumari(fullAddress)) {
-            console.log('Address is within Kanyakumari, navigating to home');
-            dispatch(setConfirmAddress(fullAddress));
-            saveAdressOnLocalStorage('user-address', fullAddress);
-            navigation.replace('home');
-          }
-        } else {
-          if (locationPermission === 'denied') {
-            console.log('Permission denied, navigating to home');
-            navigation.replace('home');
-          } else {
-            console.log('Fetching address...');
-            await dispatch(fatchUserAddress());
-          }
+          console.log(confirmAddress, 'going to home');
+          dispatch(setConfirmAddress(fullAddress));
+          saveAdressOnLocalStorage('user-address', fullAddress);
+          navigation.replace('home');
+        } else if (locationPermission === 'denied') {
+          // console.log('Permission denied, navigating to home');
+          navigation.replace('home');
         }
       };
 
       checkAddressAndNavigate();
-    }, [fullAddress, locationPermission]),
+    }, [fullAddress, locationPermission, confirmAddress]),
   );
 
   return (

@@ -10,7 +10,7 @@ import BottomSheet, {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import appColors from '../../utils/appColors';
-import {useSelector} from 'react-redux';
+
 const CustomBottomSheet = ({
   isBackdropClosable = true,
   children,
@@ -63,6 +63,7 @@ const CustomBottomSheet = ({
       backdropComponent={renderBackdrop} // Add backdrop
       enableDynamicSizing={false}
       enablePanDownToClose={true} // Allow closing by swiping down
+      enableContentPanningGesture={!isOpened}
       keyboardBehavior="interactive"
       keyboardBlurBehavior="restore"
       enableOverDrag={false}

@@ -40,6 +40,7 @@ const SplashScreen = () => {
           navigation.replace('home');
         } else {
           console.log('Local data not found');
+          await dispatch(fatchUserAddress());
           navigation.replace(result === RESULTS.GRANTED ? 'checking' : 'home');
         }
       };

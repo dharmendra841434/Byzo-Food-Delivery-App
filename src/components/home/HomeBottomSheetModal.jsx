@@ -84,11 +84,12 @@ const HomeBottomSheetModal = ({
               setSettingModelOpen={setSettingModelOpen}
               handleCloseSheet={() => {
                 bottomSheetRef?.current?.close();
-                dispatch(setAddressLoader(false));
               }}
               handleSelectAddress={handleSelectAddress}
               onPressCureentLocation={() => {
-                bottomSheetRef?.current?.close();
+                if (locationPermission !== 'denied') {
+                  bottomSheetRef?.current?.close();
+                }
               }}
             />
           </View>

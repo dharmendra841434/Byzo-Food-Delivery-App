@@ -70,7 +70,7 @@ const AddressAutoComplete = ({
     }
   };
 
-  const handleSuggestionAPI = async placeId => {
+  const handleSuggestionPress = async placeId => {
     const apiKey = 'AIzaSyCIWbUh6hK1P_ARYXLVwqm2B_IOeACS8is'; // Replace with your actual API key
     const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${apiKey}`;
     try {
@@ -97,6 +97,8 @@ const AddressAutoComplete = ({
           }),
         );
         handleCloseSheet();
+        setSuggestions([]);
+        setQuery('');
         navigation.navigate('mapview');
       }
     } catch (error) {
@@ -118,12 +120,11 @@ const AddressAutoComplete = ({
     setSuggestions([]);
   };
 
-  const handleSuggestionPress = async placeId => {
-    handleSuggestionAPI(placeId);
-
-    setSuggestions([]);
-    setQuery('');
-  };
+  // const handleSuggestionPress = async placeId => {
+  //   handleSuggestionAPI(placeId);
+  //   setSuggestions([]);
+  //   setQuery('');
+  // };
 
   const handleCurrentLocation = async () => {
     if (locationPermission === 'granted') {
@@ -132,7 +133,6 @@ const AddressAutoComplete = ({
       handleCloseSheet();
     } else {
       setSettingModelOpen(true);
-      handleCloseSheet();
     }
   };
 

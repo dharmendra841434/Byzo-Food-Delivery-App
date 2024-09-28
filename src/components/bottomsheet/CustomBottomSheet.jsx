@@ -33,7 +33,6 @@ const CustomBottomSheet = ({
 
   const handleOnchange = index => {
     if (!index || index === -1) {
-      console.log(index, 'current ind3x');
       handleClosePress();
       Keyboard.dismiss();
     }

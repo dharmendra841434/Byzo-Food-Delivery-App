@@ -28,6 +28,7 @@ import {useNavigation} from '@react-navigation/native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {fatchAddressByCords} from '../../store/mapSlice';
 import CustomHeader from '../../components/CustomHeader';
+import CustomText from '../../components/CustomText';
 
 const CustomMap = ({
   isEnable = true,
@@ -168,7 +169,7 @@ const CustomMap = ({
             isEnable={isEnable}
           />
         </View>
-        <View style={{position: 'absolute', left: '46%', top: '52%'}}>
+        <View style={styles?.markerPosition}>
           <CustomMarker />
         </View>
       </Animated.View>
@@ -233,6 +234,11 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     alignItems: 'center',
+  },
+  markerPosition: {
+    position: 'absolute',
+    left: '46.5%',
+    top: '48.5%',
   },
 });
 

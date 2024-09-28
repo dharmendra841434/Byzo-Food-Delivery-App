@@ -11,9 +11,9 @@ const Notice = () => {
     <View style={{height: NoticeHeight}}>
       <View style={styles.container}>
         <View style={styles.noticeContainer}>
-          <SafeAreaView style={{padding: 10}}>
+          <SafeAreaView style={{paddingTop: '5%', paddingBottom: '2%'}}>
             <CustomText style={styles.heading} font="sembold">
-              It's raining near this location
+              It's raining near this location 🌧️🌧️
             </CustomText>
             <CustomText style={styles.textCenter}>
               Our delivery partners may take longer to reach you
@@ -24,8 +24,8 @@ const Notice = () => {
 
       <Svg
         width="100%"
-        height="35"
-        fill={appColors.background}
+        height="40"
+        fill={appColors?.bottomSheetBg}
         viewBox="0 0 4000 1000"
         preserveAspectRatio="none"
         style={styles.wave}>
@@ -42,12 +42,12 @@ const Notice = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'pink',
+    backgroundColor: appColors?.bottomSheetBg,
   },
   noticeContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: appColors.background,
+    backgroundColor: appColors?.bottomSheetBg,
   },
   textCenter: {
     textAlign: 'center',

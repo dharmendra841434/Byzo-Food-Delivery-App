@@ -27,7 +27,7 @@ const NoticeAnimation = ({noticePosition, children}) => {
             backgroundColor: 'black',
             left: 0,
             right: 0,
-            height: 95,
+            height: 90,
           }}>
           <ImageBackground source={cloud} style={{height: '100%'}}>
             <LottieView
@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     width: '100%',
     zIndex: 999,
     position: 'absolute',
-    backgroundColor: 'purple',
     top: 5,
   },
   contentContainer: {
@@ -80,7 +79,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   container: {
-    backgroundColor: appColors?.background,
+    backgroundColor: appColors?.bottomSheetBg,
     flex: 1,
   },
 });

@@ -13,10 +13,10 @@ import appColors from '../../utils/appColors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {addEllipsis, isWithinTimeRange} from '../../utils/helperfun';
 import person from '../../assets/images/person.png';
-import AnimatedSearchBar from './AnimatableSearchBar';
 import {useDispatch} from 'react-redux';
 import {setIsOpenDrawer} from '../../store/userSlice';
 import {useNavigation} from '@react-navigation/native';
+import Icon2 from 'react-native-vector-icons/MaterialIcons';
 
 const TopBarSection = ({
   address,
@@ -53,7 +53,24 @@ const TopBarSection = ({
             </CustomText>
             {isWithinTimeRange() && (
               <TouchableOpacity onPress={handleKnowMore} style={styles.know}>
-                <CustomText style={{fontSize: 12, color: appColors.background}}>
+                <View
+                  style={{
+                    backgroundColor: appColors?.closeButton,
+                    borderRadius: 100,
+                    padding: 2,
+                  }}>
+                  <Icon2
+                    name="flash-on"
+                    size={12}
+                    color={appColors?.background}
+                  />
+                </View>
+                <CustomText
+                  style={{
+                    fontSize: 11,
+                    color: appColors.background,
+                    marginBottom: 5,
+                  }}>
                   Know more
                 </CustomText>
               </TouchableOpacity>
@@ -98,11 +115,13 @@ const styles = StyleSheet.create({
   },
   know: {
     backgroundColor: appColors.mediumWhite,
-    borderRadius: 9,
-    paddingHorizontal: 8,
+    borderRadius: 12,
+    paddingHorizontal: 5,
     alignItems: 'center',
-    height: 23,
     marginStart: '1%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 4,
   },
 });
 

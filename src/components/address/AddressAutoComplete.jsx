@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/FontAwesome6';
 import Icon3 from 'react-native-vector-icons/MaterialIcons';
 import CustomText from '../CustomText';
-import {extractAddress} from '../../utils/helperfun';
+import {addEllipsis, extractAddress} from '../../utils/helperfun';
 import locationIcon from '../../assets/images/addressIcon.png';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -157,10 +157,10 @@ const AddressAutoComplete = ({
         </View>
         <View style={{width: '80%', marginStart: '4%', height: '100%'}}>
           <CustomText font="semibold" style={styles.suggestionTitle}>
-            {itemData?.addressTitle}
+            {addEllipsis(itemData?.addressTitle, 45)}
           </CustomText>
           <CustomText style={styles.addressDescription}>
-            {itemData?.addressDescription}
+            {addEllipsis(itemData?.addressDescription, 50)}
           </CustomText>
         </View>
       </TouchableOpacity>
@@ -185,24 +185,18 @@ const AddressAutoComplete = ({
           onChangeText={handleInputChange}
           ref={inputRef}
         />
-        <View style={{position: 'absolute', top: loader ? 15 : 13, right: 15}}>
-          {loader ? (
-            <ActivityIndicator color={appColors.secondry} />
-          ) : (
-            <>
-              {query?.length > 2 && (
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={handleClearInput}
-                  style={{
-                    backgroundColor: appColors.bottomSheetBg,
-                    borderRadius: 100,
-                    padding: 1,
-                  }}>
-                  <Icon name="close" size={20} />
-                </TouchableOpacity>
-              )}
-            </>
+        <View style={{position: 'absolute', top: 13, right: 15}}>
+          {query?.length > 2 && (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={handleClearInput}
+              style={{
+                backgroundColor: appColors.bottomSheetBg,
+                borderRadius: 100,
+                padding: 1,
+              }}>
+              <Icon name="close" size={20} />
+            </TouchableOpacity>
           )}
         </View>
       </View>

@@ -73,7 +73,10 @@ const OtpScreen = () => {
 
   return (
     <View style={styles.screen}>
-      <StatusBar backgroundColor={appColors.background} />
+      <StatusBar
+        backgroundColor={appColors.background}
+        barStyle="dark-content"
+      />
       <CustomHeader title="Otp verification" />
       <View style={{alignItems: 'center', marginTop: '5%'}}>
         <CustomText>We've send a verification code to </CustomText>

@@ -20,13 +20,11 @@ import {setViewNotice} from '../../store/mapSlice';
 import TopSectionCards from '../../components/home/TopSectionCards';
 import {isWithinTimeRange} from '../../utils/helperfun';
 
-const NOTICE_HEIGHT = -(NoticeHeight + 75);
+const NOTICE_HEIGHT = -(NoticeHeight + 50);
 
 const Home = ({address, handleChangeAddress}) => {
   const scrollY = useRef(new Animated.Value(0)).current; // Create an animated value to track the scroll position
-  const [isVisible, setIsVisible] = useState(false);
-  const [isShowSearched, setIsShowSearched] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
+
   const [gradientColor, setGradientColor] = useState([
     appColors?.gredientFrom,
     appColors?.gredientFrom,
@@ -52,31 +50,29 @@ const Home = ({address, handleChangeAddress}) => {
     extrapolate: 'clamp',
   });
 
-  const searchBarBackgroundColor = scrollY.interpolate({
-    inputRange: [300, 320],
-    outputRange: [appColors?.gredientFrom, appColors?.background], // Change colors from green to red
-    extrapolate: 'clamp',
-  });
+  // const searchBarBackgroundColor = scrollY.interpolate({
+  //   inputRange: [300, 320],
+  //   outputRange: [appColors?.gredientFrom, appColors?.background], // Change colors from green to red
+  //   extrapolate: 'clamp',
+  // });
 
   // Effect to change the status bar style based on scroll position
-  useEffect(() => {
-    const listenerId = scrollY.addListener(({value}) => {
-      if (value >= 320) {
-        setIsShowSearched(true);
-        setGradientColor(['#ffff', '#ffff']);
-        StatusBar.setBarStyle('dark-content'); // Change to dark-content when not at the top
-      } else {
-        setIsShowSearched(false);
-        setGradientColor([appColors?.gredientFrom, appColors?.gredientFrom]);
-        StatusBar.setBarStyle('light-content'); // Change to light-content when search bar sticks to top
-      }
-    });
+  // useEffect(() => {
+  //   const listenerId = scrollY.addListener(({value}) => {
+  //     if (value >= 320) {
+  //       setIsShowSearched(true);
+  //       StatusBar.setBarStyle('dark-content'); // Change to dark-content when not at the top
+  //     } else {
+  //       setIsShowSearched(false);
+  //       StatusBar.setBarStyle('light-content'); // Change to light-content when search bar sticks to top
+  //     }
+  //   });
 
-    // Clean up the listener when the component unmounts
-    return () => {
-      scrollY.removeListener(listenerId);
-    };
-  }, [scrollY]);
+  // Clean up the listener when the component unmounts
+  //   return () => {
+  //     scrollY.removeListener(listenerId);
+  //   };
+  // }, [scrollY]);
 
   const noticePosition = useRef(new Animated.Value(NOTICE_HEIGHT)).current;
 
@@ -87,18 +83,16 @@ const Home = ({address, handleChangeAddress}) => {
       useNativeDriver: false,
     }).start(() => {
       StatusBar.setBarStyle('light-content');
-      setIsVisible(false);
     });
   };
 
   const slideDown = () => {
     Animated.timing(noticePosition, {
-      toValue: 40,
+      toValue: 25,
       duration: 800,
       useNativeDriver: false,
     }).start(() => {
       StatusBar.setBarStyle('dark-content');
-      setIsVisible(true);
     });
   };
 
@@ -138,7 +132,7 @@ const Home = ({address, handleChangeAddress}) => {
                 slideDown();
                 const timeoutId = setTimeout(() => {
                   slideUp();
-                }, 3500);
+                }, 2500);
                 return () => clearTimeout(timeoutId);
               }}
             />
@@ -151,11 +145,7 @@ const Home = ({address, handleChangeAddress}) => {
             styles.searchBar,
             {
               transform: [{translateY: searchBarTranslateY}],
-              backgroundColor: searchBarBackgroundColor,
-              borderBottomWidth: isShowSearched ? 1 : 0,
-              borderBottomColor: isShowSearched
-                ? appColors?.borderGray
-                : appColors?.background,
+              backgroundColor: appColors?.gredientFrom,
             },
           ]}>
           <AnimatedSearchBar />

@@ -9,7 +9,7 @@ const CurrentLocationMarker = () => {
       <LottieView
         source={RippleEffect}
         autoPlay
-        style={{height: 50, width: 50, marginTop: 160}}
+        style={{height: 50, width: 50, marginTop: 163}}
         speed={0.5}
       />
     </View>

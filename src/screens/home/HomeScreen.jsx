@@ -154,9 +154,9 @@ const HomeScreen = () => {
       style={{backgroundColor: appColors?.background}}
       className="h-[110vh] ">
       <StatusBar
-        backgroundColor="transparent"
-        translucent={true}
-        barStyle={'light-content'}
+        backgroundColor="rgba(0,0,0,0)"
+        translucent
+        barStyle="light-content"
       />
       <View
         style={{

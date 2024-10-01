@@ -1,6 +1,7 @@
 const appColors = {
   primary: '#f8cb46',
   secondry: '#318616',
+  third: '#fc7e06',
   background: 'white',
   blackText: '#1f1f1f',
   bottomSheetBg: '#e6ecf0',

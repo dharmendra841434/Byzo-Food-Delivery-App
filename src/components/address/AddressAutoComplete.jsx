@@ -96,10 +96,11 @@ const AddressAutoComplete = ({
             long: lng,
           }),
         );
-        handleCloseSheet();
         setSuggestions([]);
         setQuery('');
         navigation.navigate('mapview');
+        console.log('modal closing.......');
+        handleCloseSheet();
       }
     } catch (error) {
       console.log(error);

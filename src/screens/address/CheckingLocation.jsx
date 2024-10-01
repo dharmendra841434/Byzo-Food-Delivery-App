@@ -49,8 +49,9 @@ const CheckingLocation = () => {
         }
         if (confirmAddress) {
           console.log(confirmAddress, 'going to home');
-          dispatch(setConfirmAddress(fullAddress));
           saveAdressOnLocalStorage('user-address', fullAddress);
+          dispatch(setConfirmAddress(fullAddress));
+          dispatch(setAddressLoader(true));
           navigation.replace('home');
         } else if (locationPermission === 'denied') {
           // console.log('Permission denied, navigating to home');

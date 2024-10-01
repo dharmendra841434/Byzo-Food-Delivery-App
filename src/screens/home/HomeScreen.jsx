@@ -14,6 +14,7 @@ import {
   checkIsWithinKanyakumari,
   getLocalStorageAddress,
   splitAddressAtFirstComma,
+  toggleTabBarVisibility,
 } from '../../utils/helperfun';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import NotAllowLocation from '../../components/address/NotAllowLocation';
@@ -21,7 +22,9 @@ import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLo
 import {showNavigationBar} from 'react-native-navigation-bar-color';
 import Home from './Home';
 import HomeBottomSheetModal from '../../components/home/HomeBottomSheetModal';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {getAllData} from '../../store/ProductsSlice';
+import HomeProductLoader from '../../components/skeltonLoaders/HomeProductLoader';
 
 const HomeScreen = () => {
   const bottomSheetRef = useRef(null);
@@ -30,16 +33,19 @@ const HomeScreen = () => {
     state => state?.map?.locationPermission,
   );
   const isChecking = useSelector(state => state?.map?.isChecking);
+  const productsLoader = useSelector(state => state?.products?.productsLoader);
   const confirmAddress = useSelector(state => state?.map?.confirmAddress);
   const dispatch = useDispatch();
   const fullAddress = useSelector(state => state?.map?.fullAddress);
   const loader = useSelector(state => state?.map?.addressLoader);
-
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   const handlePresentModalPress = () => {
+    toggleTabBarVisibility(navigation, false);
     bottomSheetRef?.current?.expand();
   };
+
   const checkPermission = async () => {
     if (!confirmAddress) {
       dispatch(setAddressLoader(true));
@@ -67,6 +73,7 @@ const HomeScreen = () => {
             dispatch(setIsChecking(false));
             // console.log(confirmAddress, 'confirmAddress');
             if (!confirmAddress) {
+              // console.log('calling cnf');
               dispatch(fatchUserAddress());
               dispatch(setConfirmAddress(fullAddress));
             }
@@ -90,7 +97,6 @@ const HomeScreen = () => {
   };
 
   const enableLocation = async () => {
-    // console.log('enable click');
     if (locationPermission === 'denied') {
       setSettingModelOpen(true);
     }
@@ -128,7 +134,6 @@ const HomeScreen = () => {
 
       const handleModalClose = () => {
         bottomSheetRef?.current?.close();
-        dispatch(setAddressLoader(false));
       };
 
       handleAddressCheck();
@@ -140,14 +145,32 @@ const HomeScreen = () => {
       bottomSheetRef?.current?.close();
       return true;
     };
-
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction,
     );
-
     return () => backHandler.remove();
   }, []);
+
+  useEffect(() => {
+    console.log('fatched');
+
+    dispatch(getAllData());
+  }, []);
+
+  useEffect(() => {
+    if (loader || productsLoader) {
+      toggleTabBarVisibility(navigation, false);
+    } else {
+      toggleTabBarVisibility(navigation, true);
+    }
+    if (!checkIsWithinKanyakumari(fullAddress)) {
+      toggleTabBarVisibility(navigation, false);
+    }
+  }, [loader, productsLoader]);
+
+  console.log(loader, 'addresssloader');
+  console.log(confirmAddress, 'cfn');
 
   return (
     <View
@@ -162,18 +185,13 @@ const HomeScreen = () => {
         style={{
           backgroundColor: appColors.background,
         }}>
-        {loader ? (
-          <View style={{height: '100%', paddingStart: '2%', marginTop: '15%'}}>
-            <CustomText font="bold" style={{fontSize: 20}}>
-              Waiting for location...
-            </CustomText>
-            <View style={{marginTop: '5%'}}>
-              <AddressScreenLoader />
-            </View>
+        {loader || productsLoader ? (
+          <View style={{height: '100%'}}>
+            <HomeProductLoader />
           </View>
         ) : (
           <>
-            {!checkIsWithinKanyakumari(confirmAddress) ? (
+            {!confirmAddress ? (
               <View style={{height: '100%'}}>
                 <NotAllowLocation
                   handlePresentModalPress={handlePresentModalPress}
@@ -198,7 +216,6 @@ const HomeScreen = () => {
         settingModelOpen={settingModelOpen}
         setSettingModelOpen={setSettingModelOpen}
         handleSelectAddress={() => {
-          bottomSheetRef?.current?.close();
           dispatch(setIsChecking(false));
           dispatch(setAddressLoader(false));
         }}

@@ -9,7 +9,7 @@ import appColors from '../../utils/appColors';
 const Notice = () => {
   return (
     <View style={{height: NoticeHeight}}>
-      <View style={styles.container}>
+      <View>
         <View style={styles.noticeContainer}>
           <SafeAreaView style={{paddingTop: '5%', paddingBottom: '2%'}}>
             <CustomText style={styles.heading} font="sembold">
@@ -41,12 +41,8 @@ const Notice = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: appColors?.bottomSheetBg,
-  },
   noticeContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: appColors?.bottomSheetBg,
   },
   textCenter: {

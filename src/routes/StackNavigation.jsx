@@ -1,16 +1,18 @@
 import React, {useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import SplashScreen from '../screens/SplashScreen';
-import MapScreen from '../screens/address/MapScreen';
-import LoginScreen from '../screens/loginScreen/LoginScreen';
-import CheckingLocation from '../screens/address/CheckingLocation';
-import OtpScreen from '../screens/loginScreen/OtpScreen';
-import RightDrawer from './RightDrawer';
-import ProfileScreen from '../screens/profile/ProfileScreen';
 import NetInfo from '@react-native-community/netinfo';
-import NoInternetConnection from '../screens/NoInternetConnection';
-import TestScreen from '../screens/testingScreen/TestScreen';
+import BottomNavigation from './BottomNavigation';
+import {
+  CheckingLocation,
+  LoginScreen,
+  MapScreen,
+  NoInternetConnection,
+  OtpScreen,
+  ProfileScreen,
+  SplashScreen,
+  TestScreen,
+} from '../screens';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,7 +50,7 @@ const StackNavigation = () => {
           component={SplashScreen}
         />
         <Stack.Screen name="login" component={LoginScreen} />
-        <Stack.Screen name="home" component={RightDrawer} />
+        <Stack.Screen name="home" component={BottomNavigation} />
         <Stack.Screen name="mapview" component={MapScreen} />
         <Stack.Screen name="test" component={TestScreen} />
         <Stack.Screen name="checking" component={CheckingLocation} />

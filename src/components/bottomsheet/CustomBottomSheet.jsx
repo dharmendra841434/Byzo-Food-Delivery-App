@@ -10,6 +10,8 @@ import BottomSheet, {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import appColors from '../../utils/appColors';
+import {useNavigation} from '@react-navigation/native';
+import {toggleTabBarVisibility} from '../../utils/helperfun';
 
 const CustomBottomSheet = ({
   isBackdropClosable = true,
@@ -19,9 +21,12 @@ const CustomBottomSheet = ({
 }) => {
   const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
+  const navigation = useNavigation();
+
   // variables
   const snapPoints = useMemo(() => [1, SCREEN_HEIGHT], [SCREEN_HEIGHT]);
   const handleClosePress = () => {
+    toggleTabBarVisibility(navigation, true);
     bottomSheetRef?.current?.close();
   };
   // Handle closing the modal
@@ -81,6 +86,7 @@ const styles = StyleSheet.create({
     marginTop: '20%',
     borderTopLeftRadius: 14,
     borderTopRightRadius: 14,
+    zIndex: 50,
   },
 });
 

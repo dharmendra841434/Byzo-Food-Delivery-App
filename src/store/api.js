@@ -45,3 +45,15 @@ export const LoginAPI = {
       .then(res => res.data);
   },
 };
+
+export const ProductsAPI = {
+  getProductsCategories: async () => {
+    return await axios
+      .get(`${BASE_URL}/getAllCatogeries`)
+      .then(res => res.data);
+  },
+
+  getAllProducts: async () => {
+    return await axios.get(`${BASE_URL}/getByzoProducts`).then(res => res.data);
+  },
+};

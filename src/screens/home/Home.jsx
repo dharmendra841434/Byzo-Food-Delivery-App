@@ -13,12 +13,11 @@ import appColors from '../../utils/appColors';
 import {NoticeHeight, screenHeight} from '../../utils/scaling';
 import NoticeAnimation from '../../components/home/NoticeAnimation';
 import LinearGradient from 'react-native-linear-gradient';
-import {dummy} from '../../utils/constent';
-import CustomText from '../../components/CustomText';
 import {useDispatch, useSelector} from 'react-redux';
 import {setViewNotice} from '../../store/mapSlice';
 import TopSectionCards from '../../components/home/TopSectionCards';
 import {isWithinTimeRange} from '../../utils/helperfun';
+import ProductsView from '../../components/home/ProductsView';
 
 const NOTICE_HEIGHT = -(NoticeHeight + 50);
 
@@ -162,56 +161,15 @@ const Home = ({address, handleChangeAddress}) => {
           showsVerticalScrollIndicator={false}>
           {/* Add your screen content here */}
           <View style={styles.content}>
-            <LinearGradient
-              colors={gradientColor} // Interpolated colors
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              style={{
-                flex: 1,
-                width: '100%',
-                backgroundColor: appColors?.gredientFrom,
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                }}>
-                <ImageBackground
-                  style={{height: screenHeight * 0.28}}
-                  source={require('../../assets/images/ttt.png')}>
-                  <TopSectionCards />
-                </ImageBackground>
-              </View>
-            </LinearGradient>
-            {/* <LinearGradient
-              colors={gradientColor} // Interpolated colors
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
-              style={{
-                flex: 1,
-                width: '100%',
-              }}>
-              <TabManuBar
-                handleActiveTab={index => {
-                  setActiveTab(index);
-                }}
-              />
-            </LinearGradient>
             <View>
-              {tabsData[activeTab] && (
-                <CustomText style={styles.contentText}>
-                  Content of {tabsData[activeTab].name}
-                </CustomText>
-              )}
-            </View> */}
-            <View style={{backgroundColor: appColors?.background}}>
-              {dummy?.map((item, index) => (
-                <CustomText key={index} className=" h-44">
-                  {item}
-                </CustomText>
-              ))}
+              <ImageBackground
+                style={{height: screenHeight * 0.28}}
+                source={require('../../assets/images/ttt.png')}>
+                <TopSectionCards />
+              </ImageBackground>
             </View>
+            <ProductsView />
           </View>
-          {/* Add more content as needed */}
         </ScrollView>
       </View>
     </NoticeAnimation>
@@ -249,11 +207,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   contentContainer: {
-    paddingTop: '50%', // Make sure there's space for the header
+    paddingTop: '45%', // Make sure there's space for the header
     backgroundColor: appColors?.gredientFrom,
   },
   content: {
     justifyContent: 'center',
+    backgroundColor: appColors?.background,
+    paddingBottom: '45%',
   },
   contentText: {
     fontSize: 24,

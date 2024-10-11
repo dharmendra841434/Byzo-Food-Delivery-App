@@ -7,6 +7,9 @@ import CategoriesSection from '../../screens/home/CategoriesSection';
 import RecommendedProducts from './products/RecommendedProducts';
 import InfiniteSection from './products/InfiniteSection';
 import NewlyLunched from './products/NewlyLunched';
+import BannerCarousel from './products/BannerCarousel';
+import CleaningProductsSection from './products/CleaningProductsSection';
+import FullImageSection from './products/FullImageSection';
 
 const ProductsView = () => {
   const productsCategories = useSelector(
@@ -30,6 +33,13 @@ const ProductsView = () => {
             )}
             {item?.sectionName === 'Newly Launched' && (
               <NewlyLunched data={item} />
+            )}
+
+            {item?.sectionName === 'Best Seller' && (
+              <BannerCarousel data={item} />
+            )}
+            {item?.sectionName === 'Full Img section' && (
+              <FullImageSection data={item} />
             )}
           </View>
         ))}

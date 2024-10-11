@@ -113,3 +113,29 @@ export const dummyData = [
     name: 'Arnaldo Hills',
   },
 ];
+
+export const cleanDummy = {
+  heading: require('../assets/images/heading.webp'),
+  categories: [
+    {
+      id: 1,
+      title: 'Surface cleaners',
+      image: require('../assets/images/SurfaceCleanersFresheners.webp'),
+    },
+    {
+      id: 2,
+      title: 'Cleaning tools',
+      image: require('../assets/images/CleaningToolsAccessories.webp'),
+    },
+    {
+      id: 3,
+      title: 'Trash Disposal',
+      image: require('../assets/images/TrashDisposal.webp'),
+    },
+    {
+      id: 4,
+      title: 'Cleaning gedget',
+      image: require('../assets/images/SmartCleaningGadgets.webp'),
+    },
+  ],
+};

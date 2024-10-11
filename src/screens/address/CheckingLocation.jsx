@@ -63,14 +63,16 @@ const CheckingLocation = () => {
     }, [fullAddress, locationPermission, confirmAddress]),
   );
 
+  //console.log('checking screen');
+
   return (
     <View
       style={{backgroundColor: appColors?.background}}
       className="h-[110vh] ">
       <StatusBar
         backgroundColor="rgba(0,0,0,0)"
-        barStyle={false ? 'light-content' : 'dark-content'}
         translucent
+        barStyle="dark-content"
       />
       <View style={{flex: 1}}>
         {loader || checkIsWithinKanyakumari(fullAddress) ? (

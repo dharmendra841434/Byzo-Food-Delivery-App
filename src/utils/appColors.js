@@ -16,6 +16,9 @@ const appColors = {
   gredientTo: '#b02d6f',
   statuBarColor: 'rgba(0,0,0,0.6)',
   closeButton: '#3c3c4f',
+  lightSky: '#dbf3ff',
+  skyblue: '#97d8fe',
+  fullCardBg: '#c99db6',
 };
 
 export default appColors;

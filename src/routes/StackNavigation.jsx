@@ -40,15 +40,11 @@ const StackNavigation = () => {
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
+          animation: 'fade',
+          animationDuration: 200,
         }}
         initialRouteName="splash">
-        <Stack.Screen
-          name="splash"
-          options={{
-            animation: 'none',
-          }}
-          component={SplashScreen}
-        />
+        <Stack.Screen name="splash" component={SplashScreen} />
         <Stack.Screen name="login" component={LoginScreen} />
         <Stack.Screen name="home" component={BottomNavigation} />
         <Stack.Screen name="mapview" component={MapScreen} />

@@ -76,23 +76,21 @@ const Home = ({address, handleChangeAddress}) => {
   const noticePosition = useRef(new Animated.Value(NOTICE_HEIGHT)).current;
 
   const slideUp = () => {
+    StatusBar.setBarStyle('light-content');
     Animated.timing(noticePosition, {
       toValue: NOTICE_HEIGHT,
       duration: 800,
       useNativeDriver: false,
-    }).start(() => {
-      StatusBar.setBarStyle('light-content');
-    });
+    }).start(() => {});
   };
 
   const slideDown = () => {
+    StatusBar.setBarStyle('dark-content');
     Animated.timing(noticePosition, {
       toValue: 25,
       duration: 800,
       useNativeDriver: false,
-    }).start(() => {
-      StatusBar.setBarStyle('dark-content');
-    });
+    }).start(() => {});
   };
 
   useEffect(() => {
@@ -213,7 +211,7 @@ const styles = StyleSheet.create({
   content: {
     justifyContent: 'center',
     backgroundColor: appColors?.background,
-    paddingBottom: '45%',
+    paddingBottom: '25%',
   },
   contentText: {
     fontSize: 24,

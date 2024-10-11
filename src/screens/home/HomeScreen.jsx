@@ -9,7 +9,6 @@ import {
   setIsChecking,
   setLocationPermission,
 } from '../../store/mapSlice';
-import CustomText from '../../components/CustomText';
 import {
   checkIsWithinKanyakumari,
   getLocalStorageAddress,
@@ -17,8 +16,6 @@ import {
   toggleTabBarVisibility,
 } from '../../utils/helperfun';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import NotAllowLocation from '../../components/address/NotAllowLocation';
-import AddressScreenLoader from '../../components/skeltonLoaders/AddressScreenLoader';
 import {showNavigationBar} from 'react-native-navigation-bar-color';
 import Home from './Home';
 import HomeBottomSheetModal from '../../components/home/HomeBottomSheetModal';
@@ -81,6 +78,7 @@ const HomeScreen = () => {
               setLoading(false);
               console.log('The permission is granted.');
               bottomSheetRef?.current?.close();
+              dispatch(setAddressLoader(false));
             }, 2000);
 
             break;
@@ -128,6 +126,10 @@ const HomeScreen = () => {
           if (localAddress !== null) {
             dispatch(setConfirmAddress(localAddress));
             bottomSheetRef?.current?.close();
+          } else {
+            console.log('loading......');
+            dispatch(setAddressLoader(true));
+            handlePresentModalPress();
           }
         }
       };
@@ -153,13 +155,12 @@ const HomeScreen = () => {
   }, []);
 
   useEffect(() => {
-    console.log('fatched');
-
     dispatch(getAllData());
   }, []);
 
   useEffect(() => {
     if (loader || productsLoader) {
+      StatusBar.setBarStyle('dark-content');
       toggleTabBarVisibility(navigation, false);
     } else {
       toggleTabBarVisibility(navigation, true);
@@ -167,19 +168,17 @@ const HomeScreen = () => {
     if (!checkIsWithinKanyakumari(fullAddress)) {
       toggleTabBarVisibility(navigation, false);
     }
-  }, [loader, productsLoader]);
-
-  console.log(loader, 'addresssloader');
-  console.log(confirmAddress, 'cfn');
+  }, [loader, productsLoader, confirmAddress]);
 
   return (
     <View
       style={{backgroundColor: appColors?.background}}
       className="h-[110vh] ">
       <StatusBar
+        animated
+        showHideTransition="fade"
         backgroundColor="rgba(0,0,0,0)"
         translucent
-        barStyle="light-content"
       />
       <View
         style={{
@@ -190,22 +189,12 @@ const HomeScreen = () => {
             <HomeProductLoader />
           </View>
         ) : (
-          <>
-            {!confirmAddress ? (
-              <View style={{height: '100%'}}>
-                <NotAllowLocation
-                  handlePresentModalPress={handlePresentModalPress}
-                />
-              </View>
-            ) : (
-              <View style={{height: '100%'}}>
-                <Home
-                  address={splitAddressAtFirstComma(confirmAddress)}
-                  handleChangeAddress={handlePresentModalPress}
-                />
-              </View>
-            )}
-          </>
+          <View style={{height: '100%'}}>
+            <Home
+              address={splitAddressAtFirstComma(confirmAddress)}
+              handleChangeAddress={handlePresentModalPress}
+            />
+          </View>
         )}
       </View>
 

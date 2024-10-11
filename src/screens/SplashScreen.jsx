@@ -39,7 +39,7 @@ const SplashScreen = () => {
           saveAdressOnLocalStorage('user-address', savedAddress);
           navigation.replace('home');
         } else {
-          console.log('Local data not found');
+          console.log('Local data expired or not found');
           await dispatch(fatchUserAddress());
           navigation.replace(result === RESULTS.GRANTED ? 'checking' : 'home');
         }

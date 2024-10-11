@@ -1,4 +1,4 @@
-import {View, StatusBar, BackHandler} from 'react-native';
+import {View, StatusBar, BackHandler, ActivityIndicator} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import appColors from '../../utils/appColors';
 import {useDispatch, useSelector} from 'react-redux';
@@ -22,6 +22,7 @@ import HomeBottomSheetModal from '../../components/home/HomeBottomSheetModal';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {getAllData} from '../../store/ProductsSlice';
 import HomeProductLoader from '../../components/skeltonLoaders/HomeProductLoader';
+import NotAllowLocation from '../../components/address/NotAllowLocation';
 
 const HomeScreen = () => {
   const bottomSheetRef = useRef(null);
@@ -162,10 +163,9 @@ const HomeScreen = () => {
     if (loader || productsLoader) {
       StatusBar.setBarStyle('dark-content');
       toggleTabBarVisibility(navigation, false);
-    } else {
+    } else if (confirmAddress) {
       toggleTabBarVisibility(navigation, true);
-    }
-    if (!checkIsWithinKanyakumari(fullAddress)) {
+    } else {
       toggleTabBarVisibility(navigation, false);
     }
   }, [loader, productsLoader, confirmAddress]);
@@ -179,6 +179,7 @@ const HomeScreen = () => {
         showHideTransition="fade"
         backgroundColor="rgba(0,0,0,0)"
         translucent
+        barStyle="dark-content"
       />
       <View
         style={{
@@ -190,10 +191,18 @@ const HomeScreen = () => {
           </View>
         ) : (
           <View style={{height: '100%'}}>
-            <Home
-              address={splitAddressAtFirstComma(confirmAddress)}
-              handleChangeAddress={handlePresentModalPress}
-            />
+            {!confirmAddress ? (
+              <>
+                <NotAllowLocation
+                  handlePresentModalPress={handlePresentModalPress}
+                />
+              </>
+            ) : (
+              <Home
+                address={splitAddressAtFirstComma(confirmAddress)}
+                handleChangeAddress={handlePresentModalPress}
+              />
+            )}
           </View>
         )}
       </View>

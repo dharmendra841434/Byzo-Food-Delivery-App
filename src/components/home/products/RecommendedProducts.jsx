@@ -1,9 +1,8 @@
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import React from 'react';
 import CustomText from '../../CustomText';
 import {RFValue} from 'react-native-responsive-fontsize';
-import appColors from '../../../utils/appColors';
-import OfferIcon from '../../../assets/icons/OfferIcon';
+
 import ProductCard from './ProductCard';
 
 const RecommendedProducts = ({data}) => {

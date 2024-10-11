@@ -76,7 +76,7 @@ const Home = ({address, handleChangeAddress}) => {
   const noticePosition = useRef(new Animated.Value(NOTICE_HEIGHT)).current;
 
   const slideUp = () => {
-    StatusBar.setBarStyle('light-content');
+    // StatusBar.setBarStyle('light-content');
     Animated.timing(noticePosition, {
       toValue: NOTICE_HEIGHT,
       duration: 800,
@@ -85,7 +85,7 @@ const Home = ({address, handleChangeAddress}) => {
   };
 
   const slideDown = () => {
-    StatusBar.setBarStyle('dark-content');
+    // StatusBar.setBarStyle('dark-content');
     Animated.timing(noticePosition, {
       toValue: 25,
       duration: 800,

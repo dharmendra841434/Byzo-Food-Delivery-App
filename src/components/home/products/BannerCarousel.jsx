@@ -26,6 +26,7 @@ const BannerCarousel = ({data}) => {
         }}
         renderItem={({item, index}) => (
           <View
+            key={index}
             style={{
               width: ITEM_WIDTH,
               borderRadius: 10,

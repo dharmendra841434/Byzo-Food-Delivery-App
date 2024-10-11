@@ -1,14 +1,12 @@
 import {View} from 'react-native';
 import React from 'react';
 import appColors from '../../utils/appColors';
-import CustomText from '../CustomText';
 import {useSelector} from 'react-redux';
 import CategoriesSection from '../../screens/home/CategoriesSection';
 import RecommendedProducts from './products/RecommendedProducts';
 import InfiniteSection from './products/InfiniteSection';
 import NewlyLunched from './products/NewlyLunched';
 import BannerCarousel from './products/BannerCarousel';
-import CleaningProductsSection from './products/CleaningProductsSection';
 import FullImageSection from './products/FullImageSection';
 
 const ProductsView = () => {

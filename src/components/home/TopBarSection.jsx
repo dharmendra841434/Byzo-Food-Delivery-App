@@ -1,7 +1,5 @@
 import {
   View,
-  Text,
-  ImageBackground,
   StyleSheet,
   TouchableOpacity,
   Image,
@@ -10,13 +8,13 @@ import {
 import React from 'react';
 import CustomText from '../CustomText';
 import appColors from '../../utils/appColors';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {addEllipsis, isWithinTimeRange} from '../../utils/helperfun';
 import person from '../../assets/images/person.png';
 import {useDispatch} from 'react-redux';
 import {setIsOpenDrawer} from '../../store/userSlice';
 import {useNavigation} from '@react-navigation/native';
-import Icon2 from 'react-native-vector-icons/MaterialIcons';
+import CustomIcons from '../CustomIcons';
+import {AppIcons} from '../../utils/constent';
 
 const TopBarSection = ({
   address,
@@ -59,9 +57,9 @@ const TopBarSection = ({
                     borderRadius: 100,
                     padding: 2,
                   }}>
-                  <Icon2
-                    name="flash-on"
-                    size={12}
+                  <CustomIcons
+                    icon={AppIcons?.flash}
+                    size={11}
                     color={appColors?.background}
                   />
                 </View>
@@ -86,10 +84,10 @@ const TopBarSection = ({
               ellipsizeMode="tail">
               {addEllipsis(address, 30)}
             </CustomText>
-            <Icon
-              name="caret-down-outline"
+            <CustomIcons
+              icon={AppIcons?.downfillArrow}
+              size={17}
               color={appColors.background}
-              size={18}
             />
           </TouchableOpacity>
         </View>

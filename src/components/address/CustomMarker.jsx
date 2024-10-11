@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import appColors from '../../utils/appColors';
-import MarkerTooltip from './mapScreen/MarkerTooltip';
 
 const CustomMarker = ({onRegionChangeComplete}) => {
   const [showTooltip, setShowTooltip] = useState(true);

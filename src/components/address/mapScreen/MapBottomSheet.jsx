@@ -1,13 +1,14 @@
 import {View, BackHandler} from 'react-native';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useEffect} from 'react';
 import CustomText from '../../CustomText';
 import AddressAutoComplete from '../AddressAutoComplete';
 import appColors from '../../../utils/appColors';
 import EnableWarning from './EnableWarning';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {splitAddressAtFirstComma} from '../../../utils/helperfun';
 import CustomBottomSheet2 from '../../bottomsheet/CustomBottomSheet';
+import CustomIcons from '../../CustomIcons';
+import {AppIcons} from '../../../utils/constent';
 
 const MapBottomSheet = ({
   setSettingModelOpen,
@@ -55,10 +56,10 @@ const MapBottomSheet = ({
               <View className="flex flex-row items-center justify-between p-2 mx-2 bg-white rounded-md ">
                 <View className="flex flex-row ">
                   <View>
-                    <Icon
-                      name="location-outline"
+                    <CustomIcons
+                      icon={AppIcons?.locationOutline}
+                      color={appColors?.blackText}
                       size={25}
-                      color={appColors.blackText}
                     />
                   </View>
                   <View className="w-[85%] ml-2  ">

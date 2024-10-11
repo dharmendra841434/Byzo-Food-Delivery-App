@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
 import {
   View,
-  Button,
   StyleSheet,
-  ImageBackground,
   TouchableWithoutFeedback,
   Keyboard,
   Image,
@@ -22,10 +20,8 @@ import CustomText from '../../components/CustomText';
 import {TextInput} from 'react-native-gesture-handler';
 import appColors from '../../utils/appColors';
 import {screenWidth} from '../../utils/scaling';
-import {opacity} from 'react-native-reanimated/lib/typescript/Colors';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
-import {sendLoginOtp} from '../../store/userSlice';
 import {LoginAPI} from '../../store/api';
 import FullScreenLoader from '../../components/FullScreenLoader';
 import appFonts from '../../utils/appFonts';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import appColors from '../../utils/appColors';
 
 const MarkerIcon = () => {

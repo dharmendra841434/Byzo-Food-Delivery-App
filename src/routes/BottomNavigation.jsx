@@ -1,12 +1,13 @@
 import {View} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons';
 import appColors from '../utils/appColors';
 import RightDrawer from './RightDrawer';
 import CategoryStack from './CategoryStack';
 import CartStack from './CartStack';
 import appFonts from '../utils/appFonts';
+import CustomIcons from '../components/CustomIcons';
+import {AppIcons} from '../utils/constent';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,9 +38,9 @@ const BottomNavigation = () => {
         component={RightDrawer}
         options={{
           tabBarIcon: ({focused}) => (
-            <Icon
-              name={focused ? 'home' : 'home-outline'}
+            <CustomIcons
               size={25}
+              icon={focused ? AppIcons?.homefill : AppIcons?.home}
               color={focused ? appColors.primary : appColors.blackText}
             />
           ),
@@ -50,9 +51,9 @@ const BottomNavigation = () => {
         component={CategoryStack}
         options={{
           tabBarIcon: ({focused}) => (
-            <Icon
-              name={focused ? 'grid' : 'grid-outline'}
+            <CustomIcons
               size={25}
+              icon={focused ? AppIcons?.categoryfill : AppIcons?.category}
               color={focused ? appColors.primary : appColors.blackText}
             />
           ),
@@ -64,9 +65,9 @@ const BottomNavigation = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <View>
-              <Icon
-                name={focused ? 'cart' : 'cart-outline'}
+              <CustomIcons
                 size={25}
+                icon={focused ? AppIcons?.cartfill : AppIcons?.cart}
                 color={focused ? appColors.primary : appColors.blackText}
               />
               {/* {cartItems?.length > 0 && (

@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import appColors from '../../utils/appColors';
 import CustomText from '../CustomText';
 import RollingBar from 'react-native-rolling-bar';
+import CustomIcons from '../CustomIcons';
+import {AppIcons} from '../../utils/constent';
 
 const AnimatedSearchBar = () => {
   const [showFirstText, setShowFirstText] = useState(true);
@@ -29,8 +29,12 @@ const AnimatedSearchBar = () => {
   return (
     <TouchableOpacity activeOpacity={0.9} style={styles.container}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Icon name="search" color={appColors.blackText} size={25} />
-        {/* Animatable Text for the first placeholder */}
+        <CustomIcons
+          icon={AppIcons?.searchIcon}
+          size={25}
+          color={appColors?.blackText}
+        />
+
         <View
           style={{
             height: '100%',
@@ -49,11 +53,10 @@ const AnimatedSearchBar = () => {
         </View>
       </View>
       <TouchableOpacity activeOpacity={0.6}>
-        <Icon
-          name="mic"
+        <CustomIcons
+          icon={AppIcons?.mic}
           size={25}
-          color={appColors.blackText}
-          style={{zIndex: 10}}
+          color={appColors?.blackText}
         />
       </TouchableOpacity>
     </TouchableOpacity>

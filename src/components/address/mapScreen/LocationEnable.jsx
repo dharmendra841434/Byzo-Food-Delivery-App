@@ -1,8 +1,9 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import CustomText from '../../CustomText';
 import appColors from '../../../utils/appColors';
+import CustomIcons from '../../CustomIcons';
+import {AppIcons} from '../../../utils/constent';
 
 const LocationEnable = ({
   isEnable,
@@ -16,7 +17,11 @@ const LocationEnable = ({
           onPress={handleCurrentLocation}
           activeOpacity={0.9}
           style={styles.button}>
-          <Icon name="my-location" color={appColors.secondry} size={20} />
+          <CustomIcons
+            icon={AppIcons?.locationCross}
+            color={appColors?.blackText}
+          />
+          {/* <Icon name="my-location" color={appColors.secondry} size={20} /> */}
           <CustomText font="semibold" style={styles.text}>
             Go to cureent location
           </CustomText>
@@ -27,7 +32,7 @@ const LocationEnable = ({
           activeOpacity={0.9}
           style={styles.button}>
           <View style={{position: 'relative'}}>
-            <Icon name="my-location" color={appColors.secondry} size={20} />
+            <CustomIcons icon={AppIcons?.locationCross} />
             <View className="-rotate-45 " style={styles.cross} />
           </View>
           <CustomText font="medium" style={styles.text}>

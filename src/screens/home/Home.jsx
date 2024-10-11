@@ -4,7 +4,6 @@ import {
   ScrollView,
   Animated,
   StyleSheet,
-  StatusBar,
   ImageBackground,
 } from 'react-native';
 import AnimatedSearchBar from '../../components/home/AnimatableSearchBar';

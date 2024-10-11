@@ -139,3 +139,21 @@ export const cleanDummy = {
     },
   ],
 };
+
+export const AppIcons = {
+  searchIcon: require('../assets/icons/search.webp'),
+  rightArrow: require('../assets/icons/rightarr.webp'),
+  locationCross: require('../assets/icons/location_cross.webp'),
+  closeIcon: require('../assets/icons/closeIcon.webp'),
+  locationOutline: require('../assets/icons/pin.webp'),
+  home: require('../assets/icons/home.webp'),
+  homefill: require('../assets/icons/homefill.webp'),
+  category: require('../assets/icons/category.webp'),
+  categoryfill: require('../assets/icons/categoryfill.webp'),
+  cart: require('../assets/icons/cart.webp'),
+  cartfill: require('../assets/icons/cartfill.webp'),
+  backIcon: require('../assets/icons/back.webp'),
+  flash: require('../assets/icons/flashOn.webp'),
+  downfillArrow: require('../assets/icons/down.webp'),
+  mic: require('../assets/icons/mic.webp'),
+};

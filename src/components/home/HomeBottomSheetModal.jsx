@@ -2,7 +2,6 @@ import {View, ActivityIndicator, StyleSheet} from 'react-native';
 import React from 'react';
 import CustomText from '../CustomText';
 import appColors from '../../utils/appColors';
-import Icon from 'react-native-vector-icons/Ionicons';
 import AddressAutoComplete from '../address/AddressAutoComplete';
 import SettingOpenModel from '../address/SettingOpenModel';
 import {useDispatch, useSelector} from 'react-redux';
@@ -12,7 +11,8 @@ import {
 } from '../../utils/helperfun';
 import EnableWarning from '../address/mapScreen/EnableWarning';
 import CustomBottomSheet from '../bottomsheet/CustomBottomSheet';
-import {setAddressLoader} from '../../store/mapSlice';
+import CustomIcons from '../CustomIcons';
+import {AppIcons} from '../../utils/constent';
 
 const HomeBottomSheetModal = ({
   handleEnableLocation,
@@ -49,12 +49,12 @@ const HomeBottomSheetModal = ({
             <>
               {checkIsWithinKanyakumari(confirmAddress) && (
                 <View className="flex flex-row items-center justify-between p-2 m-2 bg-white rounded-md ">
-                  <View className="flex flex-row ">
+                  <View className="flex flex-row items-center ">
                     <View>
-                      <Icon
-                        name="location-outline"
+                      <CustomIcons
+                        icon={AppIcons?.locationOutline}
+                        color={appColors?.blackText}
                         size={25}
-                        color={appColors.blackText}
                       />
                     </View>
                     <View className="w-[85%] ml-2 ">

@@ -1,8 +1,10 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 import appColors from '../../../utils/appColors';
 import CustomText from '../../CustomText';
 import Icon2 from 'react-native-vector-icons/Ionicons';
+import CustomIcons from '../../CustomIcons';
+import {AppIcons} from '../../../utils/constent';
 
 const TopSearchBar = ({handleSearchPress, isElivation}) => {
   return (
@@ -17,7 +19,7 @@ const TopSearchBar = ({handleSearchPress, isElivation}) => {
           elevation: isElivation ? 5 : 0,
         },
       ]}>
-      <Icon2 name="search" size={20} color={appColors.secondry} />
+      <CustomIcons icon={AppIcons?.searchIcon} color={appColors?.blackText} />
       <CustomText
         font="medium"
         style={{

@@ -1,5 +1,5 @@
 import {View, StatusBar, Image} from 'react-native';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import appColors from '../utils/appColors';
 import logo from '../assets/images/line.png';
 import CustomText from '../components/CustomText';
@@ -24,7 +24,6 @@ const SplashScreen = () => {
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
-  const fullAddress = useSelector(state => state?.map?.fullAddress);
 
   const checkPermission = async () => {
     try {

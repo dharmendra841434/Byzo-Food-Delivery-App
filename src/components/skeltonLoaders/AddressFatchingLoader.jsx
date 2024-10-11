@@ -1,8 +1,7 @@
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import CustomMarker from '../address/CustomMarker';
 import CustomText from '../CustomText';
 import appColors from '../../utils/appColors';
 

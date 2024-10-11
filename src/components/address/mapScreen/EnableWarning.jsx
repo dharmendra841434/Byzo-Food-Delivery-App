@@ -1,17 +1,20 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import appColors from '../../../utils/appColors';
 import CustomText from '../../CustomText';
-import Icon from 'react-native-vector-icons/Ionicons';
+import CustomIcons from '../../CustomIcons';
+import {AppIcons} from '../../../utils/constent';
 
 const EnableWarning = ({handleEnableLocation, className}) => {
   return (
     <View
       className={`flex flex-row items-center justify-between px-3  pb-1  bg-red-50 ${className}`}>
-      <View className="flex flex-row ">
+      <View className="flex flex-row items-center ">
         <View>
-          <Icon name="location-outline" size={28} color={appColors.blackText} />
-          <View className="absolute w-8 h-1 mt-3 -mr-3 -rotate-45 bg-red-600 border border-white " />
+          <CustomIcons
+            icon={AppIcons?.locationOutline}
+            color={appColors?.blackText}
+          />
         </View>
         <View className="ml-2 ">
           <CustomText font="bold" className="text-[12px] text-blackText">

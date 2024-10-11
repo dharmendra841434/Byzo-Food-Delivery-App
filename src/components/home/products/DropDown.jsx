@@ -1,9 +1,10 @@
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 import appColors from '../../../utils/appColors';
 import CustomText from '../../CustomText';
 import {RFValue} from 'react-native-responsive-fontsize';
-import Icon from 'react-native-vector-icons/Ionicons';
+import CustomIcons from '../../CustomIcons';
+import {AppIcons} from '../../../utils/constent';
 
 const DropDown = () => {
   return (
@@ -11,7 +12,11 @@ const DropDown = () => {
       <CustomText font="semibold" style={styles.text}>
         Gram
       </CustomText>
-      <Icon name="chevron-down-outline" size={16} />
+      <CustomIcons
+        icon={AppIcons?.downfillArrow}
+        size={16}
+        color={appColors.background}
+      />
     </TouchableOpacity>
   );
 };

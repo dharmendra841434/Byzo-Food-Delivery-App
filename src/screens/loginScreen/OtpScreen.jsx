@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  StatusBar,
-  Modal,
-  ActivityIndicator,
-} from 'react-native';
+import {View, StyleSheet, StatusBar} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import OtpInputs from '../../components/login/OtpInputs';
 import appColors from '../../utils/appColors';
@@ -13,7 +6,7 @@ import CustomHeader from '../../components/CustomHeader';
 import CustomText from '../../components/CustomText';
 import OtpTimer from '../../components/login/OtpTimmer';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {getHash, startOtpListener, useOtpVerify} from 'react-native-otp-verify';
+import {getHash, startOtpListener} from 'react-native-otp-verify';
 import {numberToArray, storeLocalStorageData} from '../../utils/helperfun';
 import {LoginAPI} from '../../store/api';
 import FullScreenLoader from '../../components/FullScreenLoader';

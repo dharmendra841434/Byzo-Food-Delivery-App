@@ -2,9 +2,9 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import CustomText from '../../CustomText';
 import MarkerIcon from '../MarkerIcon';
-import {splitAddressAtFirstComma} from '../../../utils/helperfun';
 import appColors from '../../../utils/appColors';
-import Icon3 from 'react-native-vector-icons/MaterialIcons';
+import CustomIcons from '../../CustomIcons';
+import {AppIcons} from '../../../utils/constent';
 
 const MapDeliveryAddressCard = ({
   handleChangeAddress,
@@ -76,6 +76,8 @@ const MapDeliveryAddressCard = ({
             style={{
               flexDirection: 'row',
               alignItems: 'center',
+              paddingBottom: '2%',
+              paddingTop: '1%',
             }}>
             <CustomText
               font="semibold"
@@ -85,12 +87,17 @@ const MapDeliveryAddressCard = ({
               }}>
               Confirm location
             </CustomText>
-            <Icon3
+            <CustomIcons
+              icon={AppIcons?.rightArrow}
+              color={appColors?.background}
+              size={25}
+            />
+            {/* <Icon3
               name="arrow-right"
               color={appColors.background}
               size={35}
               style={{marginStart: -8, marginTop: 6}}
-            />
+            /> */}
           </View>
         </TouchableOpacity>
       </View>

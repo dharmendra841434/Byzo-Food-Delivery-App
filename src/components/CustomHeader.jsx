@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Platform, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'; // You can use any icon library
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import CustomText from './CustomText';
 import appColors from '../utils/appColors';
 import {useNavigation} from '@react-navigation/native';
 import {setIsOpenDrawer} from '../store/userSlice';
 import {useDispatch} from 'react-redux';
+import CustomIcons from './CustomIcons';
+import {AppIcons} from '../utils/constent';
 
 export default function CustomHeader({
   title,
@@ -27,7 +28,7 @@ export default function CustomHeader({
     <View style={[styles.headerContainer, {elevation: isElivation ? 3 : 0}]}>
       {showBackButton && (
         <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
-          <Icon name="chevron-back-outline" size={20} color="black" />
+          <CustomIcons icon={AppIcons?.backIcon} color={appColors?.blackText} />
         </TouchableOpacity>
       )}
       <CustomText font="semibold" style={styles.headerTitle}>

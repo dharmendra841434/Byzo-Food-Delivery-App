@@ -1,19 +1,13 @@
 import {
   View,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   FlatList,
   Image,
-  ActivityIndicator,
-  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import appColors from '../../utils/appColors';
 import appFonts from '../../utils/appFonts';
-import Icon from 'react-native-vector-icons/Ionicons';
-import Icon2 from 'react-native-vector-icons/FontAwesome6';
-import Icon3 from 'react-native-vector-icons/MaterialIcons';
 import CustomText from '../CustomText';
 import {addEllipsis, extractAddress} from '../../utils/helperfun';
 import locationIcon from '../../assets/images/addressIcon.png';
@@ -21,12 +15,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   fatchAddressByCords,
   fatchCurrentLocationAddress,
-  fatchUserAddress,
   setAddressCordinates,
-  setfullAddress,
 } from '../../store/mapSlice';
 import {useNavigation} from '@react-navigation/native';
 import {BottomSheetTextInput} from '@gorhom/bottom-sheet';
+import {AppIcons} from '../../utils/constent';
+import CustomIcons from '../CustomIcons';
 
 const none = () => {};
 
@@ -170,7 +164,8 @@ const AddressAutoComplete = ({
   return (
     <View>
       <View style={styles.container}>
-        <Icon name="search" size={20} color={appColors.secondry} />
+        <CustomIcons icon={AppIcons?.searchIcon} />
+
         <BottomSheetTextInput
           placeholder="Search for area, street name..."
           placeholderTextColor={appColors.blackText}
@@ -196,7 +191,11 @@ const AddressAutoComplete = ({
                 borderRadius: 100,
                 padding: 1,
               }}>
-              <Icon name="close" size={20} />
+              <CustomIcons
+                icon={AppIcons?.closeIcon}
+                color={appColors?.blackText}
+                size={17}
+              />
             </TouchableOpacity>
           )}
         </View>
@@ -211,21 +210,16 @@ const AddressAutoComplete = ({
             }}
             className="flex flex-row items-center justify-between px-2 py-2 mt-3 bg-white rounded-lg ">
             <View className="flex flex-row ">
-              <Icon2
-                name="location-crosshairs"
-                size={22}
-                color={appColors.secondry}
-              />
+              <CustomIcons icon={AppIcons?.locationCross} />
               <CustomText
                 className="ml-3 text-secondry text-[13px]"
                 font="semibold">
                 Use your current location
               </CustomText>
             </View>
-            <Icon3
-              name="keyboard-arrow-right"
-              size={20}
-              color={appColors.blackText}
+            <CustomIcons
+              icon={AppIcons?.rightArrow}
+              color={appColors?.blackText}
             />
           </TouchableOpacity>
         ) : (

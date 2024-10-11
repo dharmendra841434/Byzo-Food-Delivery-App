@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import StackNavigation from './routes/StackNavigation';
 import {store} from './store/store';
 import {Provider} from 'react-redux';

@@ -1,4 +1,4 @@
-import {View, StatusBar, BackHandler, ActivityIndicator} from 'react-native';
+import {View, StatusBar, BackHandler} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import appColors from '../../utils/appColors';
 import {useDispatch, useSelector} from 'react-redux';
@@ -10,7 +10,6 @@ import {
   setLocationPermission,
 } from '../../store/mapSlice';
 import {
-  checkIsWithinKanyakumari,
   getLocalStorageAddress,
   splitAddressAtFirstComma,
   toggleTabBarVisibility,

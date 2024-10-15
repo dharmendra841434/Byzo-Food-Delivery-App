@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ToastAndroid} from 'react-native';
 import {screenHeight} from './scaling';
+import appColors from './appColors';
 const storeLocalStorageData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
@@ -182,6 +183,7 @@ const toggleTabBarVisibility = (navigation, isVisible) => {
         height: 60,
         paddingTop: 7,
         display: 'flex',
+        backgroundColor: appColors?.navColor,
       },
     });
   } else {

@@ -4,7 +4,9 @@ import appColors from '../utils/appColors';
 import logo from '../assets/images/line.png';
 import CustomText from '../components/CustomText';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {hideNavigationBar} from 'react-native-navigation-bar-color';
+import changeNavigationBarColor, {
+  hideNavigationBar,
+} from 'react-native-navigation-bar-color';
 import {
   getLocalStorageAddress,
   getLocalStorageData,
@@ -98,6 +100,7 @@ const SplashScreen = () => {
         }
       });
 
+      changeNavigationBarColor(appColors?.navColor);
       hideNavigationBar();
 
       // Optional cleanup, in case anything needs to be cleaned up when the screen is unfocused

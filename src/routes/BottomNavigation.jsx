@@ -22,6 +22,7 @@ const BottomNavigation = () => {
           height: 60,
           paddingTop: 7,
           display: 'flex',
+          backgroundColor: appColors?.navColor,
         },
         tabBarLabelStyle: {
           fontSize: 11,

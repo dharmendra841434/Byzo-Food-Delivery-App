@@ -19,6 +19,7 @@ const appColors = {
   lightSky: '#dbf3ff',
   skyblue: '#97d8fe',
   fullCardBg: '#c99db6',
+  navColor: '#e2ede4',
 };
 
 export default appColors;

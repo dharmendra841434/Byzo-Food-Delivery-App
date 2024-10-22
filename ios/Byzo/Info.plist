@@ -16,6 +16,12 @@
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need your location while the app is in use to provide location-based features.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need your location even when the app is in the background to improve location-based services.</string>
+    <key>LocationAccuracy</key>
+    <string>We require higher accuracy to enhance location-based functionality.</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
@@ -30,6 +36,7 @@
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
+		
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>

@@ -20,7 +20,7 @@ const MapDeliveryAddressCard = ({
       <CustomText
         font="bold"
         style={{color: appColors.blackText, marginStart: '2%'}}>
-        Delivering your order to{' '}
+        Delivering your order too{' '}
       </CustomText>
       <View style={styles.addresscard}>
         <View

@@ -24,11 +24,9 @@ import {
   isEmptyObject,
   splitAddressAtFirstComma,
 } from '../../utils/helperfun';
-import {useNavigation} from '@react-navigation/native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {fatchAddressByCords} from '../../store/mapSlice';
 import CustomHeader from '../../components/CustomHeader';
-import CustomText from '../../components/CustomText';
 
 const CustomMap = ({
   isEnable = true,
@@ -138,6 +136,8 @@ const CustomMap = ({
             </>
           )}
         </MapView>
+
+
         <View style={[styles.mapHeader]}>
           {!isEnable ? (
             <View>
@@ -198,8 +198,6 @@ const CustomMap = ({
             </>
           )}
         </>
-
-        {/* <Button title="Toggle Heights" onPress={toggleHeights} /> */}
       </Animated.View>
     </View>
   );

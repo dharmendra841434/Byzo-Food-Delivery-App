@@ -1,7 +1,7 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {locationAPI} from './api';
 import {checkIsWithinKanyakumari} from '../utils/helperfun';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from '@react-native-community/geolocation';
 
 export const fatchUserAddress = createAsyncThunk(
   'address',

@@ -13,7 +13,7 @@ import {
   setIsChecking,
   setLocationPermission,
 } from '../../store/mapSlice';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from '@react-native-community/geolocation';
 import SettingOpenModel from '../../components/address/SettingOpenModel';
 import {fixedZoomLevel, saveAdressOnLocalStorage} from '../../utils/helperfun';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';

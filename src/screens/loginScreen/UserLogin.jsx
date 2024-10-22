@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -15,18 +15,18 @@ import Animated, {
 import CustomButton from '../../components/CustomButton';
 import ProductSlider from '../../components/ProductSlider';
 import LinearGradient from 'react-native-linear-gradient';
-import { lightColors } from '../../utils/constent';
+import {lightColors} from '../../utils/constent';
 import CustomText from '../../components/CustomText';
-import { TextInput } from 'react-native-gesture-handler';
+import {TextInput} from 'react-native-gesture-handler';
 import appColors from '../../utils/appColors';
-import { screenWidth } from '../../utils/scaling';
-import { useNavigation } from '@react-navigation/native';
-import { LoginAPI } from '../../store/api';
+import {screenWidth} from '../../utils/scaling';
+import {useNavigation} from '@react-navigation/native';
+import {LoginAPI} from '../../store/api';
 import FullScreenLoader from '../../components/FullScreenLoader';
 import appFonts from '../../utils/appFonts';
-import { showToastWithGravityAndOffset } from '../../utils/helperfun';
+import {showToastWithGravityAndOffset} from '../../utils/helperfun';
 
-export default function UserLogin({ onSkip }) {
+export default function UserLogin({onSkip}) {
   const [mobileNumber, setMobileNumber] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const bottomColors = [...lightColors].reverse();
@@ -44,7 +44,7 @@ export default function UserLogin({ onSkip }) {
 
   const toggleVisibility = () => {
     setIsVisible(prev => !prev);
-    bottomValue.value = withTiming(isVisible ? 0 : 100, { duration: 300 }); // Change -150 to desired height
+    bottomValue.value = withTiming(isVisible ? 0 : 100, {duration: 300}); // Change -150 to desired height
   };
   const handleChangeText = text => {
     // Replace non-numeric characters with an empty string
@@ -72,7 +72,7 @@ export default function UserLogin({ onSkip }) {
   };
 
   return (
-    <View style={{ height: '100%' }}>
+    <View style={{height: '100%'}}>
       <ProductSlider />
       <Animated.View style={[[styles.loginSection, animatedStyle]]}>
         <LinearGradient colors={bottomColors} style={styles.gradient} />
@@ -108,7 +108,7 @@ export default function UserLogin({ onSkip }) {
             <CustomButton
               disabled={mobileNumber?.length < 10 ? true : false}
               title="Continue"
-              style={{ paddingBottom: 16 }}
+              style={{paddingBottom: 16}}
               onPress={handleSendOtp}
             />
             <FullScreenLoader loader={loader} setLoader={setLoader} />
@@ -123,7 +123,7 @@ export default function UserLogin({ onSkip }) {
                 paddingVertical: '3.6%',
                 justifyContent: 'center',
               }}>
-              <CustomText style={{ fontSize: 10, opacity: 0.7 }}>
+              <CustomText style={{fontSize: 10, opacity: 0.7}}>
                 By continuing, you agree to our :{' '}
               </CustomText>
               <CustomText
@@ -133,13 +133,10 @@ export default function UserLogin({ onSkip }) {
                   textDecorationLine: 'underline', // Applies the underline
                   textDecorationStyle: 'dotted',
                 }}>
-
                 Term & Services{' '}
               </CustomText>
-              <CustomText style={{ fontSize: 10, opacity: 0.7 }}> & </CustomText>
-              <CustomText style={{ color: appColors.background }} >
-                Skip login
-              </CustomText>
+              <CustomText style={{fontSize: 10, opacity: 0.7}}> & </CustomText>
+
               <CustomText
                 style={{
                   fontSize: 10,
@@ -156,7 +153,7 @@ export default function UserLogin({ onSkip }) {
         <View style={styles.logo}>
           <Image
             source={require('../../assets/images/logo.png')}
-            style={{ height: 28, width: 65 }}
+            style={{height: 28, width: 65}}
           />
         </View>
       </Animated.View>
@@ -172,7 +169,9 @@ export default function UserLogin({ onSkip }) {
           paddingBottom: 5,
           paddingHorizontal: 10,
         }}>
-
+        <CustomText style={{color: appColors.background}}>
+          Skip login
+        </CustomText>
       </TouchableOpacity>
     </View>
   );
